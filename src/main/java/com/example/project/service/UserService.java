@@ -9,8 +9,8 @@ import com.example.project.dto.user.UserDto;
 import com.example.project.exceptions.AuthenticationFailException;
 import com.example.project.exceptions.CustomException;
 import com.example.project.model.AuthenticationToken;
-import com.example.project.model.Category;
 import com.example.project.model.User;
+import com.example.project.model.UserRoles;
 import com.example.project.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -49,8 +49,8 @@ public class UserService {
             e.printStackTrace();
         }
 
-        User user = new User(signupDto.getFirstName(), signupDto.getLastName(),
-                signupDto.getEmail(), encryptedpassword);
+        User user = new User(signupDto.getFirstName(), signupDto.getLastName(),signupDto.getEmail(),
+                encryptedpassword, UserRoles.USER);
 
         userRepository.save(user);
 
@@ -101,7 +101,7 @@ public class UserService {
             throw new CustomException("token is not present");
         }
 
-        return new SignInReponseDto("sucess", token.getToken(), user.getEmail());
+        return new SignInReponseDto("sucess", token.getToken(), user.getRole());
 
         // return response
     }

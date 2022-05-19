@@ -1,15 +1,17 @@
 package com.example.project.dto.user;
 
+import com.example.project.model.UserRoles;
+
 public class SignInReponseDto {
 
     private String status;
     private String token;
-    private String email;
+    private UserRoles role;
 
-    public SignInReponseDto(String status, String token, String email) {
+    public SignInReponseDto(String status, String token, UserRoles role) {
         this.status = status;
         this.token = token;
-        this.email = email;
+        this.role = role;
     }
 
     public String getStatus() {
@@ -28,11 +30,11 @@ public class SignInReponseDto {
         this.token = token;
     }
 
-    public String getEmail() {
-        return email;
+    public UserRoles getRole() {
+        return role;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setRole(UserRoles role) {
+        this.role = role;
     }
 }
