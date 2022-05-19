@@ -1,6 +1,7 @@
 package com.example.project.repository;
 
 
+import com.example.project.model.Product;
 import com.example.project.model.User;
 import com.example.project.model.WishList;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,5 +13,9 @@ import java.util.List;
 public interface WishListRepository extends JpaRepository<WishList, Integer> {
 
     List<WishList> findAllByUserOrderByCreatedDateDesc(User user);
+
+    WishList findByUserAndProduct(User user, Product product);
+
+    void deleteByUserAndProduct(User user, Product product);
 
 }

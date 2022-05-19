@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/wishlist")
+@RequestMapping("/api/wishlist")
 public class WishListController {
 
     @Autowired
@@ -57,4 +57,20 @@ public class WishListController {
         return new ResponseEntity<>(productDtos, HttpStatus.OK);
     }
 
+
+    @DeleteMapping("/delete/{wishlistItem}")
+    public ResponseEntity<ApiResponse> deleteFromWishList(@PathVariable("wishlistItem") Integer itemId,
+                                                     @RequestParam("token") String token) {
+        // authenticate the token
+        authenticationService.authenticate(token);
+
+        // find the user
+        User user = authenticationService.getUser(token);
+
+        // save the item in wishlist
+        wishListService.deleteWishlist(user,itemId);
+        ApiResponse apiResponse = new ApiResponse(true, "Deleted from wishlist");
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+
+    }
 }
