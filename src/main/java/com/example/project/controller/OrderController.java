@@ -2,6 +2,8 @@ package com.example.project.controller;
 
 
 import com.example.project.common.ApiResponse;
+import com.example.project.dto.ProductStatisticDto;
+import com.example.project.dto.StatisticDateDto;
 import com.example.project.dto.order.OrderDto;
 import com.example.project.dto.order.OrderDtoItem;
 import com.example.project.dto.checkout.CheckoutItemDto;
@@ -62,7 +64,7 @@ public class OrderController {
 
     @GetMapping("/getOrder/{orderId}")
     public ResponseEntity<OrderDtoItem> getCartItems(@PathVariable("orderId") Integer orderId,
-                                                 @RequestParam("token") String token) {
+                                                     @RequestParam("token") String token) {
         // authenticate the token
         authenticate(token);
 
@@ -74,6 +76,12 @@ public class OrderController {
         OrderDtoItem order = orderService.getOrderById(orderId);
         order.setUserId(user.getId());
         return new ResponseEntity<>(order, HttpStatus.OK);
+    }
+
+    @GetMapping("/getStatistic")
+    public ResponseEntity<List<ProductStatisticDto>> getStatistic(@RequestBody StatisticDateDto statisticDateDto) {
+        List<ProductStatisticDto> productStatisticDtos = orderService.getStatistic(statisticDateDto);
+        return new ResponseEntity<>(productStatisticDtos, HttpStatus.OK);
     }
 
     private void authenticate(String token){

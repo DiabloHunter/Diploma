@@ -2,6 +2,8 @@ package com.example.project.service;
 
 
 
+import com.example.project.dto.ProductStatisticDto;
+import com.example.project.dto.StatisticDateDto;
 import com.example.project.dto.order.OrderDtoItem;
 import com.example.project.dto.checkout.CheckoutItemDto;
 import com.example.project.dto.order.OrderProductDto;
@@ -15,9 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 public class OrderService {
@@ -176,6 +177,44 @@ public class OrderService {
 
         orderRepository.save(order);
         cartService.deleteCartItemsByUser(user);
+    }
+
+    public List<ProductStatisticDto> getStatistic(StatisticDateDto statisticDateDto) {
+        List<Order> allOrders = orderRepository.findAllByCreatedDateBetween(statisticDateDto.getStart(), statisticDateDto.getEnd());
+        Map<Product, Double> productMap = new HashMap<>();
+        List<ProductStatisticDto> productsStatistic = new ArrayList<>();
+        AtomicInteger count = new AtomicInteger(1);
+
+        for(var item: allOrders){
+            for(var products:item.getOrderProducts()){
+                Product product = products.getProduct();
+                if(productMap.containsKey(product)){
+                    productMap.replace(product, productMap.get(product),productMap.get(product) + products.getQuantity());
+                }
+                else{
+                    productMap.put(product, products.getQuantity());
+                }
+            }
+        }
+        productMap.entrySet().stream()
+                .sorted(Map.Entry.<Product, Double>comparingByValue().reversed())
+                .forEach(x->{
+                    ProductStatisticDto productStatisticDto = new ProductStatisticDto();
+                    productStatisticDto.setId(x.getKey().getId());
+                    productStatisticDto.setCode(x.getKey().getCode());
+                    productStatisticDto.setName(x.getKey().getName());
+                    productStatisticDto.setImageURL(x.getKey().getImageURL());
+                    productStatisticDto.setPrice(x.getKey().getPrice());
+                    productStatisticDto.setDescription(x.getKey().getDescription());
+                    productStatisticDto.setCategoryId(x.getKey().getCategory().getId());
+                    productStatisticDto.setMonthSales(x.getValue());
+                    productStatisticDto.setPlace(count.get());
+                    count.getAndIncrement();
+                    productsStatistic.add(productStatisticDto);
+                });
+        return productsStatistic;
+
+
     }
 
 

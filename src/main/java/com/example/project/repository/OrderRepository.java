@@ -16,4 +16,5 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
     List<Order> findAllByCreatedDateBetween(Date dateStart, Date dateEnd);
 
     Order findOrderById(Integer id);
+
 }
