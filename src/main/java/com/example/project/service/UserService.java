@@ -12,14 +12,31 @@ import com.example.project.model.AuthenticationToken;
 import com.example.project.model.User;
 import com.example.project.model.UserRoles;
 import com.example.project.repository.UserRepository;
+import com.zaxxer.hikari.HikariDataSource;
+import org.apache.commons.exec.CommandLine;
+import org.apache.commons.exec.DefaultExecutor;
+import org.apache.commons.exec.ExecuteWatchdog;
+import org.apache.commons.exec.PumpStreamHandler;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import javax.xml.bind.DatatypeConverter;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class UserService {
@@ -132,4 +149,50 @@ public class UserService {
         updatedUser.setPassword(encryptedPassword);
         userRepository.save(updatedUser);
     }
+
+
+    public boolean backup()
+            throws IOException, InterruptedException {
+
+        Date backupDate = new Date();
+        SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
+        String backupDateStr = format.format(backupDate);
+
+        String fileName = "DbBackup"; // default file name
+        String folderPath = "D:\\projects\\CourseWork\\DBBackup";
+        File f1 = new File(folderPath);
+        f1.mkdir(); // create folder if not exist
+
+
+        String saveFileName = fileName + "_" + backupDateStr + ".sql";
+        Path sqlFile = Paths.get(saveFileName);
+        OutputStream stdOut = new BufferedOutputStream(Files.newOutputStream(sqlFile, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING));
+        stdOut.close();
+
+        String command = "D:\\projects\\CourseWork\\Project\\backup.bat && mysqldump -u root -proot atarkv3 >" +
+                "D:\\projects\\CourseWork\\DBBackup\\" + saveFileName;
+        Process runtimeProcess =Runtime.getRuntime().exec(command);
+        return true;
+    }
+
+
+    public boolean restore()
+            throws IOException {
+
+
+        Date restoreDate = new Date();
+        SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
+        String backupDateStr = format.format(restoreDate);
+
+        String fileName = "DbBackup"; // default file name
+
+        String restoreFileName = fileName + "_" + backupDateStr + ".sql";
+
+        String command = "D:\\projects\\CourseWork\\Project\\backup.bat && mysql -u root -proot atarkv3 <" +
+                "D:\\projects\\CourseWork\\DBBackup\\" + restoreFileName;
+        Runtime.getRuntime().exec(command);
+        return true;
+    }
+
+
 }

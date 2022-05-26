@@ -15,6 +15,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+
 @RequestMapping("/api/user")
 @RestController
 public class UserController {
@@ -61,5 +63,29 @@ public class UserController {
         userService.editUser(user, changedUser);
         return new ResponseEntity<>(new ApiResponse(true, "User has been updated"), HttpStatus.OK);
     }
+
+    @PostMapping("/backup")
+    public ResponseEntity<ApiResponse> backupDB(@RequestParam("token") String token){
+        authenticationService.authenticate(token);
+        try {
+            userService.backup();
+        } catch (IOException | InterruptedException e) {
+            return new ResponseEntity<>(new ApiResponse(false, "Error:" + e), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity<>(new ApiResponse(true, "Database has been successfully backuped!"), HttpStatus.OK);
+    }
+
+    @PostMapping("/restore")
+    public ResponseEntity<ApiResponse> restoreDB(@RequestParam("token") String token){
+        authenticationService.authenticate(token);
+        try {
+            userService.restore();
+        } catch (IOException e) {
+            return new ResponseEntity<>(new ApiResponse(false, "Error:" + e), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity<>(new ApiResponse(true, "Database has been successfully restored!"), HttpStatus.OK);
+    }
+
+
 
 }

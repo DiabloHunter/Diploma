@@ -45,8 +45,8 @@ public class WishListController {
 
     // get all wishlist item for a user
 
-    @GetMapping("/{token}")
-    public ResponseEntity<List<ProductDto>> getWishList(@PathVariable("token") String token) {
+    @GetMapping("/")
+    public ResponseEntity<List<ProductDto>> getWishList(@RequestParam("token") String token) {
 
         // authenticate the token
         authenticationService.authenticate(token);
