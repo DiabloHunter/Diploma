@@ -159,19 +159,15 @@ public class UserService {
         String backupDateStr = format.format(backupDate);
 
         String fileName = "DbBackup"; // default file name
-        String folderPath = "D:\\projects\\CourseWork\\DBBackup";
-        File f1 = new File(folderPath);
-        f1.mkdir(); // create folder if not exist
-
 
         String saveFileName = fileName + "_" + backupDateStr + ".sql";
         Path sqlFile = Paths.get(saveFileName);
         OutputStream stdOut = new BufferedOutputStream(Files.newOutputStream(sqlFile, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING));
         stdOut.close();
 
-        String command = "D:\\projects\\CourseWork\\Project\\backup.bat && mysqldump -u root -proot atarkv3 >" +
+        String command = "D:\\projects\\CourseWork\\Project\\backup.bat && mysqldump -u root -proot atarkv2 >" +
                 "D:\\projects\\CourseWork\\DBBackup\\" + saveFileName;
-        Process runtimeProcess =Runtime.getRuntime().exec(command);
+        Runtime.getRuntime().exec(command);
         return true;
     }
 
@@ -188,7 +184,7 @@ public class UserService {
 
         String restoreFileName = fileName + "_" + backupDateStr + ".sql";
 
-        String command = "D:\\projects\\CourseWork\\Project\\backup.bat && mysql -u root -proot atarkv3 <" +
+        String command = "D:\\projects\\CourseWork\\Project\\backup.bat && mysql -u root -proot atarkv2 <" +
                 "D:\\projects\\CourseWork\\DBBackup\\" + restoreFileName;
         Runtime.getRuntime().exec(command);
         return true;
