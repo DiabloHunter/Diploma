@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -118,6 +119,8 @@ public class ProductService {
         return productDtos;
     }
 
+
+
     public void updateProduct(ProductDto productDto, Integer productId) throws Exception {
         Optional<Product> optionalProduct = productRepository.findById(productId);
         Product product = optionalProduct.get();
@@ -158,4 +161,27 @@ public class ProductService {
     public void deleteProduct(int productId){
         productRepository.deleteById(productId);
     }
+
+    public LocalDate convertToLocalDateViaInstant(Date dateToConvert) {
+        return dateToConvert.toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate();
+    }
+    public Date convertToDateViaSqlDate(LocalDate dateToConvert) {
+        return java.sql.Date.valueOf(dateToConvert);
+    }
+
+    public Date convertDate(){
+        Date date = convertToDateViaSqlDate(convertToLocalDateViaInstant(new Date()).minusMonths(1).minusDays(1));
+        return date;
+    }
+
+    public void checkPrices(Date change){
+        List<Product> products = productRepository.findAll();
+        for(var el:products){
+            el.setCheckDate(change);
+            productRepository.save(el);
+        }
+    }
+
 }

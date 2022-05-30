@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,6 +42,13 @@ public class ProductController {
     public ResponseEntity<List<ProductDto>> getProducts() {
         List<ProductDto> products = productService.getAllProducts();
         return new ResponseEntity<>(products, HttpStatus.OK);
+    }
+
+    @PostMapping("/checkPrices")
+    public ResponseEntity<ApiResponse>  checkPrices(){
+        Date checkDate = productService.convertDate();
+        productService.checkPrices(checkDate);
+        return new ResponseEntity<>(new ApiResponse(true, "Date for all products have been changed"), HttpStatus.CREATED);
     }
 
     // create an api to edit the product

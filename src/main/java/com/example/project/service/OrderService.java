@@ -17,6 +17,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -179,8 +182,21 @@ public class OrderService {
         cartService.deleteCartItemsByUser(user);
     }
 
+    public LocalDate convertToLocalDateViaInstant(Date dateToConvert) {
+        return dateToConvert.toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate();
+    }
+    public Date convertToDateViaSqlDate(LocalDate dateToConvert) {
+        return java.sql.Date.valueOf(dateToConvert);
+    }
+
+
     public List<ProductStatisticDto> getStatistic(StatisticDateDto statisticDateDto) {
-        List<Order> allOrders = orderRepository.findAllByCreatedDateBetween(statisticDateDto.getStart(), statisticDateDto.getEnd());
+        Date start = convertToDateViaSqlDate(convertToLocalDateViaInstant(statisticDateDto.getStart()));
+        Date end = convertToDateViaSqlDate(convertToLocalDateViaInstant(statisticDateDto.getEnd()).plusDays(1));
+
+        List<Order> allOrders = orderRepository.findAllByCreatedDateBetween(start, end);
         Map<Product, Double> productMap = new HashMap<>();
         List<ProductStatisticDto> productsStatistic = new ArrayList<>();
         AtomicInteger count = new AtomicInteger(1);
