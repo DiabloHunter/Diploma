@@ -7,6 +7,7 @@ import com.example.project.dto.cart.CartDto;
 import com.example.project.model.User;
 import com.example.project.service.AuthenticationService;
 import com.example.project.service.CartService;
+import com.example.project.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,9 @@ public class CartController {
     private CartService cartService;
 
     @Autowired
+    private ProductService productService;
+
+    @Autowired
     private AuthenticationService authenticationService;
 
 
@@ -30,11 +34,31 @@ public class CartController {
         // authenticate the token
         authenticationService.authenticate(token);
 
+        // find the user
+
+        User user = authenticationService.getUser(token);
+
+        cartService.addToCart(addToCartDto, user );
+
+        return new ResponseEntity<>(new ApiResponse(true, "Added to cart"), HttpStatus.CREATED);
+    }
+
+
+    @GetMapping("/add/{goodCode}&{goodAmount}")
+    public ResponseEntity<ApiResponse> addToCart(@PathVariable("goodCode")  String code,
+                                                 @PathVariable("goodAmount") Integer amount,
+                                                 @RequestParam("token") String token) {
+        // authenticate the token
+        authenticationService.authenticate(token);
 
         // find the user
 
         User user = authenticationService.getUser(token);
 
+
+        AddToCartDto addToCartDto = new AddToCartDto();
+        addToCartDto.setProductId(productService.getProductId(code));
+        addToCartDto.setQuantity(amount);
 
         cartService.addToCart(addToCartDto, user );
 

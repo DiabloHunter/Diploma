@@ -62,6 +62,14 @@ public class ProductService {
         return productDto;
     }
 
+    public int getProductId(String code) {
+        return productRepository.findProductByCode(code).getId();
+    }
+
+    public Product getProductByCode(String code) {
+        return productRepository.findProductByCode(code);
+    }
+
     public List<ProductDto> getAllProducts() {
         List<Product> allProducts = productRepository.findAll();
         List<ProductDto> productDtos = new ArrayList<>();

@@ -3,7 +3,9 @@ package com.example.project.controller;
 
 import com.example.project.common.ApiResponse;
 import com.example.project.dto.ProductDto;
+import com.example.project.dto.ProductDtoIoT;
 import com.example.project.model.Category;
+import com.example.project.model.Product;
 import com.example.project.repository.CategoryRepo;
 import com.example.project.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +44,14 @@ public class ProductController {
     public ResponseEntity<List<ProductDto>> getProducts() {
         List<ProductDto> products = productService.getAllProducts();
         return new ResponseEntity<>(products, HttpStatus.OK);
+    }
+
+    @GetMapping("/{code}")
+    public ResponseEntity<ProductDtoIoT> getProductByCode(@PathVariable("code") String code) {
+        Product product = productService.getProductByCode(code);
+        ProductDtoIoT productDtoIoT = new ProductDtoIoT(product.getId(), product.getCode(), product.getName(),
+                product.getPrice(), product.getDescription());
+        return new ResponseEntity<>(productDtoIoT, HttpStatus.OK);
     }
 
     @PostMapping("/checkPrices")

@@ -98,7 +98,6 @@ public class UserService {
         if (Objects.isNull(user)) {
             throw new AuthenticationFailException("user is not valid");
         }
-
         // hash the password
         try {
             if (!user.getPassword().equals(hashPassword(signInDto.getPassword()))) {
@@ -107,19 +106,40 @@ public class UserService {
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
-
         // compare the password in DB
         // if password match
         AuthenticationToken token = authenticationService.getToken(user);
-
         // retrive the token
-
         if (Objects.isNull(token)) {
             throw new CustomException("token is not present");
         }
-
         return new SignInReponseDto("sucess", token.getToken(), user.getRole());
+        // return response
+    }
 
+
+    public SignInReponseDto signInMob(SignInDto signInDto) {
+        // find user by email
+        User user = userRepository.findByEmail(signInDto.getEmail());
+        if (Objects.isNull(user)) {
+            return new SignInReponseDto("fail", null, null);
+        }
+        // hash the password
+        try {
+            if (!user.getPassword().equals(hashPassword(signInDto.getPassword()))) {
+                return new SignInReponseDto("fail", null, null);
+            }
+        } catch (NoSuchAlgorithmException e) {
+            return new SignInReponseDto("fail", null, null);
+        }
+        // compare the password in DB
+        // if password match
+        AuthenticationToken token = authenticationService.getToken(user);
+        // retrive the token
+        if (Objects.isNull(token)) {
+            return new SignInReponseDto("fail", null, null);
+        }
+        return new SignInReponseDto("sucess", token.getToken(), user.getRole());
         // return response
     }
 

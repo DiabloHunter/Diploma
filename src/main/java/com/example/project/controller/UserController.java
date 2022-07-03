@@ -2,6 +2,7 @@ package com.example.project.controller;
 
 import com.example.project.common.ApiResponse;
 import com.example.project.dto.ResponseDto;
+import com.example.project.dto.order.OrderDtoItem;
 import com.example.project.dto.user.SignInDto;
 import com.example.project.dto.user.SignInReponseDto;
 import com.example.project.dto.user.SignupDto;
@@ -43,6 +44,11 @@ public class UserController {
         return userService.signIn(signInDto);
     }
 
+    @GetMapping("/signinMob/{email}&{password}")
+    public SignInReponseDto signInMob(@PathVariable("email") String email,@PathVariable("password") String password) {
+        SignInDto signInDto = new SignInDto(email, password);
+        return userService.signInMob(signInDto);
+    }
 
 
     @GetMapping("/")
