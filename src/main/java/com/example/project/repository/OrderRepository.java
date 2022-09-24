@@ -6,7 +6,6 @@ import com.example.project.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -16,6 +15,6 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
 
     List<Order> findAllByCreatedDateBetween(Date dateStart, Date dateEnd);
 
-    Order findOrderById(Integer id);
+    Order findOrderById(Long id);
 
 }

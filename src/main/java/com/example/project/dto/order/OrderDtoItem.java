@@ -7,16 +7,16 @@ import java.util.*;
 
 public class OrderDtoItem {
 
-    private int id;
+    private long id;
     private @NotNull double price;
     private @NotNull List<OrderProductDto> products = new ArrayList<>();
-    private @NotNull int userId;
+    private @NotNull long userId;
     private @NotNull Date createdDate;
 
     public OrderDtoItem() {
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
@@ -40,11 +40,11 @@ public class OrderDtoItem {
         this.products = products;
     }
 
-    public int getUserId() {
+    public long getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(long userId) {
         this.userId = userId;
     }
 

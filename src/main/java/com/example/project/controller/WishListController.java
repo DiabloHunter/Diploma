@@ -5,7 +5,7 @@ import com.example.project.dto.ProductDto;
 import com.example.project.model.Product;
 import com.example.project.model.User;
 import com.example.project.model.WishList;
-import com.example.project.service.AuthenticationService;
+import com.example.project.service.UserService;
 import com.example.project.service.WishListService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,17 +22,15 @@ public class WishListController {
     WishListService wishListService;
 
     @Autowired
-    AuthenticationService authenticationService;
+    UserService userService;
 
     // save product as wishlist item
     @PostMapping("/add")
     public ResponseEntity<ApiResponse> addToWishList(@RequestBody Product product,
-                                                     @RequestParam("token") String token) {
-        // authenticate the token
-        authenticationService.authenticate(token);
+                                                     @RequestParam("userEmail") String userEmail) {
 
         // find the user
-        User user = authenticationService.getUser(token);
+        User user = userService.getUserByEmail(userEmail);
 
         // save the item in wishlist
         WishList wishList = new WishList(user, product);
@@ -46,13 +44,9 @@ public class WishListController {
     // get all wishlist item for a user
 
     @GetMapping("/")
-    public ResponseEntity<List<ProductDto>> getWishList(@RequestParam("token") String token) {
-
-        // authenticate the token
-        authenticationService.authenticate(token);
-
+    public ResponseEntity<List<ProductDto>> getWishList(@RequestParam("userEmail") String userEmail) {
         // find the user
-        User user = authenticationService.getUser(token);
+        User user = userService.getUserByEmail(userEmail);
         List<ProductDto> productDtos = wishListService.getWishListForUser(user);
         return new ResponseEntity<>(productDtos, HttpStatus.OK);
     }
@@ -60,12 +54,9 @@ public class WishListController {
 
     @DeleteMapping("/delete/{wishlistItem}")
     public ResponseEntity<ApiResponse> deleteFromWishList(@PathVariable("wishlistItem") Integer itemId,
-                                                     @RequestParam("token") String token) {
-        // authenticate the token
-        authenticationService.authenticate(token);
-
+                                                     @RequestParam("userEmail") String userEmail) {
         // find the user
-        User user = authenticationService.getUser(token);
+        User user = userService.getUserByEmail(userEmail);
 
         // save the item in wishlist
         wishListService.deleteWishlist(user,itemId);

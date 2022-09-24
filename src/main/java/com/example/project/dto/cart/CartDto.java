@@ -5,7 +5,7 @@ import java.util.List;
 public class CartDto {
     private List<CartItemDto> cartItems;
     private double totalCost;
-    private int userId;
+    private long userId;
 
     public CartDto() {
     }
@@ -26,11 +26,11 @@ public class CartDto {
         this.totalCost = totalCost;
     }
 
-    public int getUserId() {
+    public long getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(long userId) {
         this.userId = userId;
     }
 }

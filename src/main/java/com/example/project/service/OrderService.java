@@ -49,7 +49,7 @@ public class OrderService {
 
     public Session createSession(List<CheckoutItemDto> checkoutItemDtoList) throws StripeException {
 
-        // sucess and failure urls
+        // success and failure urls
 
         String successURL = baseURL + "orders";
 
@@ -124,7 +124,7 @@ public class OrderService {
         return orderDtoItems;
     }
 
-    public OrderDtoItem getOrderById(Integer id) {
+    public OrderDtoItem getOrderById(Long id) {
         Order order = orderRepository.findOrderById(id);
         OrderDtoItem orderDtoItem = new OrderDtoItem();
         orderDtoItem.setId(order.getId());

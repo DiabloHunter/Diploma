@@ -1,16 +1,16 @@
 package com.example.project.dto.user;
 
-import com.example.project.model.UserRoles;
+import com.example.project.model.ERole;
+
+import java.util.Set;
 
 public class SignInReponseDto {
 
     private String status;
-    private String token;
-    private UserRoles role;
+    private Set<ERole> role;
 
-    public SignInReponseDto(String status, String token, UserRoles role) {
+    public SignInReponseDto(String status, Set<ERole> role) {
         this.status = status;
-        this.token = token;
         this.role = role;
     }
 
@@ -22,19 +22,11 @@ public class SignInReponseDto {
         this.status = status;
     }
 
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
-
-    public UserRoles getRole() {
+    public Set<ERole> getRole() {
         return role;
     }
 
-    public void setRole(UserRoles role) {
+    public void setRole(Set<ERole> role) {
         this.role = role;
     }
 }

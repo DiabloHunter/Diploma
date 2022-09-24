@@ -9,8 +9,8 @@ import com.example.project.dto.order.OrderDtoItem;
 import com.example.project.dto.checkout.CheckoutItemDto;
 import com.example.project.dto.checkout.StripeResponse;
 import com.example.project.model.User;
-import com.example.project.service.AuthenticationService;
 import com.example.project.service.OrderService;
+import com.example.project.service.UserService;
 import com.stripe.exception.StripeException;
 import com.stripe.model.checkout.Session;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,13 +25,10 @@ import java.util.List;
 public class OrderController {
 
     @Autowired
-    private AuthenticationService authenticationService;
-
-    @Autowired
     private OrderService orderService;
 
-
-    // stripe session checkout api
+    @Autowired
+    private UserService userService;
 
     @PostMapping("/create-checkout-session")
     public ResponseEntity<StripeResponse> checkoutList(@RequestBody List<CheckoutItemDto> checkoutItemDtoList)
@@ -42,15 +39,11 @@ public class OrderController {
 
     }
     @GetMapping("/getOrders/")
-    public ResponseEntity<OrderDto> getCartItems(@RequestParam("token") String token) {
-        // authenticate the token
-        authenticate(token);
-
+    public ResponseEntity<OrderDto> getCartItems(@RequestParam("userEmail") String userEmail) {
         // find the user
-        User user = authenticationService.getUser(token);
+        User user = userService.getUserByEmail(userEmail);
 
         // get cart items
-
         List<OrderDtoItem> orders = orderService.getAllOrders(user);
         OrderDto orderDto = new OrderDto();
         orderDto.setOrderItems(orders);
@@ -63,13 +56,10 @@ public class OrderController {
     }
 
     @GetMapping("/getOrder/{orderId}")
-    public ResponseEntity<OrderDtoItem> getCartItems(@PathVariable("orderId") Integer orderId,
-                                                     @RequestParam("token") String token) {
-        // authenticate the token
-        authenticate(token);
-
+    public ResponseEntity<OrderDtoItem> getCartItems(@PathVariable("orderId") Long orderId,
+                                                     @RequestParam("userEmail") String userEmail) {
         // find the user
-        User user = authenticationService.getUser(token);
+        User user = userService.getUserByEmail(userEmail);
 
         // get cart items
 
@@ -84,20 +74,11 @@ public class OrderController {
         return new ResponseEntity<>(productStatisticDtos, HttpStatus.OK);
     }
 
-    private void authenticate(String token){
-        authenticationService.authenticate(token);
-    }
-
 
     @PostMapping("/add")
     public ResponseEntity<ApiResponse> addToCart(@RequestBody OrderDtoItem orderDtoItem,
                                                  @RequestParam("token") String token) {
-        // authenticate the token
-        authenticationService.authenticate(token);
-
-
         orderService.addOrder(orderDtoItem);
-
         return new ResponseEntity<>(new ApiResponse(true, "Added to cart"), HttpStatus.CREATED);
     }
 
