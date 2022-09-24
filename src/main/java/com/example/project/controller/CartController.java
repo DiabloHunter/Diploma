@@ -5,9 +5,12 @@ import com.example.project.common.ApiResponse;
 import com.example.project.dto.cart.AddToCartDto;
 import com.example.project.dto.cart.CartDto;
 import com.example.project.model.User;
-import com.example.project.service.CartService;
-import com.example.project.service.ProductService;
-import com.example.project.service.UserService;
+import com.example.project.service.ICartService;
+import com.example.project.service.IProductService;
+import com.example.project.service.IUserService;
+import com.example.project.service.impl.CartService;
+import com.example.project.service.impl.ProductService;
+import com.example.project.service.impl.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,13 +21,13 @@ import org.springframework.web.bind.annotation.*;
 public class CartController {
 
     @Autowired
-    private CartService cartService;
+    private ICartService cartService;
 
     @Autowired
-    private UserService userService;
+    private IUserService userService;
 
     @Autowired
-    private ProductService productService;
+    private IProductService productService;
 
     @PostMapping("/add")
     public ResponseEntity<ApiResponse> addToCart(@RequestBody AddToCartDto addToCartDto,
@@ -48,7 +51,7 @@ public class CartController {
         User user = userService.getUserByEmail(userEmail);
 
         AddToCartDto addToCartDto = new AddToCartDto();
-        addToCartDto.setProductId(productService.getProductId(code));
+        addToCartDto.setProductId(productService.getProductByCode(code).getId());
         addToCartDto.setQuantity(amount);
 
         cartService.addToCart(addToCartDto, user);
@@ -62,14 +65,14 @@ public class CartController {
     public ResponseEntity<CartDto> getCartItems(@RequestParam("userEmail") String userEmail) {
         User user = userService.getUserByEmail(userEmail);
 
-        CartDto cartDto = cartService.listCartItems(user);
+        CartDto cartDto = cartService.getAllCartItems(user);
         return new ResponseEntity<>(cartDto, HttpStatus.OK);
     }
 
     // delete a cart item for a user
 
     @DeleteMapping("/delete/{cartItemId}")
-    public ResponseEntity<ApiResponse> deleteCartItem(@PathVariable("cartItemId") Integer itemId,
+    public ResponseEntity<ApiResponse> deleteCartItem(@PathVariable("cartItemId") Long itemId,
                                                       @RequestParam("userEmail") String userEmail) {
 
         User user = userService.getUserByEmail(userEmail);

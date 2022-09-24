@@ -1,7 +1,5 @@
 package com.example.project.dto.order;
 
-import com.example.project.dto.ProductDto;
-
 import javax.validation.constraints.NotNull;
 import java.util.*;
 

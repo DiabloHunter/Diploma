@@ -1,4 +1,4 @@
-package com.example.project.service;
+package com.example.project.service.impl;
 
 
 import com.example.project.dto.ResponseDto;
@@ -11,9 +11,10 @@ import com.example.project.exceptions.CustomException;
 import com.example.project.model.ERole;
 import com.example.project.model.Role;
 import com.example.project.model.User;
-import com.example.project.repository.UserRepository;
+import com.example.project.repository.IUserRepository;
+import com.example.project.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -31,15 +32,15 @@ import java.util.Date;
 import java.util.Objects;
 
 @Service
-public class UserService {
+public class UserService implements IUserService {
 
     @Autowired
-    UserRepository userRepository;
+    IUserRepository IUserRepository;
 
-
+    @Override
     @Transactional
     public ResponseDto signUp(SignupDto signupDto) {
-        if (Objects.nonNull(userRepository.findByEmail(signupDto.getEmail()))) {
+        if (Objects.nonNull(IUserRepository.findByEmail(signupDto.getEmail()))) {
             throw new CustomException("user already present");
         }
 
@@ -54,7 +55,7 @@ public class UserService {
         User user = new User(signupDto.getUsername(), signupDto.getEmail(),
                 encryptedpassword, Collections.singleton(new Role(ERole.USER)));
 
-        userRepository.save(user);
+        IUserRepository.save(user);
 
         ResponseDto responseDto = new ResponseDto("success", "user created succesfully");
         return responseDto;
@@ -69,10 +70,11 @@ public class UserService {
         return hash;
     }
 
+    @Override
     public SignInReponseDto signIn(SignInDto signInDto) {
         String userEmail = signInDto.getEmail();
-        User user = userRepository.findByEmail(signInDto.getEmail())
-                .orElseThrow(() -> new UsernameNotFoundException("User Not Found with email: " + userEmail));
+        User user = IUserRepository.findByEmail(signInDto.getEmail())
+                .orElseThrow(() -> new CustomException("User Not Found with email: " + userEmail));
         if (Objects.isNull(user)) {
             throw new AuthenticationFailException("user is not valid");
         }
@@ -88,10 +90,11 @@ public class UserService {
     }
 
 
+    @Override
     public SignInReponseDto signInMob(SignInDto signInDto) {
         String userEmail = signInDto.getEmail();
-        User user = userRepository.findByEmail(signInDto.getEmail())
-                .orElseThrow(() -> new UsernameNotFoundException("User Not Found with email: " + userEmail));
+        User user = IUserRepository.findByEmail(signInDto.getEmail())
+                .orElseThrow(() -> new CustomException("User Not Found with email: " + userEmail));
         if (Objects.isNull(user)) {
             return new SignInReponseDto("fail", null);
         }
@@ -106,7 +109,8 @@ public class UserService {
         return new SignInReponseDto("success", /*user.getRoles()*/ null);
     }
 
-    public UserDto getUserDto(User user){
+    @Override
+    public UserDto getUserDto(User user) {
         UserDto userDto = new UserDto();
         userDto.setUsername(user.getUsername());
         userDto.setEmail(user.getEmail());
@@ -114,11 +118,13 @@ public class UserService {
         return userDto;
     }
 
-    public User getUserByEmail(String userEmail){
-        return userRepository.findByEmail(userEmail)
-                .orElseThrow(() -> new UsernameNotFoundException("User Not Found with email: " + userEmail));
+    @Override
+    public User getUserByEmail(String userEmail) {
+        return IUserRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new CustomException("User Not Found with email: " + userEmail));
     }
 
+    @Override
     public void editUser(User updatedUser, User updateUser) {
         updatedUser.setEmail(updateUser.getEmail());
         updatedUser.setUsername(updateUser.getUsername());
@@ -131,12 +137,11 @@ public class UserService {
             e.printStackTrace();
         }
 
-
         updatedUser.setPassword(encryptedPassword);
-        userRepository.save(updatedUser);
+        IUserRepository.save(updatedUser);
     }
 
-
+    @Override
     public boolean backup()
             throws IOException, InterruptedException {
 
@@ -157,7 +162,7 @@ public class UserService {
         return true;
     }
 
-
+    @Override
     public boolean restore()
             throws IOException {
 
@@ -175,6 +180,4 @@ public class UserService {
         Runtime.getRuntime().exec(command);
         return true;
     }
-
-
 }

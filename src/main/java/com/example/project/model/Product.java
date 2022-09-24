@@ -7,6 +7,8 @@ import org.hibernate.annotations.OnDeleteAction;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "products")
@@ -14,7 +16,7 @@ public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     private @NotNull String code;
     private @NotNull String name;
@@ -25,16 +27,11 @@ public class Product {
     private @NotNull double minSales;
     private @NotNull double maxSales;
 
-
-    // Many to one relationship
     @ManyToOne(cascade = CascadeType.REFRESH)
     @JsonIgnore
     @JoinColumn(name = "category_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     Category category;
-
-
-
 
     public String getName() {
         return name;
@@ -76,11 +73,11 @@ public class Product {
         this.category = category;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

@@ -7,7 +7,8 @@ import com.example.project.dto.user.SignInReponseDto;
 import com.example.project.dto.user.SignupDto;
 import com.example.project.dto.user.UserDto;
 import com.example.project.model.User;
-import com.example.project.service.UserService;
+import com.example.project.service.IUserService;
+import com.example.project.service.impl.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +21,7 @@ import java.io.IOException;
 public class UserController {
 
     @Autowired
-    UserService userService;
+    IUserService userService;
 
     @PostMapping("/signup")
     public ResponseDto signup(@RequestBody SignupDto signupDto) {

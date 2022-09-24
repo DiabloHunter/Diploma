@@ -1,9 +1,9 @@
-package com.example.project.dto;
+package com.example.project.dto.productDto;
 
 import javax.validation.constraints.NotNull;
 
 public class ProductDtoIoT {
-    private Integer id;
+    private Long id;
     private @NotNull String code;
     private @NotNull String name;
     private @NotNull double price;
@@ -12,7 +12,7 @@ public class ProductDtoIoT {
     public ProductDtoIoT() {
     }
 
-    public ProductDtoIoT(Integer id, String code, String name, double price, String description) {
+    public ProductDtoIoT(Long id, String code, String name, double price, String description) {
         this.id = id;
         this.code = code;
         this.name = name;
@@ -20,11 +20,11 @@ public class ProductDtoIoT {
         this.description = description;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

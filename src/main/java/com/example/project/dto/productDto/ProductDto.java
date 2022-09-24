@@ -1,34 +1,22 @@
-package com.example.project.dto;
+package com.example.project.dto.productDto;
 
 import javax.validation.constraints.NotNull;
 
-public class ProductStatisticDto {
-
-    private Integer id;
+public class ProductDto {
+    // for create it can be optional
+    // for update we need the id
+    private Long id;
     private @NotNull String code;
     private @NotNull String name;
     private @NotNull String imageURL;
     private @NotNull double price;
     private @NotNull String description;
-    private @NotNull Integer categoryId;
-    private @NotNull double monthSales;
-    private @NotNull int place;
+    private @NotNull Long categoryId;
+    private @NotNull double minSales;
+    private @NotNull double maxSales;
 
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
+    public ProductDto() {
     }
 
     public String getName() {
@@ -63,27 +51,43 @@ public class ProductStatisticDto {
         this.description = description;
     }
 
-    public Integer getCategoryId() {
+    public Long getCategoryId() {
         return categoryId;
     }
 
-    public void setCategoryId(Integer categoryId) {
+    public void setCategoryId(Long categoryId) {
         this.categoryId = categoryId;
     }
 
-    public double getMonthSales() {
-        return monthSales;
+    public Long getId() {
+        return id;
     }
 
-    public void setMonthSales(double monthSales) {
-        this.monthSales = monthSales;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public int getPlace() {
-        return place;
+    public double getMinSales() {
+        return minSales;
     }
 
-    public void setPlace(int place) {
-        this.place = place;
+    public void setMinSales(double minSales) {
+        this.minSales = minSales;
+    }
+
+    public double getMaxSales() {
+        return maxSales;
+    }
+
+    public void setMaxSales(double maxSales) {
+        this.maxSales = maxSales;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 }

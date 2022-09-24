@@ -2,15 +2,17 @@ package com.example.project.controller;
 
 
 import com.example.project.common.ApiResponse;
-import com.example.project.dto.ProductStatisticDto;
+import com.example.project.dto.productDto.ProductStatisticDto;
 import com.example.project.dto.StatisticDateDto;
 import com.example.project.dto.order.OrderDto;
 import com.example.project.dto.order.OrderDtoItem;
 import com.example.project.dto.checkout.CheckoutItemDto;
 import com.example.project.dto.checkout.StripeResponse;
 import com.example.project.model.User;
-import com.example.project.service.OrderService;
-import com.example.project.service.UserService;
+import com.example.project.service.IOrderService;
+import com.example.project.service.IUserService;
+import com.example.project.service.impl.OrderService;
+import com.example.project.service.impl.UserService;
 import com.stripe.exception.StripeException;
 import com.stripe.model.checkout.Session;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,10 +27,10 @@ import java.util.List;
 public class OrderController {
 
     @Autowired
-    private OrderService orderService;
+    private IOrderService orderService;
 
     @Autowired
-    private UserService userService;
+    private IUserService userService;
 
     @PostMapping("/create-checkout-session")
     public ResponseEntity<StripeResponse> checkoutList(@RequestBody List<CheckoutItemDto> checkoutItemDtoList)
@@ -70,7 +72,7 @@ public class OrderController {
 
     @GetMapping("/getStatistic")
     public ResponseEntity<List<ProductStatisticDto>> getStatistic(@RequestBody StatisticDateDto statisticDateDto) {
-        List<ProductStatisticDto> productStatisticDtos = orderService.getStatistic(statisticDateDto);
+        List<ProductStatisticDto> productStatisticDtos = orderService.getStatisticByOrders(statisticDateDto);
         return new ResponseEntity<>(productStatisticDtos, HttpStatus.OK);
     }
 

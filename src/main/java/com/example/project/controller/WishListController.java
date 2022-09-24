@@ -1,12 +1,12 @@
 package com.example.project.controller;
 
 import com.example.project.common.ApiResponse;
-import com.example.project.dto.ProductDto;
+import com.example.project.dto.productDto.ProductDto;
 import com.example.project.model.Product;
 import com.example.project.model.User;
 import com.example.project.model.WishList;
-import com.example.project.service.UserService;
-import com.example.project.service.WishListService;
+import com.example.project.service.impl.UserService;
+import com.example.project.service.impl.WishListService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,7 +34,7 @@ public class WishListController {
 
         // save the item in wishlist
         WishList wishList = new WishList(user, product);
-        wishListService.createWishlist(wishList);
+        wishListService.addWishlist(wishList);
         ApiResponse apiResponse = new ApiResponse(true, "Added to wishlist");
         return  new ResponseEntity<>(apiResponse, HttpStatus.CREATED);
 
@@ -53,7 +53,7 @@ public class WishListController {
 
 
     @DeleteMapping("/delete/{wishlistItem}")
-    public ResponseEntity<ApiResponse> deleteFromWishList(@PathVariable("wishlistItem") Integer itemId,
+    public ResponseEntity<ApiResponse> deleteFromWishList(@PathVariable("wishlistItem") Long itemId,
                                                      @RequestParam("userEmail") String userEmail) {
         // find the user
         User user = userService.getUserByEmail(userEmail);

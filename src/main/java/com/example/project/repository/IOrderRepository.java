@@ -10,11 +10,9 @@ import java.util.Date;
 import java.util.List;
 
 @Repository
-public interface OrderRepository extends JpaRepository<Order, Integer> {
+public interface IOrderRepository extends JpaRepository<Order, Long> {
     List<Order> findAllByUser(User user);
 
     List<Order> findAllByCreatedDateBetween(Date dateStart, Date dateEnd);
-
-    Order findOrderById(Long id);
 
 }

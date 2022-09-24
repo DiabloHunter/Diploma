@@ -1,9 +1,9 @@
 package com.example.project.controller;
 
 import com.example.project.common.ApiResponse;
-import com.example.project.dto.ProductDto;
 import com.example.project.model.Category;
-import com.example.project.service.CategoryService;
+import com.example.project.service.ICategoryService;
+import com.example.project.service.impl.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +16,7 @@ import java.util.List;
 public class CategoryController {
 
     @Autowired
-    CategoryService categoryService;
+    ICategoryService categoryService;
 
 
     @PostMapping("/create")
@@ -31,15 +31,15 @@ public class CategoryController {
 
     @GetMapping("/")
     public List<Category> listCategory() {
-        return categoryService.listCategory();
+        return categoryService.getAllCategory();
     }
 
 
     @PostMapping("/update/{categoryId}")
-    public ResponseEntity<ApiResponse> updateCategory(@PathVariable("categoryId") int categoryId, @RequestBody Category category ) {
-        if (!categoryService.findById(categoryId)) {
-            return new ResponseEntity<>(new ApiResponse(false, "category does not exists"), HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<ApiResponse> updateCategory(@PathVariable("categoryId") Long categoryId, @RequestBody Category category ) {
+//        if (!categoryService.getCategoryById(categoryId)) {
+//            return new ResponseEntity<>(new ApiResponse(false, "category does not exists"), HttpStatus.NOT_FOUND);
+//        }
         try {
             categoryService.editCategory(categoryId, category);
         } catch (Exception e) {
@@ -49,10 +49,10 @@ public class CategoryController {
     }
 
     @DeleteMapping("/delete/{categoryId}")
-    public ResponseEntity<ApiResponse> deleteCategory(@PathVariable("categoryId") int categoryId){
-        if (!categoryService.findById(categoryId)) {
-            return new ResponseEntity<>(new ApiResponse(false, "category does not exists"), HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<ApiResponse> deleteCategory(@PathVariable("categoryId") Long categoryId){
+//        if (!categoryService.getCategoryById(categoryId)) {
+//            return new ResponseEntity<>(new ApiResponse(false, "category does not exists"), HttpStatus.NOT_FOUND);
+//        }
         categoryService.deleteCategory(categoryId);
         return new ResponseEntity<>(new ApiResponse(true, "category has been deleted"), HttpStatus.OK);
     }

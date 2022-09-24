@@ -4,26 +4,26 @@ import javax.validation.constraints.NotNull;
 
 public class AddToCartDto {
 
-    private Integer id;
-    private @NotNull Integer productId;
+    private Long id;
+    private @NotNull Long productId;
     private @NotNull Integer quantity;
 
     public AddToCartDto() {
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public Integer getProductId() {
+    public Long getProductId() {
         return productId;
     }
 
-    public void setProductId(Integer productId) {
+    public void setProductId(Long productId) {
         this.productId = productId;
     }
 
