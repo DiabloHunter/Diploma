@@ -27,39 +27,13 @@ import java.nio.file.StandardOpenOption;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
-import java.util.Collections;
 import java.util.Date;
-import java.util.Objects;
 
 @Service
 public class UserService implements IUserService {
 
     @Autowired
-    IUserRepository IUserRepository;
-
-    @Override
-    @Transactional
-    public ResponseDTO signUp(SignupDTO signupDto) {
-        if (Objects.nonNull(IUserRepository.findByEmail(signupDto.getEmail()))) {
-            throw new CustomException("user already present");
-        }
-
-        String encryptedpassword = signupDto.getPassword();
-
-        try {
-            encryptedpassword = hashPassword(signupDto.getPassword());
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-
-        User user = new User(signupDto.getUsername(), signupDto.getEmail(),
-                encryptedpassword, Collections.singleton(new Role(ERole.USER)));
-
-        IUserRepository.save(user);
-
-        ResponseDTO responseDto = new ResponseDTO("success", "user created succesfully");
-        return responseDto;
-    }
+    IUserRepository userRepository;
 
     private String hashPassword(String password) throws NoSuchAlgorithmException {
         MessageDigest md = MessageDigest.getInstance("MD5");
@@ -68,45 +42,6 @@ public class UserService implements IUserService {
         String hash = DatatypeConverter
                 .printHexBinary(digest).toUpperCase();
         return hash;
-    }
-
-    @Override
-    public SignInResponseDTO signIn(SignInDTO signInDto) {
-        String userEmail = signInDto.getEmail();
-        User user = IUserRepository.findByEmail(signInDto.getEmail())
-                .orElseThrow(() -> new CustomException("User Not Found with email: " + userEmail));
-        if (Objects.isNull(user)) {
-            throw new AuthenticationFailException("user is not valid");
-        }
-        try {
-            if (!user.getPassword().equals(hashPassword(signInDto.getPassword()))) {
-                throw new AuthenticationFailException("wrong password");
-            }
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-
-        return new SignInResponseDTO("success", /*user.getRoles()*/null);
-    }
-
-
-    @Override
-    public SignInResponseDTO signInMob(SignInDTO signInDto) {
-        String userEmail = signInDto.getEmail();
-        User user = IUserRepository.findByEmail(signInDto.getEmail())
-                .orElseThrow(() -> new CustomException("User Not Found with email: " + userEmail));
-        if (Objects.isNull(user)) {
-            return new SignInResponseDTO("fail", null);
-        }
-        try {
-            if (!user.getPassword().equals(hashPassword(signInDto.getPassword()))) {
-                return new SignInResponseDTO("fail", null);
-            }
-        } catch (NoSuchAlgorithmException e) {
-            return new SignInResponseDTO("fail", null);
-        }
-
-        return new SignInResponseDTO("success", /*user.getRoles()*/ null);
     }
 
     @Override
@@ -120,8 +55,18 @@ public class UserService implements IUserService {
 
     @Override
     public User getUserByEmail(String userEmail) {
-        return IUserRepository.findByEmail(userEmail)
+        return userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new CustomException("User Not Found with email: " + userEmail));
+    }
+
+    @Override
+    public Boolean existsByUsername(String username){
+        return userRepository.existsByUsername(username);
+    }
+
+    @Override
+    public Boolean existsByEmail(String email){
+        return userRepository.existsByEmail(email);
     }
 
     @Override
@@ -138,12 +83,17 @@ public class UserService implements IUserService {
         }
 
         updatedUser.setPassword(encryptedPassword);
-        IUserRepository.save(updatedUser);
+        userRepository.save(updatedUser);
+    }
+
+    @Override
+    public void addUser(User user) {
+        userRepository.save(user);
     }
 
     @Override
     public boolean backup()
-            throws IOException, InterruptedException {
+            throws IOException {
 
         Date backupDate = new Date();
         SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");

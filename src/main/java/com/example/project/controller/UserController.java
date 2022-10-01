@@ -22,16 +22,6 @@ public class UserController {
     @Autowired
     IUserService userService;
 
-    @PostMapping("/signup")
-    public ResponseDTO signup(@RequestBody SignupDTO signupDto) {
-        return userService.signUp(signupDto);
-    }
-
-    @PostMapping("/signin")
-    public SignInResponseDTO signIn(@RequestBody SignInDTO signInDto) {
-        return userService.signIn(signInDto);
-    }
-
 //    @GetMapping("/signinMob/{email}&{password}")
 //    public SignInReponseDto signInMob(@PathVariable("email") String email, @PathVariable("password") String password) {
 //        SignInDto signInDto = new SignInDto(email, password);
