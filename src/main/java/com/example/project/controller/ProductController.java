@@ -2,8 +2,8 @@ package com.example.project.controller;
 
 
 import com.example.project.common.ApiResponse;
-import com.example.project.dto.productDto.ProductDto;
-import com.example.project.dto.productDto.ProductDtoIoT;
+import com.example.project.dto.productDto.ProductDTO;
+import com.example.project.dto.productDto.ProductIoTDTO;
 import com.example.project.model.Category;
 import com.example.project.model.Product;
 import com.example.project.service.ICategoryService;
@@ -26,7 +26,7 @@ public class ProductController {
     ICategoryService categoryService;
 
     @PostMapping("/add")
-    public ResponseEntity<ApiResponse> createProduct(@RequestBody ProductDto productDto) {
+    public ResponseEntity<ApiResponse> createProduct(@RequestBody ProductDTO productDto) {
         Category category = categoryService.getCategoryById(productDto.getCategoryId());
          if (category==null) {
              return new ResponseEntity<>(new ApiResponse(false, "category does not exists"), HttpStatus.BAD_REQUEST);
@@ -40,17 +40,17 @@ public class ProductController {
     }
 
     @GetMapping("/")
-    public ResponseEntity<List<ProductDto>> getProducts() {
-        List<ProductDto> products = productService.getAllProducts();
+    public ResponseEntity<List<ProductDTO>> getProducts() {
+        List<ProductDTO> products = productService.getAllProducts();
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
     @GetMapping("/getByCode/")
-    public ResponseEntity<ProductDtoIoT> getProductByCode(@RequestBody ProductDto productDto) {
+    public ResponseEntity<ProductIoTDTO> getProductByCode(@RequestBody ProductDTO productDto) {
         Product product = productService.getProductByCode(productDto.getCode());
-        ProductDtoIoT productDtoIoT = new ProductDtoIoT(product.getId(), product.getCode(), product.getName(),
+        ProductIoTDTO productIoTDTO = new ProductIoTDTO(product.getId(), product.getCode(), product.getName(),
                 product.getPrice(), product.getDescription());
-        return new ResponseEntity<>(productDtoIoT, HttpStatus.OK);
+        return new ResponseEntity<>(productIoTDTO, HttpStatus.OK);
     }
 
     @PostMapping("/checkPrices")
@@ -61,7 +61,7 @@ public class ProductController {
     }
 
     @PostMapping("/update/")
-    public ResponseEntity<ApiResponse> updateProduct(@RequestBody ProductDto productDto) {
+    public ResponseEntity<ApiResponse> updateProduct(@RequestBody ProductDTO productDto) {
         Category category = categoryService.getCategoryById(productDto.getCategoryId());
         if (category==null) {
             return new ResponseEntity<>(new ApiResponse(false, "category does not exists"), HttpStatus.BAD_REQUEST);
@@ -75,7 +75,7 @@ public class ProductController {
     }
 
     @DeleteMapping("/delete/")
-    public ResponseEntity<ApiResponse> deleteCategory(@RequestBody ProductDto productDto){
+    public ResponseEntity<ApiResponse> deleteCategory(@RequestBody ProductDTO productDto){
         if (productService.findProductById(productDto.getId())==null) {
             return new ResponseEntity<>(new ApiResponse(false, "product does not exists"), HttpStatus.NOT_FOUND);
         }

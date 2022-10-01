@@ -1,10 +1,10 @@
 package com.example.project.service.impl;
 
-import com.example.project.dto.order.response.OrderProductDto;
-import com.example.project.dto.productDto.ProductStatisticDto;
-import com.example.project.dto.StatisticDateDto;
-import com.example.project.dto.order.response.OrderDtoItem;
-import com.example.project.dto.checkout.CheckoutItemDto;
+import com.example.project.dto.order.response.OrderProductDTO;
+import com.example.project.dto.productDto.ProductStatisticDTO;
+import com.example.project.dto.StatisticDateDTO;
+import com.example.project.dto.order.response.OrderItemDTO;
+import com.example.project.dto.checkout.CheckoutItemDTO;
 import com.example.project.model.*;
 import com.example.project.repository.*;
 import com.example.project.service.ICartService;
@@ -51,14 +51,14 @@ public class OrderService implements IOrderService {
     private String apiKey;
 
     @Override
-    public Session createSession(List<CheckoutItemDto> checkoutItemDtoList) throws StripeException {
+    public Session createSession(List<CheckoutItemDTO> checkoutItemDTOList) throws StripeException {
         String successURL = baseURL + "orders";
         String failureURL = baseURL + "payment/failed";
         Stripe.apiKey = apiKey;
 
         List<SessionCreateParams.LineItem> sessionItemList = new ArrayList<>();
 
-        for (CheckoutItemDto checkoutItemDto : checkoutItemDtoList) {
+        for (CheckoutItemDTO checkoutItemDto : checkoutItemDTOList) {
             sessionItemList.add(createSessionLineItem(checkoutItemDto));
         }
 
@@ -73,14 +73,14 @@ public class OrderService implements IOrderService {
         return Session.create(params);
     }
 
-    private SessionCreateParams.LineItem createSessionLineItem(CheckoutItemDto checkoutItemDto) {
+    private SessionCreateParams.LineItem createSessionLineItem(CheckoutItemDTO checkoutItemDto) {
         return SessionCreateParams.LineItem.builder()
                 .setPriceData(createPriceData(checkoutItemDto))
                 .setQuantity(Long.parseLong(String.valueOf(checkoutItemDto.getQuantity())))
                 .build();
     }
 
-    private SessionCreateParams.LineItem.PriceData createPriceData(CheckoutItemDto checkoutItemDto) {
+    private SessionCreateParams.LineItem.PriceData createPriceData(CheckoutItemDTO checkoutItemDto) {
         return SessionCreateParams.LineItem.PriceData.builder()
                 .setCurrency("usd")
                 .setUnitAmount((long) (checkoutItemDto.getPrice() * 100))
@@ -92,27 +92,27 @@ public class OrderService implements IOrderService {
     }
 
     @Override
-    public List<OrderDtoItem> getAllOrders(User user) {
+    public List<OrderItemDTO> getAllOrders(User user) {
         List<Order> allOrders = orderRepository.findAllByUser(user);
-        List<OrderDtoItem> orderDtoItems = new ArrayList<>();
+        List<OrderItemDTO> orderItemDTOS = new ArrayList<>();
         for (var order : allOrders) {
-            OrderDtoItem orderDtoItem = new OrderDtoItem();
-            orderDtoItem.setOrderId(order.getId());
-            orderDtoItem.setPrice(order.getPrice());
-            orderDtoItem.setCreatedDate(order.getCreatedDate());
-            orderDtoItem.setUserId(order.getUser().getId());
-            List<OrderProductDto> products = new ArrayList<>();
+            OrderItemDTO orderItemDTO = new OrderItemDTO();
+            orderItemDTO.setOrderId(order.getId());
+            orderItemDTO.setPrice(order.getPrice());
+            orderItemDTO.setCreatedDate(order.getCreatedDate());
+            orderItemDTO.setUserId(order.getUser().getId());
+            List<OrderProductDTO> products = new ArrayList<>();
             for (OrderUnit orderUnit : order.getOrderUnits()) {
                 Product product = orderUnit.getProduct();
-                OrderProductDto orderProductDto = new OrderProductDto(product.getId(), product.getName(), product.getCode(),
+                OrderProductDTO orderProductDto = new OrderProductDTO(product.getId(), product.getName(), product.getCode(),
                         product.getImageURL(), product.getPrice(), product.getDescription(), orderUnit.getQuantity(),
                         product.getCategory().getId());
                 products.add(orderProductDto);
             }
-            orderDtoItem.setProducts(products);
-            orderDtoItems.add(orderDtoItem);
+            orderItemDTO.setProducts(products);
+            orderItemDTOS.add(orderItemDTO);
         }
-        return orderDtoItems;
+        return orderItemDTOS;
     }
 
     @Override
@@ -122,15 +122,15 @@ public class OrderService implements IOrderService {
     }
 
     @Override
-    public void addOrder(OrderDtoItem orderDtoItem) {
+    public void addOrder(OrderItemDTO orderItemDTO) {
         Order order = new Order();
         //todo add exception
-        User user = userRepository.findById(orderDtoItem.getUserId()).orElseThrow();
+        User user = userRepository.findById(orderItemDTO.getUserId()).orElseThrow();
         order.setUser(user);
         order.setCreatedDate(new Date());
-        order.setPrice(orderDtoItem.getPrice());
+        order.setPrice(orderItemDTO.getPrice());
         List<OrderUnit> orderUnits = new ArrayList<>();
-        for (OrderProductDto orderProductDto : orderDtoItem.getProducts()) {
+        for (OrderProductDTO orderProductDto : orderItemDTO.getProducts()) {
             OrderUnit orderUnit = new OrderUnit(productRepository.getById(orderProductDto.getProductId()),
                     orderProductDto.getQuantity());
             orderUnits.add(orderUnit);
@@ -153,13 +153,13 @@ public class OrderService implements IOrderService {
     }
 
     @Override
-    public List<ProductStatisticDto> getStatisticByOrders(StatisticDateDto statisticDateDto) {
+    public List<ProductStatisticDTO> getStatisticByOrders(StatisticDateDTO statisticDateDto) {
         Date start = convertToDateViaSqlDate(convertToLocalDateViaInstant(statisticDateDto.getStart()));
         Date end = convertToDateViaSqlDate(convertToLocalDateViaInstant(statisticDateDto.getEnd()).plusDays(1));
 
         List<Order> allOrders = orderRepository.findAllByCreatedDateBetween(start, end);
         Map<Product, Double> productMap = new HashMap<>();
-        List<ProductStatisticDto> productsStatistic = new ArrayList<>();
+        List<ProductStatisticDTO> productsStatistic = new ArrayList<>();
         AtomicInteger count = new AtomicInteger(1);
 
         for (Order item : allOrders) {
@@ -176,7 +176,7 @@ public class OrderService implements IOrderService {
         productMap.entrySet().stream()
                 .sorted(Map.Entry.<Product, Double>comparingByValue().reversed())
                 .forEach(x -> {
-                    ProductStatisticDto productStatisticDto = new ProductStatisticDto();
+                    ProductStatisticDTO productStatisticDto = new ProductStatisticDTO();
                     productStatisticDto.setId(x.getKey().getId());
                     productStatisticDto.setCode(x.getKey().getCode());
                     productStatisticDto.setName(x.getKey().getName());

@@ -1,6 +1,6 @@
 package com.example.project.service.impl;
 
-import com.example.project.dto.productDto.ProductDto;
+import com.example.project.dto.productDto.ProductDTO;
 import com.example.project.exceptions.ProductNotExistsException;
 import com.example.project.model.Category;
 import com.example.project.model.Order;
@@ -30,7 +30,7 @@ public class ProductService implements IProductService {
     IOrderRepository IOrderRepository;
 
     @Override
-    public void addProduct(ProductDto productDto, Category category) throws Exception {
+    public void addProduct(ProductDTO productDto, Category category) throws Exception {
         Product product = new Product();
         assertProductIsNotExistByCode(productDto.getCode());
         validateProductImage(productDto);
@@ -47,8 +47,8 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public ProductDto getProductDto(Product product) {
-        ProductDto productDto = new ProductDto();
+    public ProductDTO getProductDto(Product product) {
+        ProductDTO productDto = new ProductDTO();
         productDto.setCode(product.getCode());
         productDto.setDescription(product.getDescription());
         productDto.setImageURL(product.getImageURL());
@@ -68,9 +68,9 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public List<ProductDto> getAllProducts() {
+    public List<ProductDTO> getAllProducts() {
         List<Product> allProducts = IProductRepository.findAll();
-        List<ProductDto> productDtos = new ArrayList<>();
+        List<ProductDTO> productDTOS = new ArrayList<>();
 
         boolean isChanged = false;
         for (Product product : allProducts) {
@@ -117,14 +117,14 @@ public class ProductService implements IProductService {
                 IProductRepository.save(product);
             }
 
-            productDtos.add(getProductDto(product));
+            productDTOS.add(getProductDto(product));
         }
-        return productDtos;
+        return productDTOS;
     }
 
 
     @Override
-    public void updateProduct(ProductDto productDto) throws Exception {
+    public void updateProduct(ProductDTO productDto) throws Exception {
         Product product = IProductRepository.findProductByCode(productDto.getCode())
                 .orElse(null);
 
@@ -141,7 +141,7 @@ public class ProductService implements IProductService {
         IProductRepository.save(product);
     }
 
-    private void validateProductImage(ProductDto productDto) throws Exception {
+    private void validateProductImage(ProductDTO productDto) throws Exception {
         if (productDto.getImageURL().length() > 240) {
             throw new Exception("Image URL is too long!");
         }

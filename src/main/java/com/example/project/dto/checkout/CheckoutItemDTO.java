@@ -1,6 +1,6 @@
 package com.example.project.dto.checkout;
 
-public class CheckoutItemDto {
+public class CheckoutItemDTO {
 
     private String productName;
     private int quantity;
@@ -8,7 +8,7 @@ public class CheckoutItemDto {
     private long productId;
     private int userId;
 
-    public CheckoutItemDto() {
+    public CheckoutItemDTO() {
     }
 
     public String getProductName() {

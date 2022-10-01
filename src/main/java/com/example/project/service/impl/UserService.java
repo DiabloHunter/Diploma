@@ -1,11 +1,11 @@
 package com.example.project.service.impl;
 
 
-import com.example.project.dto.ResponseDto;
-import com.example.project.dto.user.SignInDto;
-import com.example.project.dto.user.SignInReponseDto;
-import com.example.project.dto.user.SignupDto;
-import com.example.project.dto.user.UserDto;
+import com.example.project.dto.ResponseDTO;
+import com.example.project.dto.user.SignInDTO;
+import com.example.project.dto.user.SignInResponseDTO;
+import com.example.project.dto.user.SignupDTO;
+import com.example.project.dto.user.UserDTO;
 import com.example.project.exceptions.AuthenticationFailException;
 import com.example.project.exceptions.CustomException;
 import com.example.project.model.ERole;
@@ -39,7 +39,7 @@ public class UserService implements IUserService {
 
     @Override
     @Transactional
-    public ResponseDto signUp(SignupDto signupDto) {
+    public ResponseDTO signUp(SignupDTO signupDto) {
         if (Objects.nonNull(IUserRepository.findByEmail(signupDto.getEmail()))) {
             throw new CustomException("user already present");
         }
@@ -57,7 +57,7 @@ public class UserService implements IUserService {
 
         IUserRepository.save(user);
 
-        ResponseDto responseDto = new ResponseDto("success", "user created succesfully");
+        ResponseDTO responseDto = new ResponseDTO("success", "user created succesfully");
         return responseDto;
     }
 
@@ -71,7 +71,7 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public SignInReponseDto signIn(SignInDto signInDto) {
+    public SignInResponseDTO signIn(SignInDTO signInDto) {
         String userEmail = signInDto.getEmail();
         User user = IUserRepository.findByEmail(signInDto.getEmail())
                 .orElseThrow(() -> new CustomException("User Not Found with email: " + userEmail));
@@ -86,32 +86,32 @@ public class UserService implements IUserService {
             e.printStackTrace();
         }
 
-        return new SignInReponseDto("success", /*user.getRoles()*/null);
+        return new SignInResponseDTO("success", /*user.getRoles()*/null);
     }
 
 
     @Override
-    public SignInReponseDto signInMob(SignInDto signInDto) {
+    public SignInResponseDTO signInMob(SignInDTO signInDto) {
         String userEmail = signInDto.getEmail();
         User user = IUserRepository.findByEmail(signInDto.getEmail())
                 .orElseThrow(() -> new CustomException("User Not Found with email: " + userEmail));
         if (Objects.isNull(user)) {
-            return new SignInReponseDto("fail", null);
+            return new SignInResponseDTO("fail", null);
         }
         try {
             if (!user.getPassword().equals(hashPassword(signInDto.getPassword()))) {
-                return new SignInReponseDto("fail", null);
+                return new SignInResponseDTO("fail", null);
             }
         } catch (NoSuchAlgorithmException e) {
-            return new SignInReponseDto("fail", null);
+            return new SignInResponseDTO("fail", null);
         }
 
-        return new SignInReponseDto("success", /*user.getRoles()*/ null);
+        return new SignInResponseDTO("success", /*user.getRoles()*/ null);
     }
 
     @Override
-    public UserDto getUserDto(User user) {
-        UserDto userDto = new UserDto();
+    public UserDTO getUserDto(User user) {
+        UserDTO userDto = new UserDTO();
         userDto.setUsername(user.getUsername());
         userDto.setEmail(user.getEmail());
         userDto.setPassword(user.getPassword());

@@ -1,6 +1,6 @@
 package com.example.project.dto;
 
-public class ResponseDto {
+public class ResponseDTO {
 
     private String status;
     private String message;
@@ -21,7 +21,7 @@ public class ResponseDto {
         this.message = message;
     }
 
-    public ResponseDto(String status, String message) {
+    public ResponseDTO(String status, String message) {
         this.status = status;
         this.message = message;
     }

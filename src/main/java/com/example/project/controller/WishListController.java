@@ -1,7 +1,7 @@
 package com.example.project.controller;
 
 import com.example.project.common.ApiResponse;
-import com.example.project.dto.productDto.ProductDto;
+import com.example.project.dto.productDto.ProductDTO;
 import com.example.project.model.Product;
 import com.example.project.model.User;
 import com.example.project.model.WishList;
@@ -44,11 +44,11 @@ public class WishListController {
     // get all wishlist item for a user
 
     @GetMapping("/")
-    public ResponseEntity<List<ProductDto>> getWishList(@RequestParam("userEmail") String userEmail) {
+    public ResponseEntity<List<ProductDTO>> getWishList(@RequestParam("userEmail") String userEmail) {
         // find the user
         User user = userService.getUserByEmail(userEmail);
-        List<ProductDto> productDtos = wishListService.getWishListForUser(user);
-        return new ResponseEntity<>(productDtos, HttpStatus.OK);
+        List<ProductDTO> productDTOS = wishListService.getWishListForUser(user);
+        return new ResponseEntity<>(productDTOS, HttpStatus.OK);
     }
 
 

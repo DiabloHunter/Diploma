@@ -4,12 +4,12 @@ package com.example.project.dto.cart;
 import com.example.project.model.Cart;
 import com.example.project.model.Product;
 
-public class CartItemDto {
+public class CartItemDTO {
     private Integer id;
     private Integer quantity;
     private Product product;
 
-    public CartItemDto() {
+    public CartItemDTO() {
     }
 
     public Integer getId() {
@@ -36,7 +36,7 @@ public class CartItemDto {
         this.product = product;
     }
 
-    public CartItemDto(Cart cart) {
+    public CartItemDTO(Cart cart) {
         this.id = cart.getId();
         this.quantity = cart.getQuantity();
         this.setProduct(cart.getProduct());

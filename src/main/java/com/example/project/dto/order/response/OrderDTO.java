@@ -3,20 +3,20 @@ package com.example.project.dto.order.response;
 
 import java.util.List;
 
-public class OrderDto {
+public class OrderDTO {
 
-    private List<OrderDtoItem> orderDtoItems;
+    private List<OrderItemDTO> orderItemDTOS;
     private double totalCost;
 
-    public OrderDto() {
+    public OrderDTO() {
     }
 
-    public List<OrderDtoItem> getOrderItems() {
-        return orderDtoItems;
+    public List<OrderItemDTO> getOrderItems() {
+        return orderItemDTOS;
     }
 
-    public void setOrderItems(List<OrderDtoItem> orderDtoItems) {
-        this.orderDtoItems = orderDtoItems;
+    public void setOrderItems(List<OrderItemDTO> orderItemDTOS) {
+        this.orderItemDTOS = orderItemDTOS;
     }
 
     public double getTotalCost() {

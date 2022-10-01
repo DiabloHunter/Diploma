@@ -1,6 +1,6 @@
 package com.example.project.service;
 
-import com.example.project.dto.productDto.ProductDto;
+import com.example.project.dto.productDto.ProductDTO;
 import com.example.project.model.User;
 import com.example.project.model.WishList;
 
@@ -11,5 +11,5 @@ public interface IWishListService {
 
     void deleteWishlist(User user, Long productId);
 
-    List<ProductDto> getWishListForUser(User user);
+    List<ProductDTO> getWishListForUser(User user);
 }

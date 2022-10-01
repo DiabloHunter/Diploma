@@ -2,13 +2,13 @@ package com.example.project.dto.cart;
 
 import javax.validation.constraints.NotNull;
 
-public class AddToCartDto {
+public class AddToCartDTO {
 
     private Long id;
     private @NotNull Long productId;
     private @NotNull Integer quantity;
 
-    public AddToCartDto() {
+    public AddToCartDTO() {
     }
 
     public Long getId() {

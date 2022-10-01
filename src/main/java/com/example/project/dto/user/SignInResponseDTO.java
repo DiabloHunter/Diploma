@@ -4,12 +4,12 @@ import com.example.project.model.ERole;
 
 import java.util.Set;
 
-public class SignInReponseDto {
+public class SignInResponseDTO {
 
     private String status;
     private Set<ERole> role;
 
-    public SignInReponseDto(String status, Set<ERole> role) {
+    public SignInResponseDTO(String status, Set<ERole> role) {
         this.status = status;
         this.role = role;
     }

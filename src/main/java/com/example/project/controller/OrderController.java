@@ -3,11 +3,11 @@ package com.example.project.controller;
 
 import com.example.project.common.ApiResponse;
 import com.example.project.dto.order.request.GetOrderDTO;
-import com.example.project.dto.productDto.ProductStatisticDto;
-import com.example.project.dto.StatisticDateDto;
-import com.example.project.dto.order.response.OrderDto;
-import com.example.project.dto.order.response.OrderDtoItem;
-import com.example.project.dto.checkout.CheckoutItemDto;
+import com.example.project.dto.productDto.ProductStatisticDTO;
+import com.example.project.dto.StatisticDateDTO;
+import com.example.project.dto.order.response.OrderDTO;
+import com.example.project.dto.order.response.OrderItemDTO;
+import com.example.project.dto.checkout.CheckoutItemDTO;
 import com.example.project.dto.checkout.StripeResponse;
 import com.example.project.model.Order;
 import com.example.project.model.User;
@@ -33,22 +33,22 @@ public class OrderController {
     private IUserService userService;
 
     @PostMapping("/create-checkout-session")
-    public ResponseEntity<StripeResponse> checkoutList(@RequestBody List<CheckoutItemDto> checkoutItemDtoList)
+    public ResponseEntity<StripeResponse> checkoutList(@RequestBody List<CheckoutItemDTO> checkoutItemDTOList)
             throws StripeException {
-        Session session = orderService.createSession(checkoutItemDtoList);
+        Session session = orderService.createSession(checkoutItemDTOList);
         StripeResponse stripeResponse = new StripeResponse(session.getId());
         return new ResponseEntity<>(stripeResponse, HttpStatus.OK);
 
     }
 
     @GetMapping("/getOrders/")
-    public ResponseEntity<OrderDto> getOrders(@RequestBody GetOrderDTO getOrderDTO) {
+    public ResponseEntity<OrderDTO> getOrders(@RequestBody GetOrderDTO getOrderDTO) {
         // find the user
         User user = userService.getUserByEmail(getOrderDTO.getUserEmail());
 
         // get cart items
-        List<OrderDtoItem> orders = orderService.getAllOrders(user);
-        OrderDto orderDto = new OrderDto();
+        List<OrderItemDTO> orders = orderService.getAllOrders(user);
+        OrderDTO orderDto = new OrderDTO();
         orderDto.setOrderItems(orders);
         double totalSum = 0;
         for (var el : orders) {
@@ -70,15 +70,15 @@ public class OrderController {
     }
 
     @GetMapping("/getStatistic")
-    public ResponseEntity<List<ProductStatisticDto>> getStatistic(@RequestBody StatisticDateDto statisticDateDto) {
-        List<ProductStatisticDto> productStatisticDtos = orderService.getStatisticByOrders(statisticDateDto);
-        return new ResponseEntity<>(productStatisticDtos, HttpStatus.OK);
+    public ResponseEntity<List<ProductStatisticDTO>> getStatistic(@RequestBody StatisticDateDTO statisticDateDto) {
+        List<ProductStatisticDTO> productStatisticDTOS = orderService.getStatisticByOrders(statisticDateDto);
+        return new ResponseEntity<>(productStatisticDTOS, HttpStatus.OK);
     }
 
 
     @PostMapping("/add")
-    public ResponseEntity<ApiResponse> addOrder(@RequestBody OrderDtoItem orderDtoItem) {
-        orderService.addOrder(orderDtoItem);
+    public ResponseEntity<ApiResponse> addOrder(@RequestBody OrderItemDTO orderItemDTO) {
+        orderService.addOrder(orderItemDTO);
         return new ResponseEntity<>(new ApiResponse(true, "Added to cart"), HttpStatus.CREATED);
     }
 

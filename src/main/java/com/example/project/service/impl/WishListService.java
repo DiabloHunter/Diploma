@@ -1,7 +1,7 @@
 package com.example.project.service.impl;
 
 
-import com.example.project.dto.productDto.ProductDto;
+import com.example.project.dto.productDto.ProductDTO;
 import com.example.project.exceptions.CustomException;
 import com.example.project.model.Product;
 import com.example.project.model.User;
@@ -47,13 +47,13 @@ public class WishListService implements IWishListService {
     }
 
     @Override
-    public List<ProductDto> getWishListForUser(User user) {
+    public List<ProductDTO> getWishListForUser(User user) {
         final List<WishList> wishLists = IWishListRepository.findAllByUserOrderByCreatedDateDesc(user);
-        List<ProductDto> productDtos = new ArrayList<>();
+        List<ProductDTO> productDTOS = new ArrayList<>();
         for (WishList wishList: wishLists) {
-            productDtos.add(productService.getProductDto(wishList.getProduct()));
+            productDTOS.add(productService.getProductDto(wishList.getProduct()));
         }
 
-        return productDtos;
+        return productDTOS;
     }
 }

@@ -2,18 +2,23 @@ package com.example.project.dto.productDto;
 
 import javax.validation.constraints.NotNull;
 
-public class ProductStatisticDto {
-
+public class ProductIoTDTO {
     private Long id;
     private @NotNull String code;
     private @NotNull String name;
-    private @NotNull String imageURL;
     private @NotNull double price;
     private @NotNull String description;
-    private @NotNull Long categoryId;
-    private @NotNull double monthSales;
-    private @NotNull int place;
 
+    public ProductIoTDTO() {
+    }
+
+    public ProductIoTDTO(Long id, String code, String name, double price, String description) {
+        this.id = id;
+        this.code = code;
+        this.name = name;
+        this.price = price;
+        this.description = description;
+    }
 
     public Long getId() {
         return id;
@@ -39,14 +44,6 @@ public class ProductStatisticDto {
         this.name = name;
     }
 
-    public String getImageURL() {
-        return imageURL;
-    }
-
-    public void setImageURL(String imageURL) {
-        this.imageURL = imageURL;
-    }
-
     public double getPrice() {
         return price;
     }
@@ -61,29 +58,5 @@ public class ProductStatisticDto {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public Long getCategoryId() {
-        return categoryId;
-    }
-
-    public void setCategoryId(Long categoryId) {
-        this.categoryId = categoryId;
-    }
-
-    public double getMonthSales() {
-        return monthSales;
-    }
-
-    public void setMonthSales(double monthSales) {
-        this.monthSales = monthSales;
-    }
-
-    public int getPlace() {
-        return place;
-    }
-
-    public void setPlace(int place) {
-        this.place = place;
     }
 }

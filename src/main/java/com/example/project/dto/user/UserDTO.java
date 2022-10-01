@@ -1,7 +1,7 @@
 package com.example.project.dto.user;
 
 
-public class UserDto {
+public class UserDTO {
 
     private String username;
 

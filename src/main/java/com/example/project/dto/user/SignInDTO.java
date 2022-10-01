@@ -1,11 +1,11 @@
 package com.example.project.dto.user;
 
-public class SignInDto {
+public class SignInDTO {
 
     private String email;
     private String password;
 
-    public SignInDto(String email, String password) {
+    public SignInDTO(String email, String password) {
         this.email = email;
         this.password = password;
     }

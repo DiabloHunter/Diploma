@@ -1,8 +1,8 @@
 package com.example.project.service.impl;
 
-import com.example.project.dto.cart.AddToCartDto;
-import com.example.project.dto.cart.CartDto;
-import com.example.project.dto.cart.CartItemDto;
+import com.example.project.dto.cart.AddToCartDTO;
+import com.example.project.dto.cart.CartDTO;
+import com.example.project.dto.cart.CartItemDTO;
 import com.example.project.exceptions.CustomException;
 import com.example.project.model.Cart;
 import com.example.project.model.Product;
@@ -27,7 +27,7 @@ public class CartService implements ICartService {
     ICartRepository ICartRepository;
 
     @Override
-    public void addToCart(AddToCartDto addToCartDto, User user) {
+    public void addToCart(AddToCartDTO addToCartDto, User user) {
         Product product = productService.findProductById(addToCartDto.getProductId());
 
         Cart cart = new Cart();
@@ -40,16 +40,16 @@ public class CartService implements ICartService {
     }
 
     @Override
-    public CartDto getAllCartItems(User user) {
+    public CartDTO getAllCartItems(User user) {
         List<Cart> cartList = ICartRepository.findAllByUserOrderByCreatedDateDesc(user);
-        List<CartItemDto> cartItems = new ArrayList<>();
+        List<CartItemDTO> cartItems = new ArrayList<>();
         double totalCost = 0;
         for (Cart cart : cartList) {
-            CartItemDto cartItemDto = new CartItemDto(cart);
+            CartItemDTO cartItemDto = new CartItemDTO(cart);
             totalCost += cartItemDto.getQuantity() * cart.getProduct().getPrice();
             cartItems.add(cartItemDto);
         }
-        CartDto cartDto = new CartDto();
+        CartDTO cartDto = new CartDTO();
         cartDto.setTotalCost(totalCost);
         cartDto.setCartItems(cartItems);
         cartDto.setUserId(user.getId());

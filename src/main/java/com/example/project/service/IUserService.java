@@ -1,10 +1,10 @@
 package com.example.project.service;
 
-import com.example.project.dto.ResponseDto;
-import com.example.project.dto.user.SignInDto;
-import com.example.project.dto.user.SignInReponseDto;
-import com.example.project.dto.user.SignupDto;
-import com.example.project.dto.user.UserDto;
+import com.example.project.dto.ResponseDTO;
+import com.example.project.dto.user.SignInDTO;
+import com.example.project.dto.user.SignInResponseDTO;
+import com.example.project.dto.user.SignupDTO;
+import com.example.project.dto.user.UserDTO;
 import com.example.project.model.User;
 
 import javax.transaction.Transactional;
@@ -12,13 +12,13 @@ import java.io.IOException;
 
 public interface IUserService {
     @Transactional
-    ResponseDto signUp(SignupDto signupDto);
+    ResponseDTO signUp(SignupDTO signupDto);
 
-    SignInReponseDto signIn(SignInDto signInDto);
+    SignInResponseDTO signIn(SignInDTO signInDto);
 
-    SignInReponseDto signInMob(SignInDto signInDto);
+    SignInResponseDTO signInMob(SignInDTO signInDto);
 
-    UserDto getUserDto(User user);
+    UserDTO getUserDto(User user);
 
     User getUserByEmail(String userEmail);
 

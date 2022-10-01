@@ -1,11 +1,11 @@
 package com.example.project.controller;
 
 import com.example.project.common.ApiResponse;
-import com.example.project.dto.ResponseDto;
-import com.example.project.dto.user.SignInDto;
-import com.example.project.dto.user.SignInReponseDto;
-import com.example.project.dto.user.SignupDto;
-import com.example.project.dto.user.UserDto;
+import com.example.project.dto.ResponseDTO;
+import com.example.project.dto.user.SignInDTO;
+import com.example.project.dto.user.SignInResponseDTO;
+import com.example.project.dto.user.SignupDTO;
+import com.example.project.dto.user.UserDTO;
 import com.example.project.model.User;
 import com.example.project.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,12 +23,12 @@ public class UserController {
     IUserService userService;
 
     @PostMapping("/signup")
-    public ResponseDto signup(@RequestBody SignupDto signupDto) {
+    public ResponseDTO signup(@RequestBody SignupDTO signupDto) {
         return userService.signUp(signupDto);
     }
 
     @PostMapping("/signin")
-    public SignInReponseDto signIn(@RequestBody SignInDto signInDto) {
+    public SignInResponseDTO signIn(@RequestBody SignInDTO signInDto) {
         return userService.signIn(signInDto);
     }
 
@@ -39,7 +39,7 @@ public class UserController {
 //    }
 
     @GetMapping("/")
-    public UserDto getUser(@RequestBody UserDto userDto) {
+    public UserDTO getUser(@RequestBody UserDTO userDto) {
         // find the user
         User user = userService.getUserByEmail(userDto.getEmail());
 

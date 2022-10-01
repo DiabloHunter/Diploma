@@ -3,7 +3,7 @@ package com.example.project.dto;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
-public class StatisticDateDto {
+public class StatisticDateDTO {
 
     private @NotNull Date start;
     private @NotNull Date end;

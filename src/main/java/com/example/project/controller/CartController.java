@@ -2,8 +2,8 @@ package com.example.project.controller;
 
 
 import com.example.project.common.ApiResponse;
-import com.example.project.dto.cart.AddToCartDto;
-import com.example.project.dto.cart.CartDto;
+import com.example.project.dto.cart.AddToCartDTO;
+import com.example.project.dto.cart.CartDTO;
 import com.example.project.model.User;
 import com.example.project.service.ICartService;
 import com.example.project.service.IProductService;
@@ -27,7 +27,7 @@ public class CartController {
     private IProductService productService;
 
     @PostMapping("/add")
-    public ResponseEntity<ApiResponse> addToCart(@RequestBody AddToCartDto addToCartDto,
+    public ResponseEntity<ApiResponse> addToCart(@RequestBody AddToCartDTO addToCartDto,
                                                  @RequestParam("userEmail") String userEmail) {
         // find the user
         User user = userService.getUserByEmail(userEmail);
@@ -43,7 +43,7 @@ public class CartController {
                                                  @RequestParam("userEmail") String userEmail) {
         User user = userService.getUserByEmail(userEmail);
 
-        AddToCartDto addToCartDto = new AddToCartDto();
+        AddToCartDTO addToCartDto = new AddToCartDTO();
         addToCartDto.setProductId(productService.getProductByCode(code).getId());
         addToCartDto.setQuantity(amount);
 
@@ -54,9 +54,9 @@ public class CartController {
 
     // get all cart items for a user
     @GetMapping("/")
-    public ResponseEntity<CartDto> getCartItems(@RequestParam("userEmail") String userEmail) {
+    public ResponseEntity<CartDTO> getCartItems(@RequestParam("userEmail") String userEmail) {
         User user = userService.getUserByEmail(userEmail);
-        CartDto cartDto = cartService.getAllCartItems(user);
+        CartDTO cartDto = cartService.getAllCartItems(user);
         return new ResponseEntity<>(cartDto, HttpStatus.OK);
     }
 

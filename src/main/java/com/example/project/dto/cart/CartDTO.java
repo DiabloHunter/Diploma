@@ -2,19 +2,19 @@ package com.example.project.dto.cart;
 
 import java.util.List;
 
-public class CartDto {
-    private List<CartItemDto> cartItems;
+public class CartDTO {
+    private List<CartItemDTO> cartItems;
     private double totalCost;
     private long userId;
 
-    public CartDto() {
+    public CartDTO() {
     }
 
-    public List<CartItemDto> getCartItems() {
+    public List<CartItemDTO> getCartItems() {
         return cartItems;
     }
 
-    public void setCartItems(List<CartItemDto> cartItems) {
+    public void setCartItems(List<CartItemDTO> cartItems) {
         this.cartItems = cartItems;
     }
 

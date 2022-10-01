@@ -3,15 +3,15 @@ package com.example.project.dto.order.response;
 import javax.validation.constraints.NotNull;
 import java.util.*;
 
-public class OrderDtoItem {
+public class OrderItemDTO {
 
     private Long orderId;
     private @NotNull Double price;
-    private @NotNull List<OrderProductDto> products = new ArrayList<>();
+    private @NotNull List<OrderProductDTO> products = new ArrayList<>();
     private @NotNull Long userId;
     private @NotNull Date createdDate;
 
-    public OrderDtoItem() {
+    public OrderItemDTO() {
     }
 
     public Long getOrderId() {
@@ -30,11 +30,11 @@ public class OrderDtoItem {
         this.price = price;
     }
 
-    public List<OrderProductDto> getProducts() {
+    public List<OrderProductDTO> getProducts() {
         return products;
     }
 
-    public void setProducts(List<OrderProductDto> products) {
+    public void setProducts(List<OrderProductDTO> products) {
         this.products = products;
     }
 

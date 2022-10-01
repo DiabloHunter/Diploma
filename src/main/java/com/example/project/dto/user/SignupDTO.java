@@ -1,6 +1,6 @@
 package com.example.project.dto.user;
 
-public class SignupDto {
+public class SignupDTO {
 
     private String username;
     private String email;

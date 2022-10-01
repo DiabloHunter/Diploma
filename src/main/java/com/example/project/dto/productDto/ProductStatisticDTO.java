@@ -2,9 +2,8 @@ package com.example.project.dto.productDto;
 
 import javax.validation.constraints.NotNull;
 
-public class ProductDto {
-    // for create it can be optional
-    // for update we need the id
+public class ProductStatisticDTO {
+
     private Long id;
     private @NotNull String code;
     private @NotNull String name;
@@ -12,11 +11,24 @@ public class ProductDto {
     private @NotNull double price;
     private @NotNull String description;
     private @NotNull Long categoryId;
-    private @NotNull double minSales;
-    private @NotNull double maxSales;
+    private @NotNull double monthSales;
+    private @NotNull int place;
 
 
-    public ProductDto() {
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 
     public String getName() {
@@ -59,35 +71,19 @@ public class ProductDto {
         this.categoryId = categoryId;
     }
 
-    public Long getId() {
-        return id;
+    public double getMonthSales() {
+        return monthSales;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setMonthSales(double monthSales) {
+        this.monthSales = monthSales;
     }
 
-    public double getMinSales() {
-        return minSales;
+    public int getPlace() {
+        return place;
     }
 
-    public void setMinSales(double minSales) {
-        this.minSales = minSales;
-    }
-
-    public double getMaxSales() {
-        return maxSales;
-    }
-
-    public void setMaxSales(double maxSales) {
-        this.maxSales = maxSales;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
+    public void setPlace(int place) {
+        this.place = place;
     }
 }
