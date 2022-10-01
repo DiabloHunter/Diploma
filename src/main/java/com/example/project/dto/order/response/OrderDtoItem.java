@@ -1,32 +1,32 @@
-package com.example.project.dto.order;
+package com.example.project.dto.order.response;
 
 import javax.validation.constraints.NotNull;
 import java.util.*;
 
 public class OrderDtoItem {
 
-    private long id;
-    private @NotNull double price;
+    private Long orderId;
+    private @NotNull Double price;
     private @NotNull List<OrderProductDto> products = new ArrayList<>();
-    private @NotNull long userId;
+    private @NotNull Long userId;
     private @NotNull Date createdDate;
 
     public OrderDtoItem() {
     }
 
-    public long getId() {
-        return id;
+    public Long getOrderId() {
+        return orderId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setOrderId(Long orderId) {
+        this.orderId = orderId;
     }
 
-    public double getPrice() {
+    public Double getPrice() {
         return price;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(Double price) {
         this.price = price;
     }
 
@@ -38,11 +38,11 @@ public class OrderDtoItem {
         this.products = products;
     }
 
-    public long getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(long userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 
@@ -52,9 +52,5 @@ public class OrderDtoItem {
 
     public void setCreatedDate(Date createdDate) {
         this.createdDate = createdDate;
-    }
-
-    public void addProduct(OrderProductDto orderProductDto){
-        products.add(orderProductDto);
     }
 }

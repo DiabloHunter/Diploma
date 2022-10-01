@@ -21,17 +21,33 @@ public class Product {
     private @NotNull String code;
     private @NotNull String name;
     private @NotNull String imageURL;
-    private @NotNull double price;
+    private @NotNull Double price;
     private @NotNull String description;
     private @NotNull Date checkDate;
-    private @NotNull double minSales;
-    private @NotNull double maxSales;
+    private @NotNull Double minSales;
+    private @NotNull Double maxSales;
 
     @ManyToOne(cascade = CascadeType.REFRESH)
     @JsonIgnore
     @JoinColumn(name = "category_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     Category category;
+
+    public Product(String code, String name, String imageURL, Double price, String description, Date checkDate,
+                   Double minSales, Double maxSales, Category category) {
+        this.code = code;
+        this.name = name;
+        this.imageURL = imageURL;
+        this.price = price;
+        this.description = description;
+        this.checkDate = checkDate;
+        this.minSales = minSales;
+        this.maxSales = maxSales;
+        this.category = category;
+    }
+
+    public Product() {
+    }
 
     public String getName() {
         return name;
@@ -49,11 +65,11 @@ public class Product {
         this.imageURL = imageURL;
     }
 
-    public double getPrice() {
+    public Double getPrice() {
         return price;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(Double price) {
         this.price = price;
     }
 
@@ -89,19 +105,19 @@ public class Product {
         this.checkDate = checkDate;
     }
 
-    public double getMinSales() {
+    public Double getMinSales() {
         return minSales;
     }
 
-    public void setMinSales(double minSales) {
+    public void setMinSales(Double minSales) {
         this.minSales = minSales;
     }
 
-    public double getMaxSales() {
+    public Double getMaxSales() {
         return maxSales;
     }
 
-    public void setMaxSales(double maxSales) {
+    public void setMaxSales(Double maxSales) {
         this.maxSales = maxSales;
     }
 

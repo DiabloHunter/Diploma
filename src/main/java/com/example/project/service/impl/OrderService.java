@@ -1,12 +1,13 @@
 package com.example.project.service.impl;
 
-
+import com.example.project.dto.order.response.OrderProductDto;
 import com.example.project.dto.productDto.ProductStatisticDto;
 import com.example.project.dto.StatisticDateDto;
-import com.example.project.dto.order.OrderDtoItem;
+import com.example.project.dto.order.response.OrderDtoItem;
 import com.example.project.dto.checkout.CheckoutItemDto;
 import com.example.project.model.*;
 import com.example.project.repository.*;
+import com.example.project.service.ICartService;
 import com.example.project.service.IOrderService;
 import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
@@ -25,19 +26,23 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class OrderService implements IOrderService {
 
     @Autowired
-    IOrderRepository IOrderRepository;
+    IOrderRepository orderRepository;
 
     @Autowired
-    IUserRepository IUserRepository;
+    IUserRepository userRepository;
 
     @Autowired
-    IProductRepository IProductRepository;
+    IProductRepository productRepository;
 
     @Autowired
-    ICategoryRepository ICategoryRepository;
+    ICategoryRepository categoryRepository;
 
     @Autowired
-    CartService cartService;
+    ICartService cartService;
+
+    @Autowired
+    IOrderUnit orderUnitService;
+
 
     @Value("${BASE_URL}")
     private String baseURL;
@@ -88,83 +93,52 @@ public class OrderService implements IOrderService {
 
     @Override
     public List<OrderDtoItem> getAllOrders(User user) {
-        List<Order> allOrders = IOrderRepository.findAllByUser(user);
+        List<Order> allOrders = orderRepository.findAllByUser(user);
         List<OrderDtoItem> orderDtoItems = new ArrayList<>();
         for (var order : allOrders) {
-            if (!order.getProducts().isEmpty()) {
-                OrderDtoItem orderDtoItem = new OrderDtoItem();
-                orderDtoItem.setId(order.getId());
-                orderDtoItem.setPrice(order.getPrice());
-//                for (var orderProduct : order.getOrderProducts()) {
-//                    OrderProductDto orderProductDto = new OrderProductDto();
-//                    orderProductDto.setDescription(orderProduct.getProduct().getDescription());
-//                    orderProductDto.setImageURL(orderProduct.getProduct().getImageURL());
-//                    orderProductDto.setName(orderProduct.getProduct().getName());
-//                    orderProductDto.setCategoryId(orderProduct.getProduct().getCategory().getId());
-//                    orderProductDto.setPrice(orderProduct.getProduct().getPrice());
-//                    orderProductDto.setId(orderProduct.getProduct().getId());
-//                    orderProductDto.setQuantity(orderProduct.getQuantity());
-//                    orderDtoItem.addProduct(orderProductDto);
-//                }
-                orderDtoItem.setCreatedDate(order.getCreatedDate());
-                orderDtoItems.add(orderDtoItem);
+            OrderDtoItem orderDtoItem = new OrderDtoItem();
+            orderDtoItem.setOrderId(order.getId());
+            orderDtoItem.setPrice(order.getPrice());
+            orderDtoItem.setCreatedDate(order.getCreatedDate());
+            orderDtoItem.setUserId(order.getUser().getId());
+            List<OrderProductDto> products = new ArrayList<>();
+            for (OrderUnit orderUnit : order.getOrderUnits()) {
+                Product product = orderUnit.getProduct();
+                OrderProductDto orderProductDto = new OrderProductDto(product.getId(), product.getName(), product.getCode(),
+                        product.getImageURL(), product.getPrice(), product.getDescription(), orderUnit.getQuantity(),
+                        product.getCategory().getId());
+                products.add(orderProductDto);
             }
+            orderDtoItem.setProducts(products);
+            orderDtoItems.add(orderDtoItem);
         }
         return orderDtoItems;
     }
 
     @Override
-    public OrderDtoItem getOrderById(Long id) {
-        Order order = IOrderRepository.findById(id).orElse(null);
-        OrderDtoItem orderDtoItem = new OrderDtoItem();
-        orderDtoItem.setId(order.getId());
-        orderDtoItem.setPrice(order.getPrice());
-//        for(var orderProduct : order.getOrderProducts()){
-//            OrderProductDto orderProductDto = new OrderProductDto();
-//            orderProductDto.setDescription(orderProduct.getProduct().getDescription());
-//            orderProductDto.setImageURL(orderProduct.getProduct().getImageURL());
-//            orderProductDto.setName(orderProduct.getProduct().getName());
-//            orderProductDto.setCategoryId(orderProduct.getProduct().getCategory().getId());
-//            orderProductDto.setPrice(orderProduct.getProduct().getPrice());
-//            orderProductDto.setId(orderProduct.getProduct().getId());
-//            orderProductDto.setQuantity(orderProduct.getQuantity());
-//            orderDtoItem.addProduct(orderProductDto);
-//        }
-        orderDtoItem.setCreatedDate(order.getCreatedDate());
-        return orderDtoItem;
+    public Order getOrderById(Long id) {
+        Order order = orderRepository.findById(id).orElse(null);
+        return order;
     }
 
     @Override
     public void addOrder(OrderDtoItem orderDtoItem) {
         Order order = new Order();
-        List<Order> lastOrder = IOrderRepository.findAll();
-        if (lastOrder.isEmpty()) {
-            order.setId(1);
-        } else {
-            order.setId(lastOrder.get(lastOrder.size() - 1).getId() + 1);
-        }
-        order.setPrice(orderDtoItem.getPrice());
-        User user = IUserRepository.findById(orderDtoItem.getUserId()).orElseThrow();
+        //todo add exception
+        User user = userRepository.findById(orderDtoItem.getUserId()).orElseThrow();
         order.setUser(user);
         order.setCreatedDate(new Date());
+        order.setPrice(orderDtoItem.getPrice());
+        List<OrderUnit> orderUnits = new ArrayList<>();
+        for (OrderProductDto orderProductDto : orderDtoItem.getProducts()) {
+            OrderUnit orderUnit = new OrderUnit(productRepository.getById(orderProductDto.getProductId()),
+                    orderProductDto.getQuantity());
+            orderUnits.add(orderUnit);
+            orderUnitService.save(orderUnit);
+        }
+        order.setOrderUnits(orderUnits);
 
-//        List<OrderProduct> orderProducts = new ArrayList<>();
-//        for(var productDto: orderDtoItem.getProducts()){
-//            OrderProduct orderProduct = new OrderProduct();
-//            orderProduct.setOrder(order);
-//
-//            Product product = productRepository.getById(productDto.getId());
-//            orderProduct.setProduct(product);
-//            orderProduct.setQuantity(productDto.getQuantity());
-//
-//            OrderProductId orderProductId = new OrderProductId(order.getId(), product.getId());
-//            orderProduct.setId(orderProductId);
-//            orderProducts.add(orderProduct);
-//
-//        }
-//        order.setOrderProducts(orderProducts);
-
-        IOrderRepository.save(order);
+        orderRepository.save(order);
         cartService.deleteCartItemsByUser(user);
     }
 
@@ -183,21 +157,21 @@ public class OrderService implements IOrderService {
         Date start = convertToDateViaSqlDate(convertToLocalDateViaInstant(statisticDateDto.getStart()));
         Date end = convertToDateViaSqlDate(convertToLocalDateViaInstant(statisticDateDto.getEnd()).plusDays(1));
 
-        List<Order> allOrders = IOrderRepository.findAllByCreatedDateBetween(start, end);
+        List<Order> allOrders = orderRepository.findAllByCreatedDateBetween(start, end);
         Map<Product, Double> productMap = new HashMap<>();
         List<ProductStatisticDto> productsStatistic = new ArrayList<>();
         AtomicInteger count = new AtomicInteger(1);
 
-        for (var item : allOrders) {
-//            for(var products:item.getOrderProducts()){
-//                Product product = products.getProduct();
-//                if(productMap.containsKey(product)){
-//                    productMap.replace(product, productMap.get(product),productMap.get(product) + products.getQuantity());
-//                }
-//                else{
-//                    productMap.put(product, products.getQuantity());
-//                }
-//            }
+        for (Order item : allOrders) {
+            for(OrderUnit orderUnit:item.getOrderUnits()){
+                Product product = orderUnit.getProduct();
+                if(productMap.containsKey(product)){
+                    productMap.replace(product, productMap.get(product),productMap.get(product) + orderUnit.getQuantity());
+                }
+                else{
+                    productMap.put(product, orderUnit.getQuantity());
+                }
+            }
         }
         productMap.entrySet().stream()
                 .sorted(Map.Entry.<Product, Double>comparingByValue().reversed())

@@ -8,7 +8,6 @@ import com.example.project.dto.user.SignupDto;
 import com.example.project.dto.user.UserDto;
 import com.example.project.model.User;
 import com.example.project.service.IUserService;
-import com.example.project.service.impl.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,16 +32,16 @@ public class UserController {
         return userService.signIn(signInDto);
     }
 
-    @GetMapping("/signinMob/{email}&{password}")
-    public SignInReponseDto signInMob(@PathVariable("email") String email, @PathVariable("password") String password) {
-        SignInDto signInDto = new SignInDto(email, password);
-        return userService.signInMob(signInDto);
-    }
+//    @GetMapping("/signinMob/{email}&{password}")
+//    public SignInReponseDto signInMob(@PathVariable("email") String email, @PathVariable("password") String password) {
+//        SignInDto signInDto = new SignInDto(email, password);
+//        return userService.signInMob(signInDto);
+//    }
 
     @GetMapping("/")
-    public UserDto getUser(@RequestParam("userEmail") String userEmail) {
+    public UserDto getUser(@RequestBody UserDto userDto) {
         // find the user
-        User user = userService.getUserByEmail(userEmail);
+        User user = userService.getUserByEmail(userDto.getEmail());
 
         return userService.getUserDto(user);
     }

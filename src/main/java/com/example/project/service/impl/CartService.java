@@ -37,7 +37,6 @@ public class CartService implements ICartService {
         cart.setCreatedDate(new Date());
 
         ICartRepository.save(cart);
-
     }
 
     @Override

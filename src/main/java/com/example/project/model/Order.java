@@ -11,7 +11,7 @@ public class Order {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @Column(name = "price")
     private double price;
@@ -23,17 +23,15 @@ public class Order {
     @Column(name = "created_date")
     private Date createdDate;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "order_products",
-            joinColumns = @JoinColumn(name = "order_id"),
-            inverseJoinColumns = @JoinColumn(name = "product_id"))
-    private Set<Product> products = new HashSet<>();
+    @OneToMany
+    @MapKey(name = "id")
+    private List<OrderUnit> orderUnits;
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -61,11 +59,11 @@ public class Order {
         this.createdDate = createdDate;
     }
 
-    public Set<Product> getProducts() {
-        return products;
+    public List<OrderUnit> getOrderUnits() {
+        return orderUnits;
     }
 
-    public void setProducts(Set<Product> products) {
-        this.products = products;
+    public void setOrderUnits(List<OrderUnit> products) {
+        this.orderUnits = products;
     }
 }

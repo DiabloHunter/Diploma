@@ -1,6 +1,7 @@
 package com.example.project.controller;
 
 import com.example.project.common.ApiResponse;
+import com.example.project.dto.category.CategoryRequestDTO;
 import com.example.project.model.Category;
 import com.example.project.service.ICategoryService;
 import com.example.project.service.impl.CategoryService;
@@ -35,25 +36,25 @@ public class CategoryController {
     }
 
 
-    @PostMapping("/update/{categoryId}")
-    public ResponseEntity<ApiResponse> updateCategory(@PathVariable("categoryId") Long categoryId, @RequestBody Category category ) {
-//        if (!categoryService.getCategoryById(categoryId)) {
-//            return new ResponseEntity<>(new ApiResponse(false, "category does not exists"), HttpStatus.NOT_FOUND);
-//        }
+    @PostMapping("/update/")
+    public ResponseEntity<ApiResponse> updateCategory(@RequestBody Category category) {
+        if (categoryService.getCategoryById(category.getId())==null) {
+            return new ResponseEntity<>(new ApiResponse(false, "category does not exists"), HttpStatus.NOT_FOUND);
+        }
         try {
-            categoryService.editCategory(categoryId, category);
+            categoryService.editCategory(category.getId(), category);
         } catch (Exception e) {
             return new ResponseEntity<>(new ApiResponse(false, e.getMessage()), HttpStatus.OK);
         }
         return new ResponseEntity<>(new ApiResponse(true, "category has been updated"), HttpStatus.OK);
     }
 
-    @DeleteMapping("/delete/{categoryId}")
-    public ResponseEntity<ApiResponse> deleteCategory(@PathVariable("categoryId") Long categoryId){
-//        if (!categoryService.getCategoryById(categoryId)) {
-//            return new ResponseEntity<>(new ApiResponse(false, "category does not exists"), HttpStatus.NOT_FOUND);
-//        }
-        categoryService.deleteCategory(categoryId);
+    @DeleteMapping("/delete/")
+    public ResponseEntity<ApiResponse> deleteCategory(@RequestBody CategoryRequestDTO categoryRequestDTO){
+        if (categoryService.getCategoryById(categoryRequestDTO.getCategoryId())==null) {
+            return new ResponseEntity<>(new ApiResponse(false, "category does not exists"), HttpStatus.NOT_FOUND);
+        }
+        categoryService.deleteCategory(categoryRequestDTO.getCategoryId());
         return new ResponseEntity<>(new ApiResponse(true, "category has been deleted"), HttpStatus.OK);
     }
 }

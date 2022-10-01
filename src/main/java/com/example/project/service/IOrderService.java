@@ -2,8 +2,9 @@ package com.example.project.service;
 
 import com.example.project.dto.StatisticDateDto;
 import com.example.project.dto.checkout.CheckoutItemDto;
-import com.example.project.dto.order.OrderDtoItem;
+import com.example.project.dto.order.response.OrderDtoItem;
 import com.example.project.dto.productDto.ProductStatisticDto;
+import com.example.project.model.Order;
 import com.example.project.model.User;
 import com.stripe.exception.StripeException;
 import com.stripe.model.checkout.Session;
@@ -15,7 +16,7 @@ public interface IOrderService {
 
     List<OrderDtoItem> getAllOrders(User user);
 
-    OrderDtoItem getOrderById(Long id);
+    Order getOrderById(Long id);
 
     void addOrder(OrderDtoItem orderDtoItem);
 

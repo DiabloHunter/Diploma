@@ -8,9 +8,6 @@ import com.example.project.model.User;
 import com.example.project.service.ICartService;
 import com.example.project.service.IProductService;
 import com.example.project.service.IUserService;
-import com.example.project.service.impl.CartService;
-import com.example.project.service.impl.ProductService;
-import com.example.project.service.impl.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,11 +29,8 @@ public class CartController {
     @PostMapping("/add")
     public ResponseEntity<ApiResponse> addToCart(@RequestBody AddToCartDto addToCartDto,
                                                  @RequestParam("userEmail") String userEmail) {
-
         // find the user
-
         User user = userService.getUserByEmail(userEmail);
-
         cartService.addToCart(addToCartDto, user);
 
         return new ResponseEntity<>(new ApiResponse(true, "Added to cart"), HttpStatus.CREATED);
@@ -47,7 +41,6 @@ public class CartController {
     public ResponseEntity<ApiResponse> addToCart(@PathVariable("goodCode") String code,
                                                  @PathVariable("goodAmount") Integer amount,
                                                  @RequestParam("userEmail") String userEmail) {
-
         User user = userService.getUserByEmail(userEmail);
 
         AddToCartDto addToCartDto = new AddToCartDto();
@@ -59,12 +52,10 @@ public class CartController {
         return new ResponseEntity<>(new ApiResponse(true, "Added to cart"), HttpStatus.CREATED);
     }
 
-
     // get all cart items for a user
     @GetMapping("/")
     public ResponseEntity<CartDto> getCartItems(@RequestParam("userEmail") String userEmail) {
         User user = userService.getUserByEmail(userEmail);
-
         CartDto cartDto = cartService.getAllCartItems(user);
         return new ResponseEntity<>(cartDto, HttpStatus.OK);
     }
@@ -74,9 +65,7 @@ public class CartController {
     @DeleteMapping("/delete/{cartItemId}")
     public ResponseEntity<ApiResponse> deleteCartItem(@PathVariable("cartItemId") Long itemId,
                                                       @RequestParam("userEmail") String userEmail) {
-
         User user = userService.getUserByEmail(userEmail);
-
         cartService.deleteCartItem(itemId, user);
 
         return new ResponseEntity<>(new ApiResponse(true, "Item has been removed"), HttpStatus.OK);

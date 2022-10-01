@@ -28,9 +28,9 @@ public class ProductController {
     @PostMapping("/add")
     public ResponseEntity<ApiResponse> createProduct(@RequestBody ProductDto productDto) {
         Category category = categoryService.getCategoryById(productDto.getCategoryId());
-//         if (!optionalCategory.isPresent()) {
-//             return new ResponseEntity<>(new ApiResponse(false, "category does not exists"), HttpStatus.BAD_REQUEST);
-//         }
+         if (category==null) {
+             return new ResponseEntity<>(new ApiResponse(false, "category does not exists"), HttpStatus.BAD_REQUEST);
+         }
         try {
             productService.addProduct(productDto, category);
         } catch (Exception e) {
@@ -45,9 +45,9 @@ public class ProductController {
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
-    @GetMapping("/{code}")
-    public ResponseEntity<ProductDtoIoT> getProductByCode(@PathVariable("code") String code) {
-        Product product = productService.getProductByCode(code);
+    @GetMapping("/getByCode/")
+    public ResponseEntity<ProductDtoIoT> getProductByCode(@RequestBody ProductDto productDto) {
+        Product product = productService.getProductByCode(productDto.getCode());
         ProductDtoIoT productDtoIoT = new ProductDtoIoT(product.getId(), product.getCode(), product.getName(),
                 product.getPrice(), product.getDescription());
         return new ResponseEntity<>(productDtoIoT, HttpStatus.OK);
@@ -60,15 +60,12 @@ public class ProductController {
         return new ResponseEntity<>(new ApiResponse(true, "Date for all products have been changed"), HttpStatus.CREATED);
     }
 
-    // create an api to edit the product
-
-
-    @PostMapping("/update/{productId}")
+    @PostMapping("/update/")
     public ResponseEntity<ApiResponse> updateProduct(@RequestBody ProductDto productDto) {
         Category category = categoryService.getCategoryById(productDto.getCategoryId());
-//        if (!optionalCategory.isPresent()) {
-//            return new ResponseEntity<>(new ApiResponse(false, "category does not exists"), HttpStatus.BAD_REQUEST);
-//        }
+        if (category==null) {
+            return new ResponseEntity<>(new ApiResponse(false, "category does not exists"), HttpStatus.BAD_REQUEST);
+        }
         try {
             productService.updateProduct(productDto);
         } catch (Exception e) {
@@ -77,12 +74,12 @@ public class ProductController {
         return new ResponseEntity<>(new ApiResponse(true, "product has been updated"), HttpStatus.OK);
     }
 
-    @DeleteMapping("/delete/{productId}")
-    public ResponseEntity<ApiResponse> deleteCategory(@PathVariable("productId") long productId){
-        if (productService.findProductById(productId)==null) {
+    @DeleteMapping("/delete/")
+    public ResponseEntity<ApiResponse> deleteCategory(@RequestBody ProductDto productDto){
+        if (productService.findProductById(productDto.getId())==null) {
             return new ResponseEntity<>(new ApiResponse(false, "product does not exists"), HttpStatus.NOT_FOUND);
         }
-        productService.deleteProductById(productId);
+        productService.deleteProductById(productDto.getId());
         return new ResponseEntity<>(new ApiResponse(true, "product has been deleted"), HttpStatus.OK);
     }
 

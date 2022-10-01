@@ -2,17 +2,17 @@ package com.example.project.controller;
 
 
 import com.example.project.common.ApiResponse;
+import com.example.project.dto.order.request.GetOrderDTO;
 import com.example.project.dto.productDto.ProductStatisticDto;
 import com.example.project.dto.StatisticDateDto;
-import com.example.project.dto.order.OrderDto;
-import com.example.project.dto.order.OrderDtoItem;
+import com.example.project.dto.order.response.OrderDto;
+import com.example.project.dto.order.response.OrderDtoItem;
 import com.example.project.dto.checkout.CheckoutItemDto;
 import com.example.project.dto.checkout.StripeResponse;
+import com.example.project.model.Order;
 import com.example.project.model.User;
 import com.example.project.service.IOrderService;
 import com.example.project.service.IUserService;
-import com.example.project.service.impl.OrderService;
-import com.example.project.service.impl.UserService;
 import com.stripe.exception.StripeException;
 import com.stripe.model.checkout.Session;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,33 +40,32 @@ public class OrderController {
         return new ResponseEntity<>(stripeResponse, HttpStatus.OK);
 
     }
+
     @GetMapping("/getOrders/")
-    public ResponseEntity<OrderDto> getCartItems(@RequestParam("userEmail") String userEmail) {
+    public ResponseEntity<OrderDto> getOrders(@RequestBody GetOrderDTO getOrderDTO) {
         // find the user
-        User user = userService.getUserByEmail(userEmail);
+        User user = userService.getUserByEmail(getOrderDTO.getUserEmail());
 
         // get cart items
         List<OrderDtoItem> orders = orderService.getAllOrders(user);
         OrderDto orderDto = new OrderDto();
         orderDto.setOrderItems(orders);
-        double totalSum=0;
-        for(var el: orders){
-            totalSum+=el.getPrice();
+        double totalSum = 0;
+        for (var el : orders) {
+            totalSum += el.getPrice();
         }
         orderDto.setTotalCost(totalSum);
         return new ResponseEntity<>(orderDto, HttpStatus.OK);
     }
 
-    @GetMapping("/getOrder/{orderId}")
-    public ResponseEntity<OrderDtoItem> getCartItems(@PathVariable("orderId") Long orderId,
-                                                     @RequestParam("userEmail") String userEmail) {
+    @GetMapping("/getOrder/")
+    public ResponseEntity<Order> getOrder(@RequestBody GetOrderDTO getOrderDTO) {
         // find the user
-        User user = userService.getUserByEmail(userEmail);
+        User user = userService.getUserByEmail(getOrderDTO.getUserEmail());
 
         // get cart items
-
-        OrderDtoItem order = orderService.getOrderById(orderId);
-        order.setUserId(user.getId());
+        Order order = orderService.getOrderById(getOrderDTO.getOrderId());
+        order.setUser(user);
         return new ResponseEntity<>(order, HttpStatus.OK);
     }
 
@@ -78,11 +77,9 @@ public class OrderController {
 
 
     @PostMapping("/add")
-    public ResponseEntity<ApiResponse> addToCart(@RequestBody OrderDtoItem orderDtoItem,
-                                                 @RequestParam("token") String token) {
+    public ResponseEntity<ApiResponse> addOrder(@RequestBody OrderDtoItem orderDtoItem) {
         orderService.addOrder(orderDtoItem);
         return new ResponseEntity<>(new ApiResponse(true, "Added to cart"), HttpStatus.CREATED);
     }
-
 
 }
