@@ -11,10 +11,10 @@ import com.example.project.service.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -25,6 +25,8 @@ public class ProductController {
 
     @Autowired
     ICategoryService categoryService;
+
+    private static final String CHECK_PRICES_CRON = "0 58 13 ? * SAT";
 
     @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER')")
     @PostMapping("/add")
@@ -41,7 +43,7 @@ public class ProductController {
         return new ResponseEntity<>(new ApiResponse(true, "product has been added"), HttpStatus.CREATED);
     }
 
-    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
+    @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/")
     public ResponseEntity<List<ProductDTO>> getProducts() {
         List<ProductDTO> products = productService.getAllProducts();
@@ -57,11 +59,17 @@ public class ProductController {
         return new ResponseEntity<>(productIoTDTO, HttpStatus.OK);
     }
 
+
+    @Scheduled(cron = CHECK_PRICES_CRON)
+    public ResponseEntity<ApiResponse>  checkPricesSchedule(){
+        productService.checkPrices();
+        return new ResponseEntity<>(new ApiResponse(true, "Date for all products have been changed"), HttpStatus.CREATED);
+    }
+
     @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER')")
     @PostMapping("/checkPrices")
     public ResponseEntity<ApiResponse>  checkPrices(){
-        Date checkDate = productService.convertDate();
-        productService.checkPrices(checkDate);
+        productService.checkPrices();
         return new ResponseEntity<>(new ApiResponse(true, "Date for all products have been changed"), HttpStatus.CREATED);
     }
 

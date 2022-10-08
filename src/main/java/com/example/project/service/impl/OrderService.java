@@ -41,7 +41,7 @@ public class OrderService implements IOrderService {
     ICartService cartService;
 
     @Autowired
-    IOrderUnit orderUnitService;
+    IOrderUnitRepository orderUnitRepository;
 
 
     @Value("${BASE_URL}")
@@ -134,7 +134,7 @@ public class OrderService implements IOrderService {
             OrderUnit orderUnit = new OrderUnit(productRepository.getById(orderProductDto.getProductId()),
                     orderProductDto.getQuantity());
             orderUnits.add(orderUnit);
-            orderUnitService.save(orderUnit);
+            orderUnitRepository.save(orderUnit);
         }
         order.setOrderUnits(orderUnits);
 

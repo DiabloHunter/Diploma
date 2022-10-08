@@ -11,10 +11,7 @@ import com.example.project.service.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
@@ -24,10 +21,10 @@ import java.util.List;
 public class ProductService implements IProductService {
 
     @Autowired
-    IProductRepository IProductRepository;
+    IProductRepository productRepository;
 
     @Autowired
-    IOrderRepository IOrderRepository;
+    IOrderRepository orderRepository;
 
     @Override
     public void addProduct(ProductDTO productDto, Category category) throws Exception {
@@ -43,7 +40,7 @@ public class ProductService implements IProductService {
         product.setCheckDate(new Date());
         product.setMinSales(productDto.getMinSales());
         product.setMaxSales(productDto.getMaxSales());
-        IProductRepository.save(product);
+        productRepository.save(product);
     }
 
     @Override
@@ -63,60 +60,16 @@ public class ProductService implements IProductService {
 
     @Override
     public Product getProductByCode(String code) {
-        return IProductRepository.findProductByCode(code)
+        return productRepository.findProductByCode(code)
                 .orElseThrow(() -> new ProductNotExistsException("product code is invalid: " + code));
     }
 
     @Override
     public List<ProductDTO> getAllProducts() {
-        List<Product> allProducts = IProductRepository.findAll();
+        List<Product> allProducts = productRepository.findAll();
         List<ProductDTO> productDTOS = new ArrayList<>();
 
-        boolean isChanged = false;
         for (Product product : allProducts) {
-            Date todayDate = new Date();
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            boolean isTimeToCorrectPrice = false;
-            try {
-                Date parsedDate1 = sdf.parse(sdf.format(product.getCheckDate()));
-                Date parsedDate2 = sdf.parse(sdf.format(todayDate));
-
-                LocalDateTime oldDate = parsedDate1.toInstant()
-                        .atZone(ZoneId.systemDefault())
-                        .toLocalDateTime();
-                LocalDateTime newDate = parsedDate2.toInstant()
-                        .atZone(ZoneId.systemDefault())
-                        .toLocalDateTime();
-
-                if (oldDate.plusMonths(1).isBefore(newDate) || oldDate.plusMonths(1).equals(newDate)) {
-                    isTimeToCorrectPrice = true;
-                }
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-            if (isTimeToCorrectPrice) {
-                List<Order> orders = IOrderRepository.findAllByCreatedDateBetween(product.getCheckDate(), todayDate);
-                double count = 0;
-                for (var order : orders) {
-//                    for(var productInOrder:order.getOrderProducts()){
-//                        if( productInOrder.getId().getProductId()==product.getId()){
-//                            count+=productInOrder.getQuantity();
-//                        }
-//                    }
-                }
-                if (count > product.getMaxSales()) {
-                    product.setPrice(Math.ceil(product.getPrice() * 1.1));
-                    isChanged = true;
-                } else if (count < product.getMinSales()) {
-                    product.setPrice(Math.ceil(product.getPrice() / 1.1));
-                    isChanged = true;
-                }
-            }
-            if (isChanged) {
-                product.setCheckDate(todayDate);
-                IProductRepository.save(product);
-            }
-
             productDTOS.add(getProductDto(product));
         }
         return productDTOS;
@@ -125,7 +78,7 @@ public class ProductService implements IProductService {
 
     @Override
     public void updateProduct(ProductDTO productDto) throws Exception {
-        Product product = IProductRepository.findProductByCode(productDto.getCode())
+        Product product = productRepository.findProductByCode(productDto.getCode())
                 .orElse(null);
 
         assertProductIsNotNull(product);
@@ -138,7 +91,7 @@ public class ProductService implements IProductService {
         product.setPrice(productDto.getPrice());
         product.setMinSales(productDto.getMinSales());
         product.setMaxSales(productDto.getMaxSales());
-        IProductRepository.save(product);
+        productRepository.save(product);
     }
 
     private void validateProductImage(ProductDTO productDto) throws Exception {
@@ -149,14 +102,14 @@ public class ProductService implements IProductService {
 
     @Override
     public Product findProductById(Long productId) throws ProductNotExistsException {
-        Product product = IProductRepository.findById(productId)
+        Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new ProductNotExistsException("product id is invalid: " + productId));
         return product;
     }
 
     @Override
     public void deleteProductById(Long productId) {
-        IProductRepository.deleteById(productId);
+        productRepository.deleteById(productId);
     }
 
     private LocalDate convertToLocalDateViaInstant(Date dateToConvert) {
@@ -176,16 +129,33 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public void checkPrices(Date change) {
-        List<Product> products = IProductRepository.findAll();
-        for (var el : products) {
-            el.setCheckDate(change);
-            IProductRepository.save(el);
+    public void checkPrices() {
+        List<Product> products = productRepository.findAll();
+
+        Date todayDate = new Date();
+        for(Product product: products){
+            List<Order> orders = orderRepository.findAllByCreatedDateBetween(product.getCheckDate(), todayDate);
+            double count = 0;
+            for (var order : orders) {
+                for (var orderUnit : order.getOrderUnits()) {
+                    if (orderUnit.getProduct().getId() == product.getId()) {
+                        count += orderUnit.getQuantity();
+                    }
+                }
+            }
+            if (count > product.getMaxSales()) {
+                product.setPrice(Math.ceil(product.getPrice() * 1.1));
+            } else if (count < product.getMinSales()) {
+                product.setPrice(Math.ceil(product.getPrice() / 1.1));
+            }
+            product.setCheckDate(todayDate);
+            productRepository.save(product);
         }
+
     }
 
     private void assertProductIsNotExistByCode(String productCode) throws IllegalArgumentException {
-        if (IProductRepository.findProductByCode(productCode)
+        if (productRepository.findProductByCode(productCode)
                 .orElse(null) != null) {
             throw new IllegalArgumentException("Product with the same code has already existed!");
         }

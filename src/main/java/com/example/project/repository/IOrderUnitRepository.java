@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface IOrderUnit extends JpaRepository<OrderUnit, Long> {
+public interface IOrderUnitRepository extends JpaRepository<OrderUnit, Long> {
 }

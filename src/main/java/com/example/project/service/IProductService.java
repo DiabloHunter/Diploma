@@ -25,5 +25,5 @@ public interface IProductService {
 
     Date convertDate();
 
-    void checkPrices(Date change);
+    void checkPrices();
 }
