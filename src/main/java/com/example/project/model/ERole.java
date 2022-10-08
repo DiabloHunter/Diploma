@@ -1,9 +1,9 @@
 package com.example.project.model;
 
 public enum ERole {
-  USER,
-  ADMIN,
-  MODERATOR,
-  MANAGER,
-  CASHIER,
+  ROLE_USER,
+  ROLE_CASHIER,
+  ROLE_MANAGER,
+  ROLE_MODERATOR,
+  ROLE_ADMIN
 }

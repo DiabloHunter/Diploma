@@ -104,26 +104,34 @@ public class AuthService implements IAuthService {
         Set<Role> roles = new HashSet<>();
 
         if (strRoles == null) {
-            Role userRole = roleService.findByName(ERole.USER)
+            Role userRole = roleService.findByName(ERole.ROLE_USER)
                     .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
             roles.add(userRole);
         } else {
             strRoles.forEach(role -> {
                 switch (role) {
                     case "admin":
-                        Role adminRole = roleService.findByName(ERole.ADMIN)
+                        Role adminRole = roleService.findByName(ERole.ROLE_ADMIN)
                                 .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
                         roles.add(adminRole);
-
+                        break;
+                    case "moderator":
+                        Role moderatorRole = roleService.findByName(ERole.ROLE_MODERATOR)
+                                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                        roles.add(moderatorRole);
                         break;
                     case "manager":
-                        Role modRole = roleService.findByName(ERole.MANAGER)
+                        Role managerRole = roleService.findByName(ERole.ROLE_MANAGER)
                                 .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-                        roles.add(modRole);
-
+                        roles.add(managerRole);
+                        break;
+                    case "cashier":
+                        Role cashierRole = roleService.findByName(ERole.ROLE_CASHIER)
+                                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                        roles.add(cashierRole);
                         break;
                     default:
-                        Role userRole = roleService.findByName(ERole.USER)
+                        Role userRole = roleService.findByName(ERole.ROLE_USER)
                                 .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
                         roles.add(userRole);
                 }

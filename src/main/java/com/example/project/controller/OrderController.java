@@ -81,7 +81,7 @@ public class OrderController {
     @PostMapping("/add")
     public ResponseEntity<ApiResponse> addOrder(@RequestBody OrderItemDTO orderItemDTO) {
         orderService.addOrder(orderItemDTO);
-        return new ResponseEntity<>(new ApiResponse(true, "Added to cart"), HttpStatus.CREATED);
+        return new ResponseEntity<>(new ApiResponse(true, "Order created!"), HttpStatus.CREATED);
     }
 
 }

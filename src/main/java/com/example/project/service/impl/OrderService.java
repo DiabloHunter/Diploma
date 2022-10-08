@@ -5,6 +5,7 @@ import com.example.project.dto.productDto.ProductStatisticDTO;
 import com.example.project.dto.StatisticDateDTO;
 import com.example.project.dto.order.response.OrderItemDTO;
 import com.example.project.dto.checkout.CheckoutItemDTO;
+import com.example.project.exceptions.ProductNotExistsException;
 import com.example.project.model.*;
 import com.example.project.repository.*;
 import com.example.project.service.ICartService;
@@ -15,6 +16,7 @@ import com.stripe.model.checkout.Session;
 import com.stripe.param.checkout.SessionCreateParams;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -131,7 +133,10 @@ public class OrderService implements IOrderService {
         order.setPrice(orderItemDTO.getPrice());
         List<OrderUnit> orderUnits = new ArrayList<>();
         for (OrderProductDTO orderProductDto : orderItemDTO.getProducts()) {
-            OrderUnit orderUnit = new OrderUnit(productRepository.getById(orderProductDto.getProductId()),
+            OrderUnit orderUnit = new OrderUnit(productRepository.findProductByCode(
+                    orderProductDto.getCode()).orElseThrow(() ->
+                    //todo decide, what method should i use to search the product(id or code) + decide what kind of exception
+                    new ProductNotExistsException("Product with given code not exist. Code: " + orderProductDto.getCode())),
                     orderProductDto.getQuantity());
             orderUnits.add(orderUnit);
             orderUnitRepository.save(orderUnit);
