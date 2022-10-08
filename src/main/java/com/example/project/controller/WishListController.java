@@ -10,6 +10,7 @@ import com.example.project.service.impl.WishListService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,6 +26,7 @@ public class WishListController {
     UserService userService;
 
     // save product as wishlist item
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
     @PostMapping("/add")
     public ResponseEntity<ApiResponse> addToWishList(@RequestBody Product product,
                                                      @RequestParam("userEmail") String userEmail) {
@@ -42,7 +44,7 @@ public class WishListController {
 
 
     // get all wishlist item for a user
-
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
     @GetMapping("/")
     public ResponseEntity<List<ProductDTO>> getWishList(@RequestParam("userEmail") String userEmail) {
         // find the user
@@ -51,7 +53,7 @@ public class WishListController {
         return new ResponseEntity<>(productDTOS, HttpStatus.OK);
     }
 
-
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
     @DeleteMapping("/delete/{wishlistItem}")
     public ResponseEntity<ApiResponse> deleteFromWishList(@PathVariable("wishlistItem") Long itemId,
                                                      @RequestParam("userEmail") String userEmail) {

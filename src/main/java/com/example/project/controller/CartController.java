@@ -11,6 +11,7 @@ import com.example.project.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -26,6 +27,7 @@ public class CartController {
     @Autowired
     private IProductService productService;
 
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
     @PostMapping("/add")
     public ResponseEntity<ApiResponse> addToCart(@RequestBody AddToCartDTO addToCartDto,
                                                  @RequestParam("userEmail") String userEmail) {
@@ -36,7 +38,7 @@ public class CartController {
         return new ResponseEntity<>(new ApiResponse(true, "Added to cart"), HttpStatus.CREATED);
     }
 
-
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
     @GetMapping("/add/{goodCode}&{goodAmount}")
     public ResponseEntity<ApiResponse> addToCart(@PathVariable("goodCode") String code,
                                                  @PathVariable("goodAmount") Integer amount,
@@ -52,7 +54,9 @@ public class CartController {
         return new ResponseEntity<>(new ApiResponse(true, "Added to cart"), HttpStatus.CREATED);
     }
 
+
     // get all cart items for a user
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
     @GetMapping("/")
     public ResponseEntity<CartDTO> getCartItems(@RequestParam("userEmail") String userEmail) {
         User user = userService.getUserByEmail(userEmail);
@@ -61,7 +65,7 @@ public class CartController {
     }
 
     // delete a cart item for a user
-
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
     @DeleteMapping("/delete/{cartItemId}")
     public ResponseEntity<ApiResponse> deleteCartItem(@PathVariable("cartItemId") Long itemId,
                                                       @RequestParam("userEmail") String userEmail) {

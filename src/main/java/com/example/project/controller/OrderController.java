@@ -18,6 +18,7 @@ import com.stripe.model.checkout.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,6 +33,7 @@ public class OrderController {
     @Autowired
     private IUserService userService;
 
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
     @PostMapping("/create-checkout-session")
     public ResponseEntity<StripeResponse> checkoutList(@RequestBody List<CheckoutItemDTO> checkoutItemDTOList)
             throws StripeException {
@@ -40,7 +42,7 @@ public class OrderController {
         return new ResponseEntity<>(stripeResponse, HttpStatus.OK);
 
     }
-
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
     @GetMapping("/getOrders/")
     public ResponseEntity<OrderDTO> getOrders(@RequestBody GetOrderDTO getOrderDTO) {
         // find the user
@@ -57,7 +59,7 @@ public class OrderController {
         orderDto.setTotalCost(totalSum);
         return new ResponseEntity<>(orderDto, HttpStatus.OK);
     }
-
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
     @GetMapping("/getOrder/")
     public ResponseEntity<Order> getOrder(@RequestBody GetOrderDTO getOrderDTO) {
         // find the user
@@ -68,14 +70,14 @@ public class OrderController {
         order.setUser(user);
         return new ResponseEntity<>(order, HttpStatus.OK);
     }
-
+    @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER')")
     @GetMapping("/getStatistic")
     public ResponseEntity<List<ProductStatisticDTO>> getStatistic(@RequestBody StatisticDateDTO statisticDateDto) {
         List<ProductStatisticDTO> productStatisticDTOS = orderService.getStatisticByOrders(statisticDateDto);
         return new ResponseEntity<>(productStatisticDTOS, HttpStatus.OK);
     }
 
-
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
     @PostMapping("/add")
     public ResponseEntity<ApiResponse> addOrder(@RequestBody OrderItemDTO orderItemDTO) {
         orderService.addOrder(orderItemDTO);

@@ -11,6 +11,7 @@ import com.example.project.service.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
@@ -25,6 +26,7 @@ public class ProductController {
     @Autowired
     ICategoryService categoryService;
 
+    @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER')")
     @PostMapping("/add")
     public ResponseEntity<ApiResponse> createProduct(@RequestBody ProductDTO productDto) {
         Category category = categoryService.getCategoryById(productDto.getCategoryId());
@@ -39,12 +41,14 @@ public class ProductController {
         return new ResponseEntity<>(new ApiResponse(true, "product has been added"), HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
     @GetMapping("/")
     public ResponseEntity<List<ProductDTO>> getProducts() {
         List<ProductDTO> products = productService.getAllProducts();
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
     @GetMapping("/getByCode/")
     public ResponseEntity<ProductIoTDTO> getProductByCode(@RequestBody ProductDTO productDto) {
         Product product = productService.getProductByCode(productDto.getCode());
@@ -53,6 +57,7 @@ public class ProductController {
         return new ResponseEntity<>(productIoTDTO, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER')")
     @PostMapping("/checkPrices")
     public ResponseEntity<ApiResponse>  checkPrices(){
         Date checkDate = productService.convertDate();
@@ -60,6 +65,7 @@ public class ProductController {
         return new ResponseEntity<>(new ApiResponse(true, "Date for all products have been changed"), HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER')")
     @PostMapping("/update/")
     public ResponseEntity<ApiResponse> updateProduct(@RequestBody ProductDTO productDto) {
         Category category = categoryService.getCategoryById(productDto.getCategoryId());
@@ -74,6 +80,7 @@ public class ProductController {
         return new ResponseEntity<>(new ApiResponse(true, "product has been updated"), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER')")
     @DeleteMapping("/delete/")
     public ResponseEntity<ApiResponse> deleteCategory(@RequestBody ProductDTO productDto){
         if (productService.findProductById(productDto.getId())==null) {

@@ -8,6 +8,7 @@ import com.example.project.service.impl.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,7 +20,7 @@ public class CategoryController {
     @Autowired
     ICategoryService categoryService;
 
-
+    @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER')")
     @PostMapping("/create")
     public ResponseEntity<ApiResponse> createCategory(@RequestBody Category category) {
         try {
@@ -35,7 +36,7 @@ public class CategoryController {
         return categoryService.getAllCategory();
     }
 
-
+    @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER')")
     @PostMapping("/update/")
     public ResponseEntity<ApiResponse> updateCategory(@RequestBody Category category) {
         if (categoryService.getCategoryById(category.getId())==null) {
@@ -49,6 +50,7 @@ public class CategoryController {
         return new ResponseEntity<>(new ApiResponse(true, "category has been updated"), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER')")
     @DeleteMapping("/delete/")
     public ResponseEntity<ApiResponse> deleteCategory(@RequestBody CategoryRequestDTO categoryRequestDTO){
         if (categoryService.getCategoryById(categoryRequestDTO.getCategoryId())==null) {

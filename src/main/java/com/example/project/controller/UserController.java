@@ -11,6 +11,7 @@ import com.example.project.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -28,6 +29,7 @@ public class UserController {
 //        return userService.signInMob(signInDto);
 //    }
 
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
     @GetMapping("/")
     public UserDTO getUser(@RequestBody UserDTO userDto) {
         // find the user
@@ -36,13 +38,15 @@ public class UserController {
         return userService.getUserDto(user);
     }
 
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
     @PostMapping("/update/")
-    public ResponseEntity<ApiResponse> updateCategory(@RequestParam("userEmail") String userEmail, @RequestBody User changedUser) {
+    public ResponseEntity<ApiResponse> updateUser(@RequestParam("userEmail") String userEmail, @RequestBody User changedUser) {
         User user = userService.getUserByEmail(userEmail);
         userService.editUser(user, changedUser);
         return new ResponseEntity<>(new ApiResponse(true, "User has been updated"), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER')")
     @PostMapping("/backup")
     public ResponseEntity<ApiResponse> backupDB() {
         try {
@@ -53,6 +57,7 @@ public class UserController {
         return new ResponseEntity<>(new ApiResponse(true, "Database has been successfully backuped!"), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER')")
     @PostMapping("/restore")
     public ResponseEntity<ApiResponse> restoreDB() {
         try {
