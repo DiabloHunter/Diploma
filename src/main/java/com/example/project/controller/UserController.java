@@ -31,9 +31,9 @@ public class UserController {
 
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
     @GetMapping("/")
-    public UserDTO getUser(@RequestBody UserDTO userDto) {
+    public UserDTO getUser(@RequestParam String email) {
         // find the user
-        User user = userService.getUserByEmail(userDto.getEmail());
+        User user = userService.getUserByEmail(email );
 
         return userService.getUserDto(user);
     }

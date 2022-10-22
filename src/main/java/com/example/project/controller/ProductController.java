@@ -89,12 +89,12 @@ public class ProductController {
     }
 
     @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER')")
-    @DeleteMapping("/delete/")
-    public ResponseEntity<ApiResponse> deleteCategory(@RequestBody ProductDTO productDto){
-        if (productService.findProductById(productDto.getId())==null) {
+    @DeleteMapping("/delete")
+    public ResponseEntity<ApiResponse> deleteCategory(@RequestParam Long id){
+        if (productService.findProductById(id)==null) {
             return new ResponseEntity<>(new ApiResponse(false, "product does not exists"), HttpStatus.NOT_FOUND);
         }
-        productService.deleteProductById(productDto.getId());
+        productService.deleteProductById(id);
         return new ResponseEntity<>(new ApiResponse(true, "product has been deleted"), HttpStatus.OK);
     }
 

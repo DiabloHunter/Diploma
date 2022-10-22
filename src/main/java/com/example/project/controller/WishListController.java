@@ -54,8 +54,8 @@ public class WishListController {
     }
 
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
-    @DeleteMapping("/delete/{wishlistItem}")
-    public ResponseEntity<ApiResponse> deleteFromWishList(@PathVariable("wishlistItem") Long itemId,
+    @DeleteMapping("/delete")
+    public ResponseEntity<ApiResponse> deleteFromWishList(@RequestParam("wishlistId") Long itemId,
                                                      @RequestParam("userEmail") String userEmail) {
         // find the user
         User user = userService.getUserByEmail(userEmail);

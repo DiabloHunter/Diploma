@@ -38,8 +38,8 @@ public class CategoryController {
 
     @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER')")
     @PostMapping("/update/")
-    public ResponseEntity<ApiResponse> updateCategory(@RequestBody Category category) {
-        if (categoryService.getCategoryById(category.getId())==null) {
+    public ResponseEntity<ApiResponse> updateCategory(@RequestParam Long id, @RequestBody Category category) {
+        if (categoryService.getCategoryById(id)==null) {
             return new ResponseEntity<>(new ApiResponse(false, "category does not exists"), HttpStatus.NOT_FOUND);
         }
         try {
@@ -52,11 +52,11 @@ public class CategoryController {
 
     @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER')")
     @DeleteMapping("/delete/")
-    public ResponseEntity<ApiResponse> deleteCategory(@RequestBody CategoryRequestDTO categoryRequestDTO){
-        if (categoryService.getCategoryById(categoryRequestDTO.getCategoryId())==null) {
+    public ResponseEntity<ApiResponse> deleteCategory(@RequestParam Long id){
+        if (categoryService.getCategoryById(id)==null) {
             return new ResponseEntity<>(new ApiResponse(false, "category does not exists"), HttpStatus.NOT_FOUND);
         }
-        categoryService.deleteCategory(categoryRequestDTO.getCategoryId());
+        categoryService.deleteCategory(id);
         return new ResponseEntity<>(new ApiResponse(true, "category has been deleted"), HttpStatus.OK);
     }
 }

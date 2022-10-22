@@ -66,8 +66,8 @@ public class CartController {
 
     // delete a cart item for a user
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
-    @DeleteMapping("/delete/{cartItemId}")
-    public ResponseEntity<ApiResponse> deleteCartItem(@PathVariable("cartItemId") Long itemId,
+    @DeleteMapping("/delete/")
+    public ResponseEntity<ApiResponse> deleteCartItem(@RequestParam("cartItemId") Long itemId,
                                                       @RequestParam("userEmail") String userEmail) {
         User user = userService.getUserByEmail(userEmail);
         cartService.deleteCartItem(itemId, user);

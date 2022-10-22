@@ -44,9 +44,9 @@ public class OrderController {
     }
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
     @GetMapping("/getOrders/")
-    public ResponseEntity<OrderDTO> getOrders(@RequestBody GetOrderDTO getOrderDTO) {
+    public ResponseEntity<OrderDTO> getOrders(@RequestParam("userEmail") String email) {
         // find the user
-        User user = userService.getUserByEmail(getOrderDTO.getUserEmail());
+        User user = userService.getUserByEmail(email);
 
         // get cart items
         List<OrderItemDTO> orders = orderService.getAllOrders(user);
@@ -61,12 +61,12 @@ public class OrderController {
     }
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
     @GetMapping("/getOrder/")
-    public ResponseEntity<Order> getOrder(@RequestBody GetOrderDTO getOrderDTO) {
+    public ResponseEntity<Order> getOrder(@RequestParam Long id, @RequestParam String email) {
         // find the user
-        User user = userService.getUserByEmail(getOrderDTO.getUserEmail());
+        User user = userService.getUserByEmail(email);
 
         // get cart items
-        Order order = orderService.getOrderById(getOrderDTO.getOrderId());
+        Order order = orderService.getOrderById(id);
         order.setUser(user);
         return new ResponseEntity<>(order, HttpStatus.OK);
     }
