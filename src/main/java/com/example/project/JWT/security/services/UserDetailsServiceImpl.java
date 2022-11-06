@@ -1,5 +1,6 @@
 package com.example.project.JWT.security.services;
 
+import com.example.project.exceptions.UserEmailNotFoundException;
 import com.example.project.model.User;
 import com.example.project.repository.IUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,16 +12,19 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
-  @Autowired
-  IUserRepository userRepository;
+    @Autowired
+    IUserRepository userRepository;
 
-  @Override
-  @Transactional
-  public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-    User user = userRepository.findByUsername(username)
-        .orElseThrow(() -> new UsernameNotFoundException("User Not Found with username: " + username));
+    @Transactional
+    public UserDetails loadUserByUserEmail(String email) throws UserEmailNotFoundException {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserEmailNotFoundException("User Not Found with email: " + email));
 
-    return UserDetailsImpl.build(user);
-  }
+        return UserDetailsImpl.build(user);
+    }
 
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return null;
+    }
 }

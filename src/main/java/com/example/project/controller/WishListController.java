@@ -1,8 +1,8 @@
 package com.example.project.controller;
 
 import com.example.project.common.ApiResponse;
-import com.example.project.dto.productDto.ProductDTO;
-import com.example.project.model.Product;
+import com.example.project.dto.dishDto.DishDTO;
+import com.example.project.model.Dish;
 import com.example.project.model.User;
 import com.example.project.model.WishList;
 import com.example.project.service.impl.UserService;
@@ -25,20 +25,20 @@ public class WishListController {
     @Autowired
     UserService userService;
 
-    // save product as wishlist item
+    // save dish as wishlist item
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
     @PostMapping("/add")
-    public ResponseEntity<ApiResponse> addToWishList(@RequestBody Product product,
+    public ResponseEntity<ApiResponse> addToWishList(@RequestBody Dish dish,
                                                      @RequestParam("userEmail") String userEmail) {
 
         // find the user
         User user = userService.getUserByEmail(userEmail);
 
         // save the item in wishlist
-        WishList wishList = new WishList(user, product);
+        WishList wishList = new WishList(user, dish);
         wishListService.addWishlist(wishList);
         ApiResponse apiResponse = new ApiResponse(true, "Added to wishlist");
-        return  new ResponseEntity<>(apiResponse, HttpStatus.CREATED);
+        return new ResponseEntity<>(apiResponse, HttpStatus.CREATED);
 
     }
 
@@ -46,22 +46,22 @@ public class WishListController {
     // get all wishlist item for a user
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
     @GetMapping("/")
-    public ResponseEntity<List<ProductDTO>> getWishList(@RequestParam("userEmail") String userEmail) {
+    public ResponseEntity<List<DishDTO>> getWishList(@RequestParam("userEmail") String userEmail) {
         // find the user
         User user = userService.getUserByEmail(userEmail);
-        List<ProductDTO> productDTOS = wishListService.getWishListForUser(user);
-        return new ResponseEntity<>(productDTOS, HttpStatus.OK);
+        List<DishDTO> dishDTOS = wishListService.getWishListForUser(user);
+        return new ResponseEntity<>(dishDTOS, HttpStatus.OK);
     }
 
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
     @DeleteMapping("/delete")
     public ResponseEntity<ApiResponse> deleteFromWishList(@RequestParam("wishlistId") Long itemId,
-                                                     @RequestParam("userEmail") String userEmail) {
+                                                          @RequestParam("userEmail") String userEmail) {
         // find the user
         User user = userService.getUserByEmail(userEmail);
 
         // save the item in wishlist
-        wishListService.deleteWishlist(user,itemId);
+        wishListService.deleteWishlist(user, itemId);
         ApiResponse apiResponse = new ApiResponse(true, "Deleted from wishlist");
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
 

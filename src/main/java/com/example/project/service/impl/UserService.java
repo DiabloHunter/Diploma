@@ -1,15 +1,7 @@
 package com.example.project.service.impl;
 
-
-import com.example.project.dto.ResponseDTO;
-import com.example.project.dto.user.SignInDTO;
-import com.example.project.dto.user.SignInResponseDTO;
-import com.example.project.dto.user.SignupDTO;
 import com.example.project.dto.user.UserDTO;
-import com.example.project.exceptions.AuthenticationFailException;
 import com.example.project.exceptions.CustomException;
-import com.example.project.model.ERole;
-import com.example.project.model.Role;
 import com.example.project.model.User;
 import com.example.project.repository.IUserRepository;
 import com.example.project.service.IUserService;
@@ -17,9 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import javax.xml.bind.DatatypeConverter;
-import java.io.*;
+import java.io.BufferedOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -47,9 +40,9 @@ public class UserService implements IUserService {
     @Override
     public UserDTO getUserDto(User user) {
         UserDTO userDto = new UserDTO();
-        userDto.setUsername(user.getUsername());
         userDto.setEmail(user.getEmail());
         userDto.setPassword(user.getPassword());
+        userDto.setRating(user.getRating());
         return userDto;
     }
 
@@ -60,29 +53,21 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public Boolean existsByUsername(String username){
-        return userRepository.existsByUsername(username);
-    }
-
-    @Override
-    public Boolean existsByEmail(String email){
+    public Boolean existsByEmail(String email) {
         return userRepository.existsByEmail(email);
     }
 
     @Override
     public void editUser(User updatedUser, User updateUser) {
         updatedUser.setEmail(updateUser.getEmail());
-        updatedUser.setUsername(updateUser.getUsername());
-
-        String encryptedPassword = updateUser.getPassword();
 
         try {
-            encryptedPassword = hashPassword(updateUser.getPassword());
+            String encryptedPassword = hashPassword(updateUser.getPassword());
+            updatedUser.setPassword(encryptedPassword);
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
 
-        updatedUser.setPassword(encryptedPassword);
         userRepository.save(updatedUser);
     }
 

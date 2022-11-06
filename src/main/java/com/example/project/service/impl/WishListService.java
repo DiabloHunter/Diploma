@@ -1,12 +1,11 @@
 package com.example.project.service.impl;
 
-
-import com.example.project.dto.productDto.ProductDTO;
+import com.example.project.dto.dishDto.DishDTO;
 import com.example.project.exceptions.CustomException;
-import com.example.project.model.Product;
+import com.example.project.model.Dish;
 import com.example.project.model.User;
 import com.example.project.model.WishList;
-import com.example.project.repository.IProductRepository;
+import com.example.project.repository.IDishRepository;
 import com.example.project.repository.IWishListRepository;
 import com.example.project.service.IWishListService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,10 +21,10 @@ public class WishListService implements IWishListService {
     IWishListRepository IWishListRepository;
 
     @Autowired
-    IProductRepository IProductRepository;
+    IDishRepository IDishRepository;
 
     @Autowired
-    ProductService productService;
+    DishService dishService;
 
     @Override
     public void addWishlist(WishList wishList) {
@@ -33,13 +32,13 @@ public class WishListService implements IWishListService {
     }
 
     @Override
-    public void deleteWishlist(User user, Long productId) {
-        Product product = IProductRepository.findById(productId)
-                .orElseThrow(() -> new CustomException("product id is invalid: " + productId));
+    public void deleteWishlist(User user, Long dishId) {
+        Dish dish = IDishRepository.findById(dishId)
+                .orElseThrow(() -> new CustomException("dish id is invalid: " + dishId));
 
-        WishList wishList = IWishListRepository.findByUserAndProduct(user, product);
+        WishList wishList = IWishListRepository.findByUserAndDish(user, dish);
 
-        if (wishList==null) {
+        if (wishList == null) {
             throw new CustomException("wishList is invalid!");
         }
 
@@ -47,13 +46,13 @@ public class WishListService implements IWishListService {
     }
 
     @Override
-    public List<ProductDTO> getWishListForUser(User user) {
+    public List<DishDTO> getWishListForUser(User user) {
         final List<WishList> wishLists = IWishListRepository.findAllByUserOrderByCreatedDateDesc(user);
-        List<ProductDTO> productDTOS = new ArrayList<>();
-        for (WishList wishList: wishLists) {
-            productDTOS.add(productService.getProductDto(wishList.getProduct()));
+        List<DishDTO> dishDTOS = new ArrayList<>();
+        for (WishList wishList : wishLists) {
+            dishDTOS.add(dishService.getDishDto(wishList.getDish()));
         }
 
-        return productDTOS;
+        return dishDTOS;
     }
 }

@@ -1,10 +1,19 @@
 package com.example.project.model;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import java.util.Date;
 
 @Entity
-@Table(name = "wishlist")
+@Table(name = "wishlists")
 public class WishList {
 
     @Id
@@ -19,22 +28,22 @@ public class WishList {
     private Date createdDate;
 
     @ManyToOne
-    @JoinColumn(name = "product_id")
-    private Product product;
+    @JoinColumn(name = "dish_id")
+    private Dish dish;
 
     public WishList() {
     }
 
-    public WishList(Integer id, User user, Date createdDate, Product product) {
+    public WishList(Integer id, User user, Date createdDate, Dish dish) {
         this.id = id;
         this.user = user;
         this.createdDate = createdDate;
-        this.product = product;
+        this.dish = dish;
     }
 
-    public WishList(User user, Product product) {
+    public WishList(User user, Dish dish) {
         this.user = user;
-        this.product = product;
+        this.dish = dish;
         this.createdDate = new Date();
     }
 
@@ -62,11 +71,11 @@ public class WishList {
         this.createdDate = createdDate;
     }
 
-    public Product getProduct() {
-        return product;
+    public Dish getDish() {
+        return dish;
     }
 
-    public void setProduct(Product product) {
-        this.product = product;
+    public void setDish(Dish dish) {
+        this.dish = dish;
     }
 }

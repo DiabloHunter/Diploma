@@ -1,9 +1,7 @@
 package com.example.project.controller;
 
-
 import com.example.project.common.ApiResponse;
-import com.example.project.dto.order.request.GetOrderDTO;
-import com.example.project.dto.productDto.ProductStatisticDTO;
+import com.example.project.dto.dishDto.DishStatisticDTO;
 import com.example.project.dto.StatisticDateDTO;
 import com.example.project.dto.order.response.OrderDTO;
 import com.example.project.dto.order.response.OrderItemDTO;
@@ -42,6 +40,7 @@ public class OrderController {
         return new ResponseEntity<>(stripeResponse, HttpStatus.OK);
 
     }
+
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
     @GetMapping("/getOrders/")
     public ResponseEntity<OrderDTO> getOrders(@RequestParam("userEmail") String email) {
@@ -59,6 +58,7 @@ public class OrderController {
         orderDto.setTotalCost(totalSum);
         return new ResponseEntity<>(orderDto, HttpStatus.OK);
     }
+
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
     @GetMapping("/getOrder/")
     public ResponseEntity<Order> getOrder(@RequestParam Long id, @RequestParam String email) {
@@ -70,11 +70,12 @@ public class OrderController {
         order.setUser(user);
         return new ResponseEntity<>(order, HttpStatus.OK);
     }
+
     @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER')")
     @GetMapping("/getStatistic")
-    public ResponseEntity<List<ProductStatisticDTO>> getStatistic(@RequestBody StatisticDateDTO statisticDateDto) {
-        List<ProductStatisticDTO> productStatisticDTOS = orderService.getStatisticByOrders(statisticDateDto);
-        return new ResponseEntity<>(productStatisticDTOS, HttpStatus.OK);
+    public ResponseEntity<List<DishStatisticDTO>> getStatistic(@RequestBody StatisticDateDTO statisticDateDto) {
+        List<DishStatisticDTO> dishStatisticDTOS = orderService.getStatisticByOrders(statisticDateDto);
+        return new ResponseEntity<>(dishStatisticDTOS, HttpStatus.OK);
     }
 
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")

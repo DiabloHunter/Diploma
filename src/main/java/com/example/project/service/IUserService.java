@@ -11,17 +11,15 @@ public interface IUserService {
 
     User getUserByEmail(String userEmail);
 
-    Boolean existsByUsername(String username);
-
-    Boolean existsByEmail(String userEmail);
+    Boolean existsByEmail(String email);
 
     void editUser(User updatedUser, User updateUser);
 
     boolean backup()
-                throws IOException, InterruptedException;
+            throws IOException, InterruptedException;
 
     boolean restore()
-                throws IOException;
+            throws IOException;
 
     void addUser(User user);
 }

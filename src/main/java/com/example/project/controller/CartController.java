@@ -6,7 +6,7 @@ import com.example.project.dto.cart.AddToCartDTO;
 import com.example.project.dto.cart.CartDTO;
 import com.example.project.model.User;
 import com.example.project.service.ICartService;
-import com.example.project.service.IProductService;
+import com.example.project.service.IDishService;
 import com.example.project.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,7 +25,7 @@ public class CartController {
     private IUserService userService;
 
     @Autowired
-    private IProductService productService;
+    private IDishService dishService;
 
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
     @PostMapping("/add")
@@ -46,7 +46,7 @@ public class CartController {
         User user = userService.getUserByEmail(userEmail);
 
         AddToCartDTO addToCartDto = new AddToCartDTO();
-        addToCartDto.setProductId(productService.getProductByCode(code).getId());
+        addToCartDto.setDishId(dishService.getDishByCode(code).getId());
         addToCartDto.setQuantity(amount);
 
         cartService.addToCart(addToCartDto, user);

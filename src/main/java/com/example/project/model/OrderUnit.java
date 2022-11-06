@@ -1,9 +1,15 @@
 package com.example.project.model;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.MapKey;
+import javax.persistence.Table;
 
 @Entity
-@Table(name = "orderUnit")
+@Table(name = "orderUnits")
 public class OrderUnit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -11,12 +17,12 @@ public class OrderUnit {
 
     @ManyToOne
     @MapKey(name = "id")
-    private Product product;
+    private Dish dish;
 
     private Double quantity;
 
-    public OrderUnit(Product product, Double quantity) {
-        this.product = product;
+    public OrderUnit(Dish dish, Double quantity) {
+        this.dish = dish;
         this.quantity = quantity;
     }
 
@@ -31,12 +37,12 @@ public class OrderUnit {
         this.id = id;
     }
 
-    public Product getProduct() {
-        return product;
+    public Dish getDish() {
+        return dish;
     }
 
-    public void setProduct(Product product) {
-        this.product = product;
+    public void setDish(Dish dish) {
+        this.dish = dish;
     }
 
     public Double getQuantity() {

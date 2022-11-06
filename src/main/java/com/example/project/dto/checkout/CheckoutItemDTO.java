@@ -2,21 +2,21 @@ package com.example.project.dto.checkout;
 
 public class CheckoutItemDTO {
 
-    private String productName;
+    private String dishName;
     private int quantity;
     private double price;
-    private long productId;
+    private long dishId;
     private int userId;
 
     public CheckoutItemDTO() {
     }
 
-    public String getProductName() {
-        return productName;
+    public String getDishName() {
+        return dishName;
     }
 
-    public void setProductName(String productName) {
-        this.productName = productName;
+    public void setDishName(String dishName) {
+        this.dishName = dishName;
     }
 
     public int getQuantity() {
@@ -35,12 +35,12 @@ public class CheckoutItemDTO {
         this.price = price;
     }
 
-    public long getProductId() {
-        return productId;
+    public long getDishId() {
+        return dishId;
     }
 
-    public void setProductId(long productId) {
-        this.productId = productId;
+    public void setDishId(long dishId) {
+        this.dishId = dishId;
     }
 
     public int getUserId() {

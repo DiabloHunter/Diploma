@@ -1,24 +1,18 @@
 package com.example.project.dto.user;
 
+import com.example.project.model.Role;
+
+import java.util.List;
 
 public class UserDTO {
-
-    private String username;
 
     private String email;
 
     private String password;
 
-    private String role;
+    private Double rating;
 
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
+    private List<Role> roles;
 
     public String getEmail() {
         return email;
@@ -36,11 +30,19 @@ public class UserDTO {
         this.password = password;
     }
 
-    public String getRole() {
-        return role;
+    public Double getRating() {
+        return rating;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public void setRating(Double rating) {
+        this.rating = rating;
+    }
+
+    public List<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
     }
 }

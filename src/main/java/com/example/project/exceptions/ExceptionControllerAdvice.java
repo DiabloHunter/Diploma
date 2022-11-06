@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class ExceptionControllerAdvice {
 
     @ExceptionHandler(value = CustomException.class)
-    public final ResponseEntity<String> handleCustomException(CustomException exception){
+    public final ResponseEntity<String> handleCustomException(CustomException exception) {
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
@@ -18,8 +18,8 @@ public class ExceptionControllerAdvice {
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(value = ProductNotExistsException.class)
-    public final ResponseEntity<String> handleProductNotExistsException(ProductNotExistsException exception) {
+    @ExceptionHandler(value = DishNotExistsException.class)
+    public final ResponseEntity<String> handleDishNotExistsException(DishNotExistsException exception) {
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
     }
 }

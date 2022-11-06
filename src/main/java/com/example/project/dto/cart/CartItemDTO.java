@@ -2,12 +2,12 @@ package com.example.project.dto.cart;
 
 
 import com.example.project.model.Cart;
-import com.example.project.model.Product;
+import com.example.project.model.Dish;
 
 public class CartItemDTO {
     private Integer id;
     private Integer quantity;
-    private Product product;
+    private Dish dish;
 
     public CartItemDTO() {
     }
@@ -28,17 +28,17 @@ public class CartItemDTO {
         this.quantity = quantity;
     }
 
-    public Product getProduct() {
-        return product;
+    public Dish getDish() {
+        return dish;
     }
 
-    public void setProduct(Product product) {
-        this.product = product;
+    public void setDish(Dish dish) {
+        this.dish = dish;
     }
 
     public CartItemDTO(Cart cart) {
         this.id = cart.getId();
         this.quantity = cart.getQuantity();
-        this.setProduct(cart.getProduct());
+        this.setDish(cart.getDish());
     }
 }

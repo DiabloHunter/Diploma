@@ -1,13 +1,20 @@
 package com.example.project.service.impl;
 
-import com.example.project.dto.order.response.OrderProductDTO;
-import com.example.project.dto.productDto.ProductStatisticDTO;
+import com.example.project.dto.order.response.OrderDishDTO;
+import com.example.project.dto.dishDto.DishStatisticDTO;
 import com.example.project.dto.StatisticDateDTO;
 import com.example.project.dto.order.response.OrderItemDTO;
 import com.example.project.dto.checkout.CheckoutItemDTO;
-import com.example.project.exceptions.ProductNotExistsException;
-import com.example.project.model.*;
-import com.example.project.repository.*;
+import com.example.project.exceptions.DishNotExistsException;
+import com.example.project.model.Dish;
+import com.example.project.model.Order;
+import com.example.project.model.OrderUnit;
+import com.example.project.model.User;
+import com.example.project.repository.ICategoryRepository;
+import com.example.project.repository.IDishRepository;
+import com.example.project.repository.IOrderRepository;
+import com.example.project.repository.IOrderUnitRepository;
+import com.example.project.repository.IUserRepository;
 import com.example.project.service.ICartService;
 import com.example.project.service.IOrderService;
 import com.stripe.Stripe;
@@ -16,12 +23,15 @@ import com.stripe.model.checkout.Session;
 import com.stripe.param.checkout.SessionCreateParams;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
@@ -34,7 +44,7 @@ public class OrderService implements IOrderService {
     IUserRepository userRepository;
 
     @Autowired
-    IProductRepository productRepository;
+    IDishRepository dishRepository;
 
     @Autowired
     ICategoryRepository categoryRepository;
@@ -88,7 +98,7 @@ public class OrderService implements IOrderService {
                 .setUnitAmount((long) (checkoutItemDto.getPrice() * 100))
                 .setProductData(
                         SessionCreateParams.LineItem.PriceData.ProductData.builder()
-                                .setName(checkoutItemDto.getProductName())
+                                .setName(checkoutItemDto.getDishName())
                                 .build()
                 ).build();
     }
@@ -103,15 +113,15 @@ public class OrderService implements IOrderService {
             orderItemDTO.setPrice(order.getPrice());
             orderItemDTO.setCreatedDate(order.getCreatedDate());
             orderItemDTO.setUserId(order.getUser().getId());
-            List<OrderProductDTO> products = new ArrayList<>();
+            List<OrderDishDTO> dishes = new ArrayList<>();
             for (OrderUnit orderUnit : order.getOrderUnits()) {
-                Product product = orderUnit.getProduct();
-                OrderProductDTO orderProductDto = new OrderProductDTO(product.getId(), product.getName(), product.getCode(),
-                        product.getImageURL(), product.getPrice(), product.getDescription(), orderUnit.getQuantity(),
-                        product.getCategory().getId());
-                products.add(orderProductDto);
+                Dish dish = orderUnit.getDish();
+                OrderDishDTO orderDishDto = new OrderDishDTO(dish.getId(), dish.getName(), dish.getCode(),
+                        dish.getImageURL(), dish.getPrice(), dish.getDescription(), orderUnit.getQuantity(),
+                        dish.getCategory().getId());
+                dishes.add(orderDishDto);
             }
-            orderItemDTO.setProducts(products);
+            orderItemDTO.setDishes(dishes);
             orderItemDTOS.add(orderItemDTO);
         }
         return orderItemDTOS;
@@ -132,12 +142,12 @@ public class OrderService implements IOrderService {
         order.setCreatedDate(new Date());
         order.setPrice(orderItemDTO.getPrice());
         List<OrderUnit> orderUnits = new ArrayList<>();
-        for (OrderProductDTO orderProductDto : orderItemDTO.getProducts()) {
-            OrderUnit orderUnit = new OrderUnit(productRepository.findProductByCode(
-                    orderProductDto.getCode()).orElseThrow(() ->
-                    //todo decide, what method should i use to search the product(id or code) + decide what kind of exception
-                    new ProductNotExistsException("Product with given code not exist. Code: " + orderProductDto.getCode())),
-                    orderProductDto.getQuantity());
+        for (OrderDishDTO orderDishDto : orderItemDTO.getDishes()) {
+            OrderUnit orderUnit = new OrderUnit(dishRepository.findDishByCode(
+                    orderDishDto.getCode()).orElseThrow(() ->
+                    //todo decide, what method should i use to search the dish(id or code) + decide what kind of exception
+                    new DishNotExistsException("Dish with given code not exist. Code: " + orderDishDto.getCode())),
+                    orderDishDto.getQuantity());
             orderUnits.add(orderUnit);
             orderUnitRepository.save(orderUnit);
         }
@@ -158,42 +168,41 @@ public class OrderService implements IOrderService {
     }
 
     @Override
-    public List<ProductStatisticDTO> getStatisticByOrders(StatisticDateDTO statisticDateDto) {
+    public List<DishStatisticDTO> getStatisticByOrders(StatisticDateDTO statisticDateDto) {
         Date start = convertToDateViaSqlDate(convertToLocalDateViaInstant(statisticDateDto.getStart()));
         Date end = convertToDateViaSqlDate(convertToLocalDateViaInstant(statisticDateDto.getEnd()).plusDays(1));
 
         List<Order> allOrders = orderRepository.findAllByCreatedDateBetween(start, end);
-        Map<Product, Double> productMap = new HashMap<>();
-        List<ProductStatisticDTO> productsStatistic = new ArrayList<>();
+        Map<Dish, Double> dishMap = new HashMap<>();
+        List<DishStatisticDTO> dishesStatistic = new ArrayList<>();
         AtomicInteger count = new AtomicInteger(1);
 
         for (Order item : allOrders) {
-            for(OrderUnit orderUnit:item.getOrderUnits()){
-                Product product = orderUnit.getProduct();
-                if(productMap.containsKey(product)){
-                    productMap.replace(product, productMap.get(product),productMap.get(product) + orderUnit.getQuantity());
-                }
-                else{
-                    productMap.put(product, orderUnit.getQuantity());
+            for (OrderUnit orderUnit : item.getOrderUnits()) {
+                Dish dish = orderUnit.getDish();
+                if (dishMap.containsKey(dish)) {
+                    dishMap.replace(dish, dishMap.get(dish), dishMap.get(dish) + orderUnit.getQuantity());
+                } else {
+                    dishMap.put(dish, orderUnit.getQuantity());
                 }
             }
         }
-        productMap.entrySet().stream()
-                .sorted(Map.Entry.<Product, Double>comparingByValue().reversed())
+        dishMap.entrySet().stream()
+                .sorted(Map.Entry.<Dish, Double>comparingByValue().reversed())
                 .forEach(x -> {
-                    ProductStatisticDTO productStatisticDto = new ProductStatisticDTO();
-                    productStatisticDto.setId(x.getKey().getId());
-                    productStatisticDto.setCode(x.getKey().getCode());
-                    productStatisticDto.setName(x.getKey().getName());
-                    productStatisticDto.setImageURL(x.getKey().getImageURL());
-                    productStatisticDto.setPrice(x.getKey().getPrice());
-                    productStatisticDto.setDescription(x.getKey().getDescription());
-                    productStatisticDto.setCategoryId(x.getKey().getCategory().getId());
-                    productStatisticDto.setMonthSales(x.getValue());
-                    productStatisticDto.setPlace(count.get());
+                    DishStatisticDTO dishStatisticDto = new DishStatisticDTO();
+                    dishStatisticDto.setId(x.getKey().getId());
+                    dishStatisticDto.setCode(x.getKey().getCode());
+                    dishStatisticDto.setName(x.getKey().getName());
+                    dishStatisticDto.setImageURL(x.getKey().getImageURL());
+                    dishStatisticDto.setPrice(x.getKey().getPrice());
+                    dishStatisticDto.setDescription(x.getKey().getDescription());
+                    dishStatisticDto.setCategoryId(x.getKey().getCategory().getId());
+                    dishStatisticDto.setMonthSales(x.getValue());
+                    dishStatisticDto.setPlace(count.get());
                     count.getAndIncrement();
-                    productsStatistic.add(productStatisticDto);
+                    dishesStatistic.add(dishStatisticDto);
                 });
-        return productsStatistic;
+        return dishesStatistic;
     }
 }

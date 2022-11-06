@@ -1,18 +1,18 @@
-package com.example.project.dto.productDto;
+package com.example.project.dto.dishDto;
 
 import javax.validation.constraints.NotNull;
 
-public class ProductIoTDTO {
+public class DishIoTDTO {
     private Long id;
     private @NotNull String code;
     private @NotNull String name;
     private @NotNull double price;
     private @NotNull String description;
 
-    public ProductIoTDTO() {
+    public DishIoTDTO() {
     }
 
-    public ProductIoTDTO(Long id, String code, String name, double price, String description) {
+    public DishIoTDTO(Long id, String code, String name, double price, String description) {
         this.id = id;
         this.code = code;
         this.name = name;

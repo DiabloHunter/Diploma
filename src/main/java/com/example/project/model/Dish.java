@@ -4,15 +4,20 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
-@Table(name = "products")
-public class Product {
+@Table(name = "dishes")
+public class Dish {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,6 +31,7 @@ public class Product {
     private @NotNull Date checkDate;
     private @NotNull Double minSales;
     private @NotNull Double maxSales;
+    private @NotNull Double costPrice;
 
     @ManyToOne(cascade = CascadeType.REFRESH)
     @JsonIgnore
@@ -33,8 +39,8 @@ public class Product {
     @OnDelete(action = OnDeleteAction.CASCADE)
     Category category;
 
-    public Product(String code, String name, String imageURL, Double price, String description, Date checkDate,
-                   Double minSales, Double maxSales, Category category) {
+    public Dish(String code, String name, String imageURL, Double price, String description, Date checkDate,
+                Double minSales, Double maxSales, Double costPrice, Category category) {
         this.code = code;
         this.name = name;
         this.imageURL = imageURL;
@@ -43,10 +49,11 @@ public class Product {
         this.checkDate = checkDate;
         this.minSales = minSales;
         this.maxSales = maxSales;
+        this.costPrice = costPrice;
         this.category = category;
     }
 
-    public Product() {
+    public Dish() {
     }
 
     public String getName() {
@@ -119,6 +126,14 @@ public class Product {
 
     public void setMaxSales(Double maxSales) {
         this.maxSales = maxSales;
+    }
+
+    public Double getCostPrice() {
+        return costPrice;
+    }
+
+    public void setCostPrice(Double costPrice) {
+        this.costPrice = costPrice;
     }
 
     public String getCode() {

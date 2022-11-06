@@ -1,10 +1,6 @@
 package com.example.project.controller;
 
 import com.example.project.common.ApiResponse;
-import com.example.project.dto.ResponseDTO;
-import com.example.project.dto.user.SignInDTO;
-import com.example.project.dto.user.SignInResponseDTO;
-import com.example.project.dto.user.SignupDTO;
 import com.example.project.dto.user.UserDTO;
 import com.example.project.model.User;
 import com.example.project.service.IUserService;
@@ -33,7 +29,7 @@ public class UserController {
     @GetMapping("/")
     public UserDTO getUser(@RequestParam String email) {
         // find the user
-        User user = userService.getUserByEmail(email );
+        User user = userService.getUserByEmail(email);
 
         return userService.getUserDto(user);
     }

@@ -5,7 +5,7 @@ import com.example.project.dto.cart.CartDTO;
 import com.example.project.dto.cart.CartItemDTO;
 import com.example.project.exceptions.CustomException;
 import com.example.project.model.Cart;
-import com.example.project.model.Product;
+import com.example.project.model.Dish;
 import com.example.project.model.User;
 import com.example.project.repository.ICartRepository;
 import com.example.project.service.ICartService;
@@ -21,17 +21,17 @@ import java.util.Optional;
 public class CartService implements ICartService {
 
     @Autowired
-    ProductService productService;
+    DishService dishService;
 
     @Autowired
     ICartRepository ICartRepository;
 
     @Override
     public void addToCart(AddToCartDTO addToCartDto, User user) {
-        Product product = productService.findProductById(addToCartDto.getProductId());
+        Dish dish = dishService.findDishById(addToCartDto.getDishId());
 
         Cart cart = new Cart();
-        cart.setProduct(product);
+        cart.setDish(dish);
         cart.setUser(user);
         cart.setQuantity(addToCartDto.getQuantity());
         cart.setCreatedDate(new Date());
@@ -46,7 +46,7 @@ public class CartService implements ICartService {
         double totalCost = 0;
         for (Cart cart : cartList) {
             CartItemDTO cartItemDto = new CartItemDTO(cart);
-            totalCost += cartItemDto.getQuantity() * cart.getProduct().getPrice();
+            totalCost += cartItemDto.getQuantity() * cart.getDish().getPrice();
             cartItems.add(cartItemDto);
         }
         CartDTO cartDto = new CartDTO();

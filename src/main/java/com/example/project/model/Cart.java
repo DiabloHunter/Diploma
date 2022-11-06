@@ -4,11 +4,18 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import java.util.Date;
 
 @Entity
-@Table(name = "cart")
+@Table(name = "carts")
 public class Cart {
 
     @Id
@@ -20,9 +27,9 @@ public class Cart {
 
     @ManyToOne
     @JsonIgnore
-    @JoinColumn(name = "product_id")
+    @JoinColumn(name = "dish_id")
     @OnDelete(action = OnDeleteAction.NO_ACTION)
-    private Product product;
+    private Dish dish;
 
     @ManyToOne
     @JsonIgnore
@@ -52,12 +59,12 @@ public class Cart {
         this.createdDate = createdDate;
     }
 
-    public Product getProduct() {
-        return product;
+    public Dish getDish() {
+        return dish;
     }
 
-    public void setProduct(Product product) {
-        this.product = product;
+    public void setDish(Dish dish) {
+        this.dish = dish;
     }
 
     public User getUser() {

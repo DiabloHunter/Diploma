@@ -48,7 +48,7 @@ public class AuthService implements IAuthService {
 
     public ResponseEntity<JwtResponse> signIn(LoginRequest loginRequest) {
         Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+                new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtUtils.generateJwtToken(authentication);
@@ -60,7 +60,6 @@ public class AuthService implements IAuthService {
 
         return ResponseEntity.ok(new JwtResponse(jwt,
                 userDetails.getId(),
-                userDetails.getUsername(),
                 userDetails.getEmail(),
                 roles));
     }
@@ -87,12 +86,6 @@ public class AuthService implements IAuthService {
 
     @Transactional
     public ResponseEntity<MessageResponse> signUp(SignupRequest signUpRequest) {
-
-        if (userService.existsByUsername(signUpRequest.getUsername())) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(new MessageResponse("Error: Username is already taken!"));
-        }
 
         if (userService.existsByEmail(signUpRequest.getEmail())) {
             return ResponseEntity
@@ -139,9 +132,9 @@ public class AuthService implements IAuthService {
         }
 
         // Create new user's account
-        User user = new User(signUpRequest.getUsername(),
-                signUpRequest.getEmail(),
+        User user = new User(signUpRequest.getEmail(),
                 encoder.encode(signUpRequest.getPassword()),
+                0.0,
                 roles);
 
 

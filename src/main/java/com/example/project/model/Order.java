@@ -1,9 +1,18 @@
 package com.example.project.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import javax.persistence.*;
-import java.util.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.MapKey;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "orders")
@@ -26,6 +35,16 @@ public class Order {
     @OneToMany
     @MapKey(name = "id")
     private List<OrderUnit> orderUnits;
+
+    public Order(double price, User user, Date createdDate, List<OrderUnit> orderUnits) {
+        this.price = price;
+        this.user = user;
+        this.createdDate = createdDate;
+        this.orderUnits = orderUnits;
+    }
+
+    public Order() {
+    }
 
     public Long getId() {
         return id;
@@ -63,7 +82,7 @@ public class Order {
         return orderUnits;
     }
 
-    public void setOrderUnits(List<OrderUnit> products) {
-        this.orderUnits = products;
+    public void setOrderUnits(List<OrderUnit> orderUnits) {
+        this.orderUnits = orderUnits;
     }
 }

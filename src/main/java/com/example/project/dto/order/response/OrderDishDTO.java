@@ -2,8 +2,8 @@ package com.example.project.dto.order.response;
 
 import javax.validation.constraints.NotNull;
 
-public class OrderProductDTO {
-    private @NotNull Long productId;
+public class OrderDishDTO {
+    private @NotNull Long dishId;
     private @NotNull String name;
     private @NotNull String code;
     private @NotNull String imageURL;
@@ -12,9 +12,9 @@ public class OrderProductDTO {
     private @NotNull Double quantity;
     private @NotNull Long categoryId;
 
-    public OrderProductDTO(Long productId, String name, String code, String imageURL, Double price, String description,
-                           Double quantity, Long categoryId) {
-        this.productId = productId;
+    public OrderDishDTO(Long dishId, String name, String code, String imageURL, Double price, String description,
+                        Double quantity, Long categoryId) {
+        this.dishId = dishId;
         this.name = name;
         this.code = code;
         this.imageURL = imageURL;
@@ -24,7 +24,7 @@ public class OrderProductDTO {
         this.categoryId = categoryId;
     }
 
-    public OrderProductDTO() {
+    public OrderDishDTO() {
     }
 
     public String getName() {
@@ -67,12 +67,12 @@ public class OrderProductDTO {
         this.categoryId = categoryId;
     }
 
-    public Long getProductId() {
-        return productId;
+    public Long getDishId() {
+        return dishId;
     }
 
-    public void setProductId(Long productId) {
-        this.productId = productId;
+    public void setDishId(Long dishId) {
+        this.dishId = dishId;
     }
 
     public Double getQuantity() {
