@@ -36,8 +36,9 @@ public class Reservation {
     private User user;
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "tables",
-            joinColumns = @JoinColumn(name = "reservation_id"))
+    @JoinTable(name = "reservation_tables",
+            joinColumns = @JoinColumn(name = "reservation_id"),
+            inverseJoinColumns = @JoinColumn(name = "table_id"))
     private List<Table> tables;
 
     public Reservation(Date startTime, Date endTime, User user, List<Table> tables) {
