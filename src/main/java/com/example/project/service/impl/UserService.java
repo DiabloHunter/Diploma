@@ -5,6 +5,7 @@ import com.example.project.exceptions.CustomException;
 import com.example.project.model.User;
 import com.example.project.repository.IUserRepository;
 import com.example.project.service.IUserService;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Service;
@@ -20,7 +21,6 @@ import java.nio.file.StandardOpenOption;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
 @Service
 public class UserService implements IUserService {
@@ -80,7 +80,7 @@ public class UserService implements IUserService {
     public boolean backup()
             throws IOException {
 
-        Date backupDate = new Date();
+        DateTime backupDate = new DateTime();
         SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
         String backupDateStr = format.format(backupDate);
 
@@ -102,7 +102,7 @@ public class UserService implements IUserService {
             throws IOException {
 
 
-        Date restoreDate = new Date();
+        DateTime restoreDate = new DateTime();
         SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
         String backupDateStr = format.format(restoreDate);
 

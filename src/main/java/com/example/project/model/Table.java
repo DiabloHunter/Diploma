@@ -1,9 +1,8 @@
 package com.example.project.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import org.joda.time.LocalDateTime;
+
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Entity
@@ -14,10 +13,21 @@ public class Table {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private @NotNull String searchId;
     private @NotNull Integer numberOfSeats;
-    private @NotNull Boolean isReserved;
 
-    public Table(Integer numberOfSeats, Boolean isReserved) {
+    @Column(nullable = false, columnDefinition = "boolean default false")
+    private Boolean isReserved;
+
+    public Table(Long id, String searchId, Integer numberOfSeats, Boolean isReserved) {
+        this.id = id;
+        this.searchId = searchId;
+        this.numberOfSeats = numberOfSeats;
+        this.isReserved = isReserved;
+    }
+
+    public Table(String searchId, Integer numberOfSeats, Boolean isReserved) {
+        this.searchId = searchId;
         this.numberOfSeats = numberOfSeats;
         this.isReserved = isReserved;
     }
@@ -31,6 +41,14 @@ public class Table {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getSearchId() {
+        return searchId;
+    }
+
+    public void setSearchId(String searchId) {
+        this.searchId = searchId;
     }
 
     public Integer getNumberOfSeats() {

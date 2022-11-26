@@ -1,34 +1,21 @@
-package com.example.project.dto.dishDto;
+package com.example.project.dto.dish;
 
 import javax.validation.constraints.NotNull;
 
-public class DishStatisticDTO {
-
+public class DishDTO {
     private Long id;
-    private @NotNull String code;
+    private @NotNull String searchId;
     private @NotNull String name;
     private @NotNull String imageURL;
     private @NotNull double price;
     private @NotNull String description;
     private @NotNull Long categoryId;
-    private @NotNull double monthSales;
-    private @NotNull int place;
+    private @NotNull double minSales;
+    private @NotNull double maxSales;
+    private @NotNull double costPrice;
 
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
+    public DishDTO() {
     }
 
     public String getName() {
@@ -71,19 +58,43 @@ public class DishStatisticDTO {
         this.categoryId = categoryId;
     }
 
-    public double getMonthSales() {
-        return monthSales;
+    public Long getId() {
+        return id;
     }
 
-    public void setMonthSales(double monthSales) {
-        this.monthSales = monthSales;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public int getPlace() {
-        return place;
+    public double getMinSales() {
+        return minSales;
     }
 
-    public void setPlace(int place) {
-        this.place = place;
+    public void setMinSales(double minSales) {
+        this.minSales = minSales;
+    }
+
+    public double getMaxSales() {
+        return maxSales;
+    }
+
+    public void setMaxSales(double maxSales) {
+        this.maxSales = maxSales;
+    }
+
+    public String getSearchId() {
+        return searchId;
+    }
+
+    public void setSearchId(String searchId) {
+        this.searchId = searchId;
+    }
+
+    public double getCostPrice() {
+        return costPrice;
+    }
+
+    public void setCostPrice(double costPrice) {
+        this.costPrice = costPrice;
     }
 }

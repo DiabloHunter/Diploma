@@ -1,5 +1,7 @@
 package com.example.project.model;
 
+import org.joda.time.LocalDateTime;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -11,7 +13,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.MapKey;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -30,13 +31,13 @@ public class Order {
     private User user;
 
     @Column(name = "created_date")
-    private Date createdDate;
+    private LocalDateTime createdDate;
 
     @OneToMany
     @MapKey(name = "id")
     private List<OrderUnit> orderUnits;
 
-    public Order(double price, User user, Date createdDate, List<OrderUnit> orderUnits) {
+    public Order(double price, User user, LocalDateTime createdDate, List<OrderUnit> orderUnits) {
         this.price = price;
         this.user = user;
         this.createdDate = createdDate;
@@ -70,11 +71,11 @@ public class Order {
         this.user = user;
     }
 
-    public Date getCreatedDate() {
+    public LocalDateTime getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(Date createdDate) {
+    public void setCreatedDate(LocalDateTime createdDate) {
         this.createdDate = createdDate;
     }
 

@@ -39,14 +39,14 @@ public class CartController {
     }
 
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
-    @GetMapping("/add/{goodCode}&{goodAmount}")
-    public ResponseEntity<ApiResponse> addToCart(@PathVariable("goodCode") String code,
+    @GetMapping("/add/{goodSearchId}&{goodAmount}")
+    public ResponseEntity<ApiResponse> addToCart(@PathVariable("goodSearchId") String searchId,
                                                  @PathVariable("goodAmount") Integer amount,
                                                  @RequestParam("userEmail") String userEmail) {
         User user = userService.getUserByEmail(userEmail);
 
         AddToCartDTO addToCartDto = new AddToCartDTO();
-        addToCartDto.setDishId(dishService.getDishByCode(code).getId());
+        addToCartDto.setDishId(dishService.getDishBySearchId(searchId).getId());
         addToCartDto.setQuantity(amount);
 
         cartService.addToCart(addToCartDto, user);

@@ -2,8 +2,8 @@ package com.example.project.controller;
 
 
 import com.example.project.common.ApiResponse;
-import com.example.project.dto.dishDto.DishDTO;
-import com.example.project.dto.dishDto.DishIoTDTO;
+import com.example.project.dto.dish.DishDTO;
+import com.example.project.dto.dish.DishIoTDTO;
 import com.example.project.model.Category;
 import com.example.project.model.Dish;
 import com.example.project.service.ICategoryService;
@@ -50,10 +50,10 @@ public class DishController {
     }
 
     //@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
-    @GetMapping("/getByCode/")
-    public ResponseEntity<DishIoTDTO> getDishByCode(@RequestBody DishDTO dishDto) {
-        Dish dish = dishService.getDishByCode(dishDto.getCode());
-        DishIoTDTO dishIoTDTO = new DishIoTDTO(dish.getId(), dish.getCode(), dish.getName(),
+    @GetMapping("/getBySearchId/")
+    public ResponseEntity<DishIoTDTO> getDishBySearchId(@RequestBody DishDTO dishDto) {
+        Dish dish = dishService.getDishBySearchId(dishDto.getSearchId());
+        DishIoTDTO dishIoTDTO = new DishIoTDTO(dish.getId(), dish.getSearchId(), dish.getName(),
                 dish.getPrice(), dish.getDescription());
         return new ResponseEntity<>(dishIoTDTO, HttpStatus.OK);
     }

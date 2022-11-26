@@ -3,6 +3,7 @@ package com.example.project.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.joda.time.LocalDateTime;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -13,7 +14,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-import java.util.Date;
 
 @Entity
 @Table(name = "dishes")
@@ -23,12 +23,12 @@ public class Dish {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private @NotNull String code;
+    private @NotNull String searchId;
     private @NotNull String name;
     private @NotNull String imageURL;
     private @NotNull Double price;
     private @NotNull String description;
-    private @NotNull Date checkDate;
+    private @NotNull LocalDateTime checkDate;
     private @NotNull Double minSales;
     private @NotNull Double maxSales;
     private @NotNull Double costPrice;
@@ -39,9 +39,9 @@ public class Dish {
     @OnDelete(action = OnDeleteAction.CASCADE)
     Category category;
 
-    public Dish(String code, String name, String imageURL, Double price, String description, Date checkDate,
+    public Dish(String searchId, String name, String imageURL, Double price, String description, LocalDateTime checkDate,
                 Double minSales, Double maxSales, Double costPrice, Category category) {
-        this.code = code;
+        this.searchId = searchId;
         this.name = name;
         this.imageURL = imageURL;
         this.price = price;
@@ -104,11 +104,11 @@ public class Dish {
         this.id = id;
     }
 
-    public Date getCheckDate() {
+    public LocalDateTime getCheckDate() {
         return checkDate;
     }
 
-    public void setCheckDate(Date checkDate) {
+    public void setCheckDate(LocalDateTime checkDate) {
         this.checkDate = checkDate;
     }
 
@@ -136,11 +136,11 @@ public class Dish {
         this.costPrice = costPrice;
     }
 
-    public String getCode() {
-        return code;
+    public String getSearchId() {
+        return searchId;
     }
 
-    public void setCode(String code) {
-        this.code = code;
+    public void setSearchId(String searchId) {
+        this.searchId = searchId;
     }
 }

@@ -9,11 +9,13 @@ import com.example.project.model.Dish;
 import com.example.project.model.User;
 import com.example.project.repository.ICartRepository;
 import com.example.project.service.ICartService;
+import com.example.project.util.TimeUtil;
+import org.joda.time.DateTime;
+import org.joda.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,7 +36,7 @@ public class CartService implements ICartService {
         cart.setDish(dish);
         cart.setUser(user);
         cart.setQuantity(addToCartDto.getQuantity());
-        cart.setCreatedDate(new Date());
+        cart.setCreatedDate(TimeUtil.parseTime(new LocalDateTime()));
 
         ICartRepository.save(cart);
     }

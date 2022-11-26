@@ -7,13 +7,12 @@ import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.SignatureException;
 import io.jsonwebtoken.UnsupportedJwtException;
+import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
-
-import java.util.Date;
 
 @Component
 public class JwtUtils {
@@ -23,7 +22,7 @@ public class JwtUtils {
     private String jwtSecret;
 
     @Value("${diploma.app.jwtExpirationMs}")
-    private int jwtExpirationMs;
+    private int jwtExpiration;
 
     public String generateJwtToken(Authentication authentication) {
 
@@ -31,8 +30,8 @@ public class JwtUtils {
 
         return Jwts.builder()
                 .setSubject((userPrincipal.getEmail()))
-                .setIssuedAt(new Date())
-                .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
+                .setIssuedAt(new LocalDateTime().toDate())
+                .setExpiration(new LocalDateTime().plusMinutes(jwtExpiration).toDate())
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
                 .compact();
     }

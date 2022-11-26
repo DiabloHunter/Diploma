@@ -1,8 +1,9 @@
 package com.example.project.dto.order.response;
 
+import org.joda.time.LocalDateTime;
+
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class OrderItemDTO {
@@ -11,7 +12,7 @@ public class OrderItemDTO {
     private @NotNull Double price;
     private @NotNull List<OrderDishDTO> dishes = new ArrayList<>();
     private @NotNull Long userId;
-    private @NotNull Date createdDate;
+    private @NotNull LocalDateTime createdDate;
 
     public OrderItemDTO() {
     }
@@ -48,11 +49,11 @@ public class OrderItemDTO {
         this.userId = userId;
     }
 
-    public Date getCreatedDate() {
+    public LocalDateTime getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(Date createdDate) {
+    public void setCreatedDate(LocalDateTime createdDate) {
         this.createdDate = createdDate;
     }
 }

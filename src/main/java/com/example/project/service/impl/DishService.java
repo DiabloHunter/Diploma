@@ -1,6 +1,6 @@
 package com.example.project.service.impl;
 
-import com.example.project.dto.dishDto.DishDTO;
+import com.example.project.dto.dish.DishDTO;
 import com.example.project.exceptions.DishNotExistsException;
 import com.example.project.model.Category;
 import com.example.project.model.Order;
@@ -8,13 +8,12 @@ import com.example.project.model.Dish;
 import com.example.project.repository.IOrderRepository;
 import com.example.project.repository.IDishRepository;
 import com.example.project.service.IDishService;
+import com.example.project.util.TimeUtil;
+import org.joda.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Service
@@ -29,15 +28,15 @@ public class DishService implements IDishService {
     @Override
     public void addDish(DishDTO dishDto, Category category) throws Exception {
         Dish dish = new Dish();
-        assertDishIsNotExistByCode(dishDto.getCode());
+        assertDishIsNotExistBySearchId(dishDto.getSearchId());
         validateDishImage(dishDto);
-        dish.setCode(dishDto.getCode());
+        dish.setSearchId(dishDto.getSearchId());
         dish.setDescription(dishDto.getDescription());
         dish.setImageURL(dishDto.getImageURL());
         dish.setName(dishDto.getName());
         dish.setCategory(category);
         dish.setPrice(dishDto.getPrice());
-        dish.setCheckDate(new Date());
+        dish.setCheckDate(TimeUtil.parseTime(new LocalDateTime()));
         dish.setMinSales(dishDto.getMinSales());
         dish.setMaxSales(dishDto.getMaxSales());
         dishRepository.save(dish);
@@ -46,7 +45,7 @@ public class DishService implements IDishService {
     @Override
     public DishDTO getDishDto(Dish dish) {
         DishDTO dishDto = new DishDTO();
-        dishDto.setCode(dish.getCode());
+        dishDto.setSearchId(dish.getSearchId());
         dishDto.setDescription(dish.getDescription());
         dishDto.setImageURL(dish.getImageURL());
         dishDto.setName(dish.getName());
@@ -59,9 +58,9 @@ public class DishService implements IDishService {
     }
 
     @Override
-    public Dish getDishByCode(String code) {
-        return dishRepository.findDishByCode(code)
-                .orElseThrow(() -> new DishNotExistsException("Dish code is invalid: " + code));
+    public Dish getDishBySearchId(String searchId) {
+        return dishRepository.findDishBySearchId(searchId)
+                .orElseThrow(() -> new DishNotExistsException("Dish searchId is invalid: " + searchId));
     }
 
     @Override
@@ -78,13 +77,13 @@ public class DishService implements IDishService {
 
     @Override
     public void updateDish(DishDTO dishDto) throws Exception {
-        Dish dish = dishRepository.findDishByCode(dishDto.getCode())
+        Dish dish = dishRepository.findDishBySearchId(dishDto.getSearchId())
                 .orElse(null);
 
         assertDishIsNotNull(dish);
         validateDishImage(dishDto);
 
-        dish.setCode(dishDto.getCode());
+        dish.setSearchId(dishDto.getSearchId());
         dish.setDescription(dishDto.getDescription());
         dish.setImageURL(dishDto.getImageURL());
         dish.setName(dishDto.getName());
@@ -112,26 +111,11 @@ public class DishService implements IDishService {
         dishRepository.deleteById(dishId);
     }
 
-    private LocalDate convertToLocalDateViaInstant(Date dateToConvert) {
-        return dateToConvert.toInstant()
-                .atZone(ZoneId.systemDefault())
-                .toLocalDate();
-    }
-
-    private Date convertToDateViaSqlDate(LocalDate dateToConvert) {
-        return java.sql.Date.valueOf(dateToConvert);
-    }
-
-    @Override
-    public Date convertDate() {
-        return convertToDateViaSqlDate(convertToLocalDateViaInstant(new Date()).minusMonths(1).minusDays(1));
-    }
-
     @Override
     public void checkPrices() {
         List<Dish> dishes = dishRepository.findAll();
 
-        Date todayDate = new Date();
+        LocalDateTime todayDate = TimeUtil.parseTime(new LocalDateTime());
         for (Dish dish : dishes) {
             List<Order> orders = orderRepository.findAllByCreatedDateBetween(dish.getCheckDate(), todayDate);
             double count = 0;
@@ -154,10 +138,10 @@ public class DishService implements IDishService {
 
     }
 
-    private void assertDishIsNotExistByCode(String dishCode) throws IllegalArgumentException {
-        if (dishRepository.findDishByCode(dishCode)
+    private void assertDishIsNotExistBySearchId(String dishSearchId) throws IllegalArgumentException {
+        if (dishRepository.findDishBySearchId(dishSearchId)
                 .orElse(null) != null) {
-            throw new IllegalArgumentException("Dish with the same code has already existed!");
+            throw new IllegalArgumentException("Dish with the same searchId already exists!");
         }
     }
 

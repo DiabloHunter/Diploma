@@ -9,6 +9,6 @@ import java.util.Optional;
 @Repository
 public interface IDishRepository extends JpaRepository<Dish, Long> {
 
-    Optional<Dish> findDishByCode(String code);
+    Optional<Dish> findDishBySearchId(String searchId);
 
 }

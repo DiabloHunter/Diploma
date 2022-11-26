@@ -34,7 +34,6 @@ public class User {
     @Column(name = "password")
     private String password;
 
-    @NotBlank
     @Column(name = "rating")
     private Double rating;
 

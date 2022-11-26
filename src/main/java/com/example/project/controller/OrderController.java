@@ -1,8 +1,8 @@
 package com.example.project.controller;
 
 import com.example.project.common.ApiResponse;
-import com.example.project.dto.dishDto.DishStatisticDTO;
-import com.example.project.dto.StatisticDateDTO;
+import com.example.project.dto.dish.DishStatisticDTO;
+import com.example.project.dto.statistic.StatisticDateDTO;
 import com.example.project.dto.order.response.OrderDTO;
 import com.example.project.dto.order.response.OrderItemDTO;
 import com.example.project.dto.checkout.CheckoutItemDTO;

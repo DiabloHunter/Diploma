@@ -1,12 +1,14 @@
 package com.example.project.controller;
 
 import com.example.project.common.ApiResponse;
-import com.example.project.dto.dishDto.DishDTO;
+import com.example.project.dto.dish.DishDTO;
 import com.example.project.model.Dish;
 import com.example.project.model.User;
 import com.example.project.model.WishList;
 import com.example.project.service.impl.UserService;
 import com.example.project.service.impl.WishListService;
+import com.example.project.util.TimeUtil;
+import org.joda.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,7 +37,7 @@ public class WishListController {
         User user = userService.getUserByEmail(userEmail);
 
         // save the item in wishlist
-        WishList wishList = new WishList(user, dish);
+        WishList wishList = new WishList(user, TimeUtil.parseTime(new LocalDateTime()), dish);
         wishListService.addWishlist(wishList);
         ApiResponse apiResponse = new ApiResponse(true, "Added to wishlist");
         return new ResponseEntity<>(apiResponse, HttpStatus.CREATED);

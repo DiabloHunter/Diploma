@@ -12,45 +12,45 @@ import java.util.List;
 public class CategoryService implements ICategoryService {
 
     @Autowired
-    ICategoryRepository ICategoryRepository;
+    ICategoryRepository categoryRepository;
 
     @Override
     public void createCategory(Category category) throws Exception {
-        Category categoryInBd = ICategoryRepository.findCategoryByCategoryName(category.getCategoryName());
+        Category categoryInBd = categoryRepository.findCategoryByCategoryName(category.getCategoryName());
         if(categoryInBd!=null){
-            throw new Exception("Category with the same name has already existed!");
+            throw new Exception("Category with the same name already exists!");
         }
         validateCategoryImage(category);
-        ICategoryRepository.save(category);
+        categoryRepository.save(category);
     }
 
     @Override
     public List<Category> getAllCategory() {
-        return ICategoryRepository.findAll();
+        return categoryRepository.findAll();
     }
 
     @Override
     public void editCategory(Long categoryId, Category updateCategory) throws Exception {
-        Category category = ICategoryRepository.findById(categoryId).orElse(null);
-        Category categoryInDb = ICategoryRepository.findCategoryByCategoryName(updateCategory.getCategoryName());
+        Category category = categoryRepository.findById(categoryId).orElse(null);
+        Category categoryInDb = categoryRepository.findCategoryByCategoryName(updateCategory.getCategoryName());
         if(categoryInDb!=null && category.getId()!=categoryInDb.getId()){
-            throw new Exception("Category with the same code has already existed!");
+            throw new Exception("Category with the same searchId already exists!");
         }
         validateCategoryImage(updateCategory);
         category.setCategoryName(updateCategory.getCategoryName());
         category.setDescription(updateCategory.getDescription());
         category.setImageUrl(updateCategory.getImageUrl());
-        ICategoryRepository.save(category);
+        categoryRepository.save(category);
     }
 
     @Override
     public Category getCategoryById(Long categoryId) {
-        return ICategoryRepository.findById(categoryId).orElse(null);
+        return categoryRepository.findById(categoryId).orElse(null);
     }
 
     @Override
     public void deleteCategory(Long categoryId){
-        ICategoryRepository.deleteById(categoryId);
+        categoryRepository.deleteById(categoryId);
     }
 
 

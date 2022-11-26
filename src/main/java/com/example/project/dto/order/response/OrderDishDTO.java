@@ -5,18 +5,18 @@ import javax.validation.constraints.NotNull;
 public class OrderDishDTO {
     private @NotNull Long dishId;
     private @NotNull String name;
-    private @NotNull String code;
+    private @NotNull String searchId;
     private @NotNull String imageURL;
     private @NotNull Double price;
     private @NotNull String description;
     private @NotNull Double quantity;
     private @NotNull Long categoryId;
 
-    public OrderDishDTO(Long dishId, String name, String code, String imageURL, Double price, String description,
+    public OrderDishDTO(Long dishId, String name, String searchId, String imageURL, Double price, String description,
                         Double quantity, Long categoryId) {
         this.dishId = dishId;
         this.name = name;
-        this.code = code;
+        this.searchId = searchId;
         this.imageURL = imageURL;
         this.price = price;
         this.description = description;
@@ -83,11 +83,11 @@ public class OrderDishDTO {
         this.quantity = quantity;
     }
 
-    public String getCode() {
-        return code;
+    public String getSearchId() {
+        return searchId;
     }
 
-    public void setCode(String code) {
-        this.code = code;
+    public void setSearchId(String searchId) {
+        this.searchId = searchId;
     }
 }

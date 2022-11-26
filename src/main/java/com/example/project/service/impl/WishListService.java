@@ -1,6 +1,6 @@
 package com.example.project.service.impl;
 
-import com.example.project.dto.dishDto.DishDTO;
+import com.example.project.dto.dish.DishDTO;
 import com.example.project.exceptions.CustomException;
 import com.example.project.model.Dish;
 import com.example.project.model.User;

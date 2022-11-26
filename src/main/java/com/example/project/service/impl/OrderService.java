@@ -1,8 +1,8 @@
 package com.example.project.service.impl;
 
 import com.example.project.dto.order.response.OrderDishDTO;
-import com.example.project.dto.dishDto.DishStatisticDTO;
-import com.example.project.dto.StatisticDateDTO;
+import com.example.project.dto.dish.DishStatisticDTO;
+import com.example.project.dto.statistic.StatisticDateDTO;
 import com.example.project.dto.order.response.OrderItemDTO;
 import com.example.project.dto.checkout.CheckoutItemDTO;
 import com.example.project.exceptions.DishNotExistsException;
@@ -17,18 +17,18 @@ import com.example.project.repository.IOrderUnitRepository;
 import com.example.project.repository.IUserRepository;
 import com.example.project.service.ICartService;
 import com.example.project.service.IOrderService;
+import com.example.project.util.TimeUtil;
 import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
 import com.stripe.model.checkout.Session;
 import com.stripe.param.checkout.SessionCreateParams;
+import org.joda.time.DateTime;
+import org.joda.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -116,7 +116,7 @@ public class OrderService implements IOrderService {
             List<OrderDishDTO> dishes = new ArrayList<>();
             for (OrderUnit orderUnit : order.getOrderUnits()) {
                 Dish dish = orderUnit.getDish();
-                OrderDishDTO orderDishDto = new OrderDishDTO(dish.getId(), dish.getName(), dish.getCode(),
+                OrderDishDTO orderDishDto = new OrderDishDTO(dish.getId(), dish.getName(), dish.getSearchId(),
                         dish.getImageURL(), dish.getPrice(), dish.getDescription(), orderUnit.getQuantity(),
                         dish.getCategory().getId());
                 dishes.add(orderDishDto);
@@ -139,14 +139,14 @@ public class OrderService implements IOrderService {
         //todo add exception
         User user = userRepository.findById(orderItemDTO.getUserId()).orElseThrow();
         order.setUser(user);
-        order.setCreatedDate(new Date());
+        order.setCreatedDate(TimeUtil.parseTime(new LocalDateTime()));
         order.setPrice(orderItemDTO.getPrice());
         List<OrderUnit> orderUnits = new ArrayList<>();
         for (OrderDishDTO orderDishDto : orderItemDTO.getDishes()) {
-            OrderUnit orderUnit = new OrderUnit(dishRepository.findDishByCode(
-                    orderDishDto.getCode()).orElseThrow(() ->
-                    //todo decide, what method should i use to search the dish(id or code) + decide what kind of exception
-                    new DishNotExistsException("Dish with given code not exist. Code: " + orderDishDto.getCode())),
+            OrderUnit orderUnit = new OrderUnit(dishRepository.findDishBySearchId(
+                    orderDishDto.getSearchId()).orElseThrow(() ->
+                    //todo decide, what method should i use to search the dish(id or searchId) + decide what kind of exception
+                    new DishNotExistsException("Dish with given searchId not exist. SearchId: " + orderDishDto.getSearchId())),
                     orderDishDto.getQuantity());
             orderUnits.add(orderUnit);
             orderUnitRepository.save(orderUnit);
@@ -157,20 +157,10 @@ public class OrderService implements IOrderService {
         cartService.deleteCartItemsByUser(user);
     }
 
-    private LocalDate convertToLocalDateViaInstant(Date dateToConvert) {
-        return dateToConvert.toInstant()
-                .atZone(ZoneId.systemDefault())
-                .toLocalDate();
-    }
-
-    private Date convertToDateViaSqlDate(LocalDate dateToConvert) {
-        return java.sql.Date.valueOf(dateToConvert);
-    }
-
     @Override
     public List<DishStatisticDTO> getStatisticByOrders(StatisticDateDTO statisticDateDto) {
-        Date start = convertToDateViaSqlDate(convertToLocalDateViaInstant(statisticDateDto.getStart()));
-        Date end = convertToDateViaSqlDate(convertToLocalDateViaInstant(statisticDateDto.getEnd()).plusDays(1));
+        LocalDateTime start = statisticDateDto.getStart();
+        LocalDateTime end = statisticDateDto.getEnd().plusDays(1);
 
         List<Order> allOrders = orderRepository.findAllByCreatedDateBetween(start, end);
         Map<Dish, Double> dishMap = new HashMap<>();
@@ -192,7 +182,7 @@ public class OrderService implements IOrderService {
                 .forEach(x -> {
                     DishStatisticDTO dishStatisticDto = new DishStatisticDTO();
                     dishStatisticDto.setId(x.getKey().getId());
-                    dishStatisticDto.setCode(x.getKey().getCode());
+                    dishStatisticDto.setSearchId(x.getKey().getSearchId());
                     dishStatisticDto.setName(x.getKey().getName());
                     dishStatisticDto.setImageURL(x.getKey().getImageURL());
                     dishStatisticDto.setPrice(x.getKey().getPrice());

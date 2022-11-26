@@ -1,10 +1,10 @@
-package com.example.project.dto.dishDto;
+package com.example.project.dto.dish;
 
 import javax.validation.constraints.NotNull;
 
 public class DishIoTDTO {
     private Long id;
-    private @NotNull String code;
+    private @NotNull String searchId;
     private @NotNull String name;
     private @NotNull double price;
     private @NotNull String description;
@@ -12,9 +12,9 @@ public class DishIoTDTO {
     public DishIoTDTO() {
     }
 
-    public DishIoTDTO(Long id, String code, String name, double price, String description) {
+    public DishIoTDTO(Long id, String searchId, String name, double price, String description) {
         this.id = id;
-        this.code = code;
+        this.searchId = searchId;
         this.name = name;
         this.price = price;
         this.description = description;
@@ -28,12 +28,12 @@ public class DishIoTDTO {
         this.id = id;
     }
 
-    public String getCode() {
-        return code;
+    public String getSearchId() {
+        return searchId;
     }
 
-    public void setCode(String code) {
-        this.code = code;
+    public void setSearchId(String searchId) {
+        this.searchId = searchId;
     }
 
     public String getName() {

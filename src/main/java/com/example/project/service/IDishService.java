@@ -1,11 +1,10 @@
 package com.example.project.service;
 
-import com.example.project.dto.dishDto.DishDTO;
+import com.example.project.dto.dish.DishDTO;
 import com.example.project.exceptions.DishNotExistsException;
 import com.example.project.model.Category;
 import com.example.project.model.Dish;
 
-import java.util.Date;
 import java.util.List;
 
 public interface IDishService {
@@ -13,7 +12,7 @@ public interface IDishService {
 
     DishDTO getDishDto(Dish dish);
 
-    Dish getDishByCode(String code);
+    Dish getDishBySearchId(String searchId);
 
     List<DishDTO> getAllDishes();
 
@@ -22,8 +21,6 @@ public interface IDishService {
     Dish findDishById(Long dishId) throws DishNotExistsException;
 
     void deleteDishById(Long dishId);
-
-    Date convertDate();
 
     void checkPrices();
 }
