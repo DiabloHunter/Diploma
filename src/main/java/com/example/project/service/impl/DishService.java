@@ -36,7 +36,7 @@ public class DishService implements IDishService {
         dish.setName(dishDto.getName());
         dish.setCategory(category);
         dish.setPrice(dishDto.getPrice());
-        dish.setCheckDate(TimeUtil.parseTime(new LocalDateTime()));
+        dish.setCheckDate(TimeUtil.parseDateTime(new LocalDateTime()));
         dish.setMinSales(dishDto.getMinSales());
         dish.setMaxSales(dishDto.getMaxSales());
         dishRepository.save(dish);
@@ -115,7 +115,7 @@ public class DishService implements IDishService {
     public void checkPrices() {
         List<Dish> dishes = dishRepository.findAll();
 
-        LocalDateTime todayDate = TimeUtil.parseTime(new LocalDateTime());
+        LocalDateTime todayDate = TimeUtil.parseDateTime(new LocalDateTime());
         for (Dish dish : dishes) {
             List<Order> orders = orderRepository.findAllByCreatedDateBetween(dish.getCheckDate(), todayDate);
             double count = 0;

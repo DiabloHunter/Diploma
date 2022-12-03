@@ -22,7 +22,6 @@ import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
 import com.stripe.model.checkout.Session;
 import com.stripe.param.checkout.SessionCreateParams;
-import org.joda.time.DateTime;
 import org.joda.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -139,7 +138,7 @@ public class OrderService implements IOrderService {
         //todo add exception
         User user = userRepository.findById(orderItemDTO.getUserId()).orElseThrow();
         order.setUser(user);
-        order.setCreatedDate(TimeUtil.parseTime(new LocalDateTime()));
+        order.setCreatedDate(TimeUtil.parseDateTime(new LocalDateTime()));
         order.setPrice(orderItemDTO.getPrice());
         List<OrderUnit> orderUnits = new ArrayList<>();
         for (OrderDishDTO orderDishDto : orderItemDTO.getDishes()) {

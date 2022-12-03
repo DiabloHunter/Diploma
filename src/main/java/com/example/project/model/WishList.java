@@ -45,7 +45,7 @@ public class WishList {
     public WishList(User user, Dish dish) {
         this.user = user;
         this.dish = dish;
-        this.createdDate = TimeUtil.parseTime(new LocalDateTime());
+        this.createdDate = TimeUtil.parseDateTime(new LocalDateTime());
     }
 
     public Integer getId() {

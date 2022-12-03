@@ -1,6 +1,7 @@
 package com.example.project.model;
 
 import org.joda.time.LocalDateTime;
+import org.joda.time.LocalTime;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -15,15 +16,19 @@ public class Table {
 
     private @NotNull String searchId;
     private @NotNull Integer numberOfSeats;
+    private @NotNull LocalTime reservedFrom;
+    private @NotNull LocalTime reservedTo;
 
     @Column(nullable = false, columnDefinition = "boolean default false")
     private Boolean isReserved;
 
-    public Table(Long id, String searchId, Integer numberOfSeats, Boolean isReserved) {
-        this.id = id;
+
+    public Table(String searchId, Integer numberOfSeats, Boolean isReserved, LocalTime reservedFrom, LocalTime reservedTo) {
         this.searchId = searchId;
         this.numberOfSeats = numberOfSeats;
         this.isReserved = isReserved;
+        this.reservedFrom = reservedFrom;
+        this.reservedTo = reservedTo;
     }
 
     public Table(String searchId, Integer numberOfSeats, Boolean isReserved) {
@@ -65,5 +70,21 @@ public class Table {
 
     public void setReserved(Boolean reserved) {
         isReserved = reserved;
+    }
+
+    public LocalTime getReservedFrom() {
+        return reservedFrom;
+    }
+
+    public void setReservedFrom(LocalTime reservedFrom) {
+        this.reservedFrom = reservedFrom;
+    }
+
+    public LocalTime getReservedTo() {
+        return reservedTo;
+    }
+
+    public void setReservedTo(LocalTime reservedTo) {
+        this.reservedTo = reservedTo;
     }
 }

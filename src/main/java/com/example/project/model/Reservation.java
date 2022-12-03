@@ -32,7 +32,7 @@ public class Reservation {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "reservation_tables",
             joinColumns = @JoinColumn(name = "reservation_id"),
             inverseJoinColumns = @JoinColumn(name = "table_id"))

@@ -37,7 +37,7 @@ public class WishListController {
         User user = userService.getUserByEmail(userEmail);
 
         // save the item in wishlist
-        WishList wishList = new WishList(user, TimeUtil.parseTime(new LocalDateTime()), dish);
+        WishList wishList = new WishList(user, TimeUtil.parseDateTime(new LocalDateTime()), dish);
         wishListService.addWishlist(wishList);
         ApiResponse apiResponse = new ApiResponse(true, "Added to wishlist");
         return new ResponseEntity<>(apiResponse, HttpStatus.CREATED);
