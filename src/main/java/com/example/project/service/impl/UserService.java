@@ -58,7 +58,12 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public void editUser(User updatedUser, User updateUser) {
+    public void create(User user) {
+        userRepository.save(user);
+    }
+
+    @Override
+    public void update(User updatedUser, User updateUser) {
         updatedUser.setEmail(updateUser.getEmail());
 
         try {
@@ -72,14 +77,13 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public void addUser(User user) {
-        userRepository.save(user);
+    public void update(User updateUser) {
+        userRepository.save(updateUser);
     }
 
     @Override
     public boolean backup()
             throws IOException {
-
         DateTime backupDate = new DateTime();
         SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
         String backupDateStr = format.format(backupDate);
@@ -100,8 +104,6 @@ public class UserService implements IUserService {
     @Override
     public boolean restore()
             throws IOException {
-
-
         DateTime restoreDate = new DateTime();
         SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
         String backupDateStr = format.format(restoreDate);

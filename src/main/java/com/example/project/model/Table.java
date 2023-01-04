@@ -64,7 +64,7 @@ public class Table {
         this.numberOfSeats = numberOfSeats;
     }
 
-    public Boolean getReserved() {
+    public Boolean isReserved() {
         return isReserved;
     }
 

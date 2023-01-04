@@ -29,14 +29,14 @@ public class DishController {
     private static final String CHECK_PRICES_CRON = "0 58 13 ? * SAT";
 
     @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER')")
-    @PostMapping("/add")
+    @PostMapping("/create")
     public ResponseEntity<ApiResponse> createDish(@RequestBody DishDTO dishDto) {
         Category category = categoryService.getCategoryById(dishDto.getCategoryId());
         if (category == null) {
             return new ResponseEntity<>(new ApiResponse(false, "category does not exists"), HttpStatus.BAD_REQUEST);
         }
         try {
-            dishService.addDish(dishDto, category);
+            dishService.create(dishDto, category);
         } catch (Exception e) {
             return new ResponseEntity<>(new ApiResponse(false, e.getMessage()), HttpStatus.OK);
         }
@@ -80,7 +80,7 @@ public class DishController {
             return new ResponseEntity<>(new ApiResponse(false, "category does not exists"), HttpStatus.BAD_REQUEST);
         }
         try {
-            dishService.updateDish(dishDto);
+            dishService.update(dishDto);
         } catch (Exception e) {
             return new ResponseEntity<>(new ApiResponse(false, e.getMessage()), HttpStatus.OK);
         }

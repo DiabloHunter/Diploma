@@ -35,7 +35,7 @@ public class CartService implements ICartService {
         cart.setDish(dish);
         cart.setUser(user);
         cart.setQuantity(addToCartDto.getQuantity());
-        cart.setCreatedDate(TimeUtil.parseDateTime(new LocalDateTime()));
+        cart.setCreatedDate(TimeUtil.formatLocalDateTime(new LocalDateTime()));
 
         ICartRepository.save(cart);
     }

@@ -13,7 +13,9 @@ public interface IUserService {
 
     Boolean existsByEmail(String email);
 
-    void editUser(User updatedUser, User updateUser);
+    void update(User updatedUser, User updateUser);
+
+    void update(User updateUser);
 
     boolean backup()
             throws IOException, InterruptedException;
@@ -21,5 +23,5 @@ public interface IUserService {
     boolean restore()
             throws IOException;
 
-    void addUser(User user);
+    void create(User user);
 }

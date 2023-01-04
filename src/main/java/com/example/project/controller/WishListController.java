@@ -27,29 +27,22 @@ public class WishListController {
     @Autowired
     UserService userService;
 
-    // save dish as wishlist item
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
-    @PostMapping("/add")
+    @PostMapping("/create")
     public ResponseEntity<ApiResponse> addToWishList(@RequestBody Dish dish,
                                                      @RequestParam("userEmail") String userEmail) {
-
-        // find the user
         User user = userService.getUserByEmail(userEmail);
 
-        // save the item in wishlist
-        WishList wishList = new WishList(user, TimeUtil.parseDateTime(new LocalDateTime()), dish);
-        wishListService.addWishlist(wishList);
+        WishList wishList = new WishList(user, TimeUtil.formatLocalDateTime(new LocalDateTime()), dish);
+        wishListService.create(wishList);
         ApiResponse apiResponse = new ApiResponse(true, "Added to wishlist");
         return new ResponseEntity<>(apiResponse, HttpStatus.CREATED);
 
     }
 
-
-    // get all wishlist item for a user
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
     @GetMapping("/")
     public ResponseEntity<List<DishDTO>> getWishList(@RequestParam("userEmail") String userEmail) {
-        // find the user
         User user = userService.getUserByEmail(userEmail);
         List<DishDTO> dishDTOS = wishListService.getWishListForUser(user);
         return new ResponseEntity<>(dishDTOS, HttpStatus.OK);
@@ -59,13 +52,9 @@ public class WishListController {
     @DeleteMapping("/delete")
     public ResponseEntity<ApiResponse> deleteFromWishList(@RequestParam("wishlistId") Long itemId,
                                                           @RequestParam("userEmail") String userEmail) {
-        // find the user
         User user = userService.getUserByEmail(userEmail);
-
-        // save the item in wishlist
-        wishListService.deleteWishlist(user, itemId);
+        wishListService.delete(user, itemId);
         ApiResponse apiResponse = new ApiResponse(true, "Deleted from wishlist");
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
-
     }
 }

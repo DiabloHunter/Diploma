@@ -31,7 +31,6 @@ public class CartController {
     @PostMapping("/add")
     public ResponseEntity<ApiResponse> addToCart(@RequestBody AddToCartDTO addToCartDto,
                                                  @RequestParam("userEmail") String userEmail) {
-        // find the user
         User user = userService.getUserByEmail(userEmail);
         cartService.addToCart(addToCartDto, user);
 
@@ -64,7 +63,6 @@ public class CartController {
         return new ResponseEntity<>(cartDto, HttpStatus.OK);
     }
 
-    // delete a cart item for a user
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
     @DeleteMapping("/delete/")
     public ResponseEntity<ApiResponse> deleteCartItem(@RequestParam("cartItemId") Long itemId,
@@ -75,5 +73,4 @@ public class CartController {
         return new ResponseEntity<>(new ApiResponse(true, "Item has been removed"), HttpStatus.OK);
 
     }
-
 }

@@ -15,9 +15,9 @@ public class CategoryService implements ICategoryService {
     ICategoryRepository categoryRepository;
 
     @Override
-    public void createCategory(Category category) throws Exception {
+    public void create(Category category) throws Exception {
         Category categoryInBd = categoryRepository.findCategoryByCategoryName(category.getCategoryName());
-        if(categoryInBd!=null){
+        if (categoryInBd != null) {
             throw new Exception("Category with the same name already exists!");
         }
         validateCategoryImage(category);
@@ -30,10 +30,10 @@ public class CategoryService implements ICategoryService {
     }
 
     @Override
-    public void editCategory(Long categoryId, Category updateCategory) throws Exception {
+    public void update(Long categoryId, Category updateCategory) throws Exception {
         Category category = categoryRepository.findById(categoryId).orElse(null);
         Category categoryInDb = categoryRepository.findCategoryByCategoryName(updateCategory.getCategoryName());
-        if(categoryInDb!=null && category.getId()!=categoryInDb.getId()){
+        if (categoryInDb != null && category.getId() != categoryInDb.getId()) {
             throw new Exception("Category with the same searchId already exists!");
         }
         validateCategoryImage(updateCategory);
@@ -49,13 +49,13 @@ public class CategoryService implements ICategoryService {
     }
 
     @Override
-    public void deleteCategory(Long categoryId){
+    public void delete(Long categoryId) {
         categoryRepository.deleteById(categoryId);
     }
 
 
     private void validateCategoryImage(Category category) throws Exception {
-        if(category.getImageUrl().length()>240){
+        if (category.getImageUrl().length() > 240) {
             throw new Exception("Image URL is too long!");
         }
     }

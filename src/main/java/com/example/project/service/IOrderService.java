@@ -18,7 +18,7 @@ public interface IOrderService {
 
     Order getOrderById(Long id);
 
-    void addOrder(OrderItemDTO orderItemDTO);
+    void createOrder(OrderItemDTO orderItemDTO);
 
     List<DishStatisticDTO> getStatisticByOrders(StatisticDateDTO statisticDateDto);
 }

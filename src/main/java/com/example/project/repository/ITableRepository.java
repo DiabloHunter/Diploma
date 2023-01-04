@@ -15,7 +15,7 @@ public interface ITableRepository extends JpaRepository<Table, Long> {
 
     Boolean existsBySearchId(String searchId);
 
-    Optional<Table> findBySearchId(String searchId);
+    List<Table> findBySearchId(String searchId);
 
     List<Table> findBySearchIdIn(List<String> searchIds);
 

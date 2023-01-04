@@ -131,19 +131,16 @@ public class AuthService implements IAuthService {
             });
         }
 
-        // Create new user's account
         User user = new User(signUpRequest.getEmail(),
                 encoder.encode(signUpRequest.getPassword()),
                 0.0,
                 roles);
 
-
         if (userService.existsByEmail(user.getEmail())) {
             throw new CustomException("user already present");
         }
-        userService.addUser(user);
+        userService.create(user);
 
         return ResponseEntity.ok(new MessageResponse("User successfully created!"));
     }
-
 }

@@ -5,8 +5,10 @@ import org.joda.time.LocalDateTime;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
-public class ReservationDTO {
+public class UpdateReservationDto {
 
+    private @NotNull Long id;
+    private @NotNull Boolean isActive;
     private @NotNull LocalDateTime startTime;
     private @NotNull LocalDateTime endTime;
     private @NotNull Integer amountOfPeople;
@@ -14,17 +16,34 @@ public class ReservationDTO {
     private @NotNull List<Long> tableIds;
     private String description;
 
-    public ReservationDTO(LocalDateTime startTime, LocalDateTime endTime, Integer amountOfPeople,
-                          String userEmail, String description, List<Long> tableIds) {
+    public UpdateReservationDto(Boolean isActive, LocalDateTime startTime, LocalDateTime endTime,
+                                Integer amountOfPeople, String userEmail, List<Long> tableIds, String description) {
+        this.isActive = isActive;
         this.startTime = startTime;
         this.endTime = endTime;
         this.amountOfPeople = amountOfPeople;
         this.userEmail = userEmail;
-        this.description = description;
         this.tableIds = tableIds;
+        this.description = description;
     }
 
-    public ReservationDTO() {
+    public UpdateReservationDto() {
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(Boolean active) {
+        isActive = active;
     }
 
     public LocalDateTime getStartTime() {
@@ -74,4 +93,5 @@ public class ReservationDTO {
     public void setTableIds(List<Long> tableIds) {
         this.tableIds = tableIds;
     }
+
 }

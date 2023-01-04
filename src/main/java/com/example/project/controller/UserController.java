@@ -19,18 +19,10 @@ public class UserController {
     @Autowired
     IUserService userService;
 
-//    @GetMapping("/signinMob/{email}&{password}")
-//    public SignInReponseDto signInMob(@PathVariable("email") String email, @PathVariable("password") String password) {
-//        SignInDto signInDto = new SignInDto(email, password);
-//        return userService.signInMob(signInDto);
-//    }
-
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
     @GetMapping("/")
     public UserDTO getUser(@RequestParam String email) {
-        // find the user
         User user = userService.getUserByEmail(email);
-
         return userService.getUserDto(user);
     }
 
@@ -38,7 +30,7 @@ public class UserController {
     @PostMapping("/update/")
     public ResponseEntity<ApiResponse> updateUser(@RequestParam("userEmail") String userEmail, @RequestBody User changedUser) {
         User user = userService.getUserByEmail(userEmail);
-        userService.editUser(user, changedUser);
+        userService.update(user, changedUser);
         return new ResponseEntity<>(new ApiResponse(true, "User has been updated"), HttpStatus.OK);
     }
 

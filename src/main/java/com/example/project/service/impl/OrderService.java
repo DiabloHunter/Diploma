@@ -133,12 +133,12 @@ public class OrderService implements IOrderService {
     }
 
     @Override
-    public void addOrder(OrderItemDTO orderItemDTO) {
+    public void createOrder(OrderItemDTO orderItemDTO) {
         Order order = new Order();
         //todo add exception
         User user = userRepository.findById(orderItemDTO.getUserId()).orElseThrow();
         order.setUser(user);
-        order.setCreatedDate(TimeUtil.parseDateTime(new LocalDateTime()));
+        order.setCreatedDate(TimeUtil.formatLocalDateTime(new LocalDateTime()));
         order.setPrice(orderItemDTO.getPrice());
         List<OrderUnit> orderUnits = new ArrayList<>();
         for (OrderDishDTO orderDishDto : orderItemDTO.getDishes()) {

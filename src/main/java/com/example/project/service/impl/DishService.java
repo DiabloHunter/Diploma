@@ -26,7 +26,7 @@ public class DishService implements IDishService {
     IOrderRepository orderRepository;
 
     @Override
-    public void addDish(DishDTO dishDto, Category category) throws Exception {
+    public void create(DishDTO dishDto, Category category) throws Exception {
         Dish dish = new Dish();
         assertDishIsNotExistBySearchId(dishDto.getSearchId());
         validateDishImage(dishDto);
@@ -36,7 +36,7 @@ public class DishService implements IDishService {
         dish.setName(dishDto.getName());
         dish.setCategory(category);
         dish.setPrice(dishDto.getPrice());
-        dish.setCheckDate(TimeUtil.parseDateTime(new LocalDateTime()));
+        dish.setCheckDate(TimeUtil.formatLocalDateTime(new LocalDateTime()));
         dish.setMinSales(dishDto.getMinSales());
         dish.setMaxSales(dishDto.getMaxSales());
         dishRepository.save(dish);
@@ -76,7 +76,7 @@ public class DishService implements IDishService {
 
 
     @Override
-    public void updateDish(DishDTO dishDto) throws Exception {
+    public void update(DishDTO dishDto) throws Exception {
         Dish dish = dishRepository.findDishBySearchId(dishDto.getSearchId())
                 .orElse(null);
 
@@ -115,7 +115,7 @@ public class DishService implements IDishService {
     public void checkPrices() {
         List<Dish> dishes = dishRepository.findAll();
 
-        LocalDateTime todayDate = TimeUtil.parseDateTime(new LocalDateTime());
+        LocalDateTime todayDate = TimeUtil.formatLocalDateTime(new LocalDateTime());
         for (Dish dish : dishes) {
             List<Order> orders = orderRepository.findAllByCreatedDateBetween(dish.getCheckDate(), todayDate);
             double count = 0;
@@ -135,7 +135,6 @@ public class DishService implements IDishService {
             dish.setCheckDate(todayDate);
             dishRepository.save(dish);
         }
-
     }
 
     private void assertDishIsNotExistBySearchId(String dishSearchId) throws IllegalArgumentException {
@@ -150,5 +149,4 @@ public class DishService implements IDishService {
             throw new IllegalArgumentException("Dish is not null!");
         }
     }
-
 }

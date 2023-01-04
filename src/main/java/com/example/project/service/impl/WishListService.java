@@ -27,12 +27,12 @@ public class WishListService implements IWishListService {
     DishService dishService;
 
     @Override
-    public void addWishlist(WishList wishList) {
+    public void create(WishList wishList) {
         IWishListRepository.save(wishList);
     }
 
     @Override
-    public void deleteWishlist(User user, Long dishId) {
+    public void delete(User user, Long dishId) {
         Dish dish = IDishRepository.findById(dishId)
                 .orElseThrow(() -> new CustomException("dish id is invalid: " + dishId));
 
@@ -52,7 +52,6 @@ public class WishListService implements IWishListService {
         for (WishList wishList : wishLists) {
             dishDTOS.add(dishService.getDishDto(wishList.getDish()));
         }
-
         return dishDTOS;
     }
 }

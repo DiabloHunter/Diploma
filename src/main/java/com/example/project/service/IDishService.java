@@ -8,7 +8,7 @@ import com.example.project.model.Dish;
 import java.util.List;
 
 public interface IDishService {
-    void addDish(DishDTO dishDto, Category category) throws Exception;
+    void create(DishDTO dishDto, Category category) throws Exception;
 
     DishDTO getDishDto(Dish dish);
 
@@ -16,7 +16,7 @@ public interface IDishService {
 
     List<DishDTO> getAllDishes();
 
-    void updateDish(DishDTO dishDto) throws Exception;
+    void update(DishDTO dishDto) throws Exception;
 
     Dish findDishById(Long dishId) throws DishNotExistsException;
 

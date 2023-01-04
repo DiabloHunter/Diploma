@@ -1,10 +1,8 @@
 package com.example.project.controller;
 
 import com.example.project.common.ApiResponse;
-import com.example.project.dto.category.CategoryRequestDTO;
 import com.example.project.model.Category;
 import com.example.project.service.ICategoryService;
-import com.example.project.service.impl.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +22,7 @@ public class CategoryController {
     @PostMapping("/create")
     public ResponseEntity<ApiResponse> createCategory(@RequestBody Category category) {
         try {
-            categoryService.createCategory(category);
+            categoryService.create(category);
         } catch (Exception e) {
             return new ResponseEntity<>(new ApiResponse(false, e.getMessage()), HttpStatus.OK);
         }
@@ -39,11 +37,11 @@ public class CategoryController {
     @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER')")
     @PostMapping("/update/")
     public ResponseEntity<ApiResponse> updateCategory(@RequestParam Long id, @RequestBody Category category) {
-        if (categoryService.getCategoryById(id)==null) {
+        if (categoryService.getCategoryById(id) == null) {
             return new ResponseEntity<>(new ApiResponse(false, "category does not exists"), HttpStatus.NOT_FOUND);
         }
         try {
-            categoryService.editCategory(category.getId(), category);
+            categoryService.update(category.getId(), category);
         } catch (Exception e) {
             return new ResponseEntity<>(new ApiResponse(false, e.getMessage()), HttpStatus.OK);
         }
@@ -52,11 +50,11 @@ public class CategoryController {
 
     @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER')")
     @DeleteMapping("/delete/")
-    public ResponseEntity<ApiResponse> deleteCategory(@RequestParam Long id){
-        if (categoryService.getCategoryById(id)==null) {
+    public ResponseEntity<ApiResponse> deleteCategory(@RequestParam Long id) {
+        if (categoryService.getCategoryById(id) == null) {
             return new ResponseEntity<>(new ApiResponse(false, "category does not exists"), HttpStatus.NOT_FOUND);
         }
-        categoryService.deleteCategory(id);
+        categoryService.delete(id);
         return new ResponseEntity<>(new ApiResponse(true, "category has been deleted"), HttpStatus.OK);
     }
 }
