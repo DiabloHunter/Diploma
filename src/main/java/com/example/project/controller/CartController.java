@@ -53,8 +53,6 @@ public class CartController {
         return new ResponseEntity<>(new ApiResponse(true, "Added to cart"), HttpStatus.CREATED);
     }
 
-
-    // get all cart items for a user
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
     @GetMapping("/")
     public ResponseEntity<CartDTO> getCartItems(@RequestParam("userEmail") String userEmail) {

@@ -26,8 +26,8 @@ public class TableController {
 
     @GetMapping("/")
     public ResponseEntity<List<TableTimeDto>> getAllTables() {
-        tableService.getAllTablesDto();
-        return new ResponseEntity<>(null, HttpStatus.OK);
+        List<TableTimeDto> tableTimeDtos =  tableService.getAllTablesDto();
+        return new ResponseEntity<>(tableTimeDtos, HttpStatus.OK);
     }
 
     @PostMapping("/create")

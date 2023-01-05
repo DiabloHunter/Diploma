@@ -6,18 +6,21 @@ import java.util.List;
 public class TableTimeDto {
 
     private String searchId;
+    private int numberOfSeats;
     private List<String> availableTime;
 
     public TableTimeDto() {
     }
 
-    public TableTimeDto(String searchId) {
+    public TableTimeDto(String searchId, int numberOfSeats) {
         this.searchId = searchId;
+        this.numberOfSeats = numberOfSeats;
         this.availableTime = new ArrayList<>();
     }
 
-    public TableTimeDto(String searchId, List<String> availableTime) {
+    public TableTimeDto(String searchId, int numberOfSeats, List<String> availableTime) {
         this.searchId = searchId;
+        this.numberOfSeats = numberOfSeats;
         this.availableTime = availableTime;
     }
 
@@ -27,6 +30,14 @@ public class TableTimeDto {
 
     public void setSearchId(String searchId) {
         this.searchId = searchId;
+    }
+
+    public int getNumberOfSeats() {
+        return numberOfSeats;
+    }
+
+    public void setNumberOfSeats(int numberOfSeats) {
+        this.numberOfSeats = numberOfSeats;
     }
 
     public List<String> getAvailableTime() {

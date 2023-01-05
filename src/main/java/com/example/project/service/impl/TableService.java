@@ -116,7 +116,7 @@ public class TableService implements ITableService {
     }
 
     private TableTimeDto getTableDto(Map.Entry<String, List<Table>> tableEntry) {
-        TableTimeDto tableTimeDto = new TableTimeDto(tableEntry.getKey());
+        TableTimeDto tableTimeDto = new TableTimeDto(tableEntry.getKey(), tableEntry.getValue().get(0).getNumberOfSeats());
 
         List<String> availableTime = new ArrayList<>();
         Table available = null;
