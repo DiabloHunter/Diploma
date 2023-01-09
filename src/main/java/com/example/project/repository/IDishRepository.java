@@ -9,6 +9,10 @@ import java.util.Optional;
 @Repository
 public interface IDishRepository extends JpaRepository<Dish, Long> {
 
-    Optional<Dish> findDishBySearchId(String searchId);
+    Dish findDishBySearchId(String searchId);
+
+    boolean existsBySearchId(String searchId);
+
+    Dish getById(Long id);
 
 }

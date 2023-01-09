@@ -1,9 +1,11 @@
 package com.example.project.service;
 
 
+import com.example.project.dto.table.CreateTableDto;
 import com.example.project.dto.table.TableTimeDto;
 import com.example.project.dto.table.UpdateTableDto;
 import com.example.project.model.Table;
+import javassist.NotFoundException;
 import org.joda.time.LocalTime;
 
 import java.util.List;
@@ -15,9 +17,13 @@ public interface ITableService {
 
     List<TableTimeDto> getAllTablesDto();
 
+    TableTimeDto getTableDtoBySearchId(String searchId);
+
     Map<String, List<Table>> convertTablesListToMap(List<Table> list);
 
     List<TableTimeDto> convertTablesToTableDtos(Map<String, List<Table>> tables);
+
+    TableTimeDto convertTablesToTableDto(List<Table> tables);
 
     List<Table> getTableBySearchId(String searchId);
 
@@ -33,9 +39,11 @@ public interface ITableService {
 
     void saveAll(List<Table> tables);
 
-    void create(Table table) throws Exception;
+    void create(CreateTableDto createTableDto);
 
-    void update(UpdateTableDto updateTableDto) throws Exception;
+    void update(UpdateTableDto updateTableDto) throws NotFoundException;
 
-    void deleteTable(String searchId);
+    void deleteTable(String searchId) throws NotFoundException;
+
+    boolean existBySearchId(String searchId);
 }

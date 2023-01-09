@@ -3,11 +3,11 @@ package com.example.project.controller;
 
 import com.example.project.common.ApiResponse;
 import com.example.project.dto.dish.DishDTO;
-import com.example.project.dto.dish.DishIoTDTO;
-import com.example.project.model.Category;
 import com.example.project.model.Dish;
-import com.example.project.service.ICategoryService;
 import com.example.project.service.IDishService;
+import javassist.NotFoundException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,28 +20,11 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/dish")
 public class DishController {
+
     @Autowired
     IDishService dishService;
 
-    @Autowired
-    ICategoryService categoryService;
-
-    private static final String CHECK_PRICES_CRON = "0 58 13 ? * SAT";
-
-    @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER')")
-    @PostMapping("/create")
-    public ResponseEntity<ApiResponse> createDish(@RequestBody DishDTO dishDto) {
-        Category category = categoryService.getCategoryById(dishDto.getCategoryId());
-        if (category == null) {
-            return new ResponseEntity<>(new ApiResponse(false, "category does not exists"), HttpStatus.BAD_REQUEST);
-        }
-        try {
-            dishService.create(dishDto, category);
-        } catch (Exception e) {
-            return new ResponseEntity<>(new ApiResponse(false, e.getMessage()), HttpStatus.OK);
-        }
-        return new ResponseEntity<>(new ApiResponse(true, "dish has been added"), HttpStatus.CREATED);
-    }
+    private static final Logger LOG = LogManager.getLogger(DishController.class);
 
     @GetMapping("/")
     public ResponseEntity<List<DishDTO>> getDishes() {
@@ -51,50 +34,85 @@ public class DishController {
 
     //@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
     @GetMapping("/getBySearchId/")
-    public ResponseEntity<DishIoTDTO> getDishBySearchId(@RequestBody DishDTO dishDto) {
+    public ResponseEntity<DishDTO> getDishBySearchId(@RequestBody DishDTO dishDto) {
         Dish dish = dishService.getDishBySearchId(dishDto.getSearchId());
-        DishIoTDTO dishIoTDTO = new DishIoTDTO(dish.getId(), dish.getSearchId(), dish.getName(),
-                dish.getPrice(), dish.getDescription());
-        return new ResponseEntity<>(dishIoTDTO, HttpStatus.OK);
-    }
 
+        if (dish == null) {
+            LOG.warn(String.format("Dish with searchId %s was not found!", dishDto.getSearchId()));
+            return new ResponseEntity<>(null,  HttpStatus.OK);
+        }
 
-    @Scheduled(cron = CHECK_PRICES_CRON)
-    public ResponseEntity<ApiResponse> checkPricesSchedule() {
-        dishService.checkPrices();
-        return new ResponseEntity<>(new ApiResponse(true, "Date for all dishes have been changed"), HttpStatus.CREATED);
+        DishDTO dishDTO = dishService.getDishDto(dish);
+        return new ResponseEntity<>(dishDTO, HttpStatus.OK);
     }
 
     @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER')")
-    @PostMapping("/checkPrices")
-    public ResponseEntity<ApiResponse> checkPrices() {
-        dishService.checkPrices();
-        return new ResponseEntity<>(new ApiResponse(true, "Date for all dishes have been changed"), HttpStatus.CREATED);
+    @PostMapping("/create")
+    public ResponseEntity<ApiResponse> createDish(@RequestBody DishDTO dishDto) {
+        try {
+            dishService.create(dishDto);
+        } catch (NotFoundException e) {
+            LOG.error(e.getMessage());
+            return new ResponseEntity<>(new ApiResponse(false, e.getMessage()), HttpStatus.NOT_FOUND);
+        } catch (IllegalArgumentException e) {
+            LOG.error(e.getMessage());
+            return new ResponseEntity<>(new ApiResponse(false, e.getMessage()), HttpStatus.BAD_REQUEST);
+        }
+
+        LOG.info(String.format("Dish with name %s has been created!", dishDto.getSearchId()));
+        return new ResponseEntity<>(new ApiResponse(true,
+                String.format("Dish with name %s has been created!", dishDto.getName())), HttpStatus.CREATED);
     }
 
     @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER')")
     @PostMapping("/update/")
     public ResponseEntity<ApiResponse> updateDish(@RequestBody DishDTO dishDto) {
-        Category category = categoryService.getCategoryById(dishDto.getCategoryId());
-        if (category == null) {
-            return new ResponseEntity<>(new ApiResponse(false, "category does not exists"), HttpStatus.BAD_REQUEST);
-        }
         try {
             dishService.update(dishDto);
-        } catch (Exception e) {
-            return new ResponseEntity<>(new ApiResponse(false, e.getMessage()), HttpStatus.OK);
+        } catch (NotFoundException e) {
+            LOG.error(e.getMessage());
+            return new ResponseEntity<>(new ApiResponse(false, e.getMessage()), HttpStatus.NOT_FOUND);
+        } catch (IllegalArgumentException e) {
+            LOG.error(e.getMessage());
+            return new ResponseEntity<>(new ApiResponse(false, e.getMessage()), HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(new ApiResponse(true, "dish has been updated"), HttpStatus.OK);
+
+        LOG.info(String.format("Dish with Id %s has been updated", dishDto.getId()));
+        return new ResponseEntity<>(new ApiResponse(true,
+                String.format("Dish with Id %s has been updated", dishDto.getId())), HttpStatus.OK);
     }
 
     @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER')")
     @DeleteMapping("/delete")
     public ResponseEntity<ApiResponse> deleteCategory(@RequestParam Long id) {
-        if (dishService.findDishById(id) == null) {
-            return new ResponseEntity<>(new ApiResponse(false, "dish does not exists"), HttpStatus.NOT_FOUND);
+        try {
+            dishService.deleteDishById(id);
+        } catch (NotFoundException e) {
+            LOG.error(e.getMessage());
+            return new ResponseEntity<>(new ApiResponse(false, e.getMessage()), HttpStatus.NOT_FOUND);
         }
-        dishService.deleteDishById(id);
-        return new ResponseEntity<>(new ApiResponse(true, "dish has been deleted"), HttpStatus.OK);
+
+        LOG.info(String.format("Dish with Id %s has been deleted", id));
+        return new ResponseEntity<>(new ApiResponse(true,
+                String.format("Dish with Id %s has been deleted", id)), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER')")
+    @PostMapping("/checkPrices")
+    public ResponseEntity<ApiResponse> checkPrices() {
+        LOG.info("Check price process started.");
+        dishService.checkPrices();
+        LOG.info("Check price has been done.");
+
+        return new ResponseEntity<>(new ApiResponse(true, "Check price has been done."), HttpStatus.OK);
+    }
+
+    @Scheduled(cron = "${cron.check.prices}")
+    public ResponseEntity<ApiResponse> checkPricesSchedule() {
+        LOG.info("Check price process started.");
+        dishService.checkPrices();
+        LOG.info("Check price has been done.");
+
+        return new ResponseEntity<>(new ApiResponse(true, "Check price has been done."), HttpStatus.OK);
+    }
 }

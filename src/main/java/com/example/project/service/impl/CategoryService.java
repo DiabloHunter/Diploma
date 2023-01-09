@@ -1,8 +1,11 @@
 package com.example.project.service.impl;
 
+import com.example.project.dto.category.CreateUpdateCategoryDto;
 import com.example.project.model.Category;
 import com.example.project.repository.ICategoryRepository;
 import com.example.project.service.ICategoryService;
+import com.example.project.util.ValidationUtil;
+import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,12 +18,15 @@ public class CategoryService implements ICategoryService {
     ICategoryRepository categoryRepository;
 
     @Override
-    public void create(Category category) throws Exception {
-        Category categoryInBd = categoryRepository.findCategoryByCategoryName(category.getCategoryName());
-        if (categoryInBd != null) {
-            throw new Exception("Category with the same name already exists!");
+    public void create(CreateUpdateCategoryDto createUpdateCategoryDto) throws IllegalArgumentException {
+        if (categoryRepository.existsByCategoryName(createUpdateCategoryDto.getCategoryName())) {
+            throw new IllegalArgumentException(String.format("Category with name %s already exists!",
+                    createUpdateCategoryDto.getCategoryName()));
         }
-        validateCategoryImage(category);
+        ValidationUtil.validateImageUrl(createUpdateCategoryDto.getImageUrl());
+
+        Category category = new Category(createUpdateCategoryDto.getCategoryName(),
+                createUpdateCategoryDto.getDescription(), createUpdateCategoryDto.getImageUrl());
         categoryRepository.save(category);
     }
 
@@ -30,33 +36,30 @@ public class CategoryService implements ICategoryService {
     }
 
     @Override
-    public void update(Long categoryId, Category updateCategory) throws Exception {
-        Category category = categoryRepository.findById(categoryId).orElse(null);
-        Category categoryInDb = categoryRepository.findCategoryByCategoryName(updateCategory.getCategoryName());
-        if (categoryInDb != null && category.getId() != categoryInDb.getId()) {
-            throw new Exception("Category with the same searchId already exists!");
+    public void update(Long categoryId, CreateUpdateCategoryDto createUpdateCategoryDto) throws NotFoundException {
+        Category category = categoryRepository.findById(categoryId).orElseThrow(() ->
+                new NotFoundException(String.format("Category with Id %s was not found!", categoryId)));
+        if (categoryRepository.existsByCategoryName(createUpdateCategoryDto.getCategoryName())) {
+            throw new IllegalArgumentException(String.format("Category with name %s already exists!",
+                    category.getCategoryName()));
         }
-        validateCategoryImage(updateCategory);
-        category.setCategoryName(updateCategory.getCategoryName());
-        category.setDescription(updateCategory.getDescription());
-        category.setImageUrl(updateCategory.getImageUrl());
+        ValidationUtil.validateImageUrl(createUpdateCategoryDto.getImageUrl());
+        category.setCategoryName(createUpdateCategoryDto.getCategoryName());
+        category.setDescription(createUpdateCategoryDto.getDescription());
+        category.setImageUrl(createUpdateCategoryDto.getImageUrl());
         categoryRepository.save(category);
     }
 
     @Override
     public Category getCategoryById(Long categoryId) {
-        return categoryRepository.findById(categoryId).orElse(null);
+        return categoryRepository.getById(categoryId);
     }
 
     @Override
-    public void delete(Long categoryId) {
-        categoryRepository.deleteById(categoryId);
-    }
-
-
-    private void validateCategoryImage(Category category) throws Exception {
-        if (category.getImageUrl().length() > 240) {
-            throw new Exception("Image URL is too long!");
+    public void delete(Long categoryId) throws NotFoundException {
+        if(!categoryRepository.existsById(categoryId)){
+            throw new NotFoundException(String.format("Category with Id %s was not found!", categoryId));
         }
+        categoryRepository.deleteById(categoryId);
     }
 }

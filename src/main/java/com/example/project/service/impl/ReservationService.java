@@ -11,6 +11,7 @@ import com.example.project.service.IReservationService;
 import com.example.project.service.ITableService;
 import com.example.project.service.IUserService;
 import com.example.project.util.TimeUtil;
+import javassist.NotFoundException;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,27 +32,6 @@ public class ReservationService implements IReservationService {
 
     @Autowired
     IUserService userService;
-
-    @Override
-    public void createReservation(ReservationDTO reservationDTO) {
-
-        List<Table> selectedTables = tableService.getTablesByIds(reservationDTO.getTableIds());
-        tableService.reserveTables(selectedTables);
-
-        User user = userService.getUserByEmail(reservationDTO.getUserEmail());
-
-        Reservation reservation = new Reservation();
-        reservation.setActive(true);
-        reservation.setDescription(reservationDTO.getDescription());
-        reservation.setAmountOfPeople(reservationDTO.getAmountOfPeople());
-        reservation.setStartTime(TimeUtil.formatLocalDateTime(reservationDTO.getStartTime()));
-        reservation.setEndTime(TimeUtil.formatLocalDateTime(reservationDTO.getEndTime()));
-        reservation.setUser(user);
-        reservation.setTables(selectedTables);
-
-        reservationRepository.save(reservation);
-        tableService.saveAll(selectedTables);
-    }
 
     @Override
     public List<TableTimeDto> getFreeTables(LocalDate date) {
@@ -82,13 +62,49 @@ public class ReservationService implements IReservationService {
     }
 
     @Override
-    public void updateReservation(UpdateReservationDto updateReservationDto) {
-        Reservation outdatedReservation = reservationRepository.findById(updateReservationDto.getId()).orElse(null);
+    public void createReservation(ReservationDTO reservationDTO) throws NotFoundException {
+
+        List<Table> selectedTables = tableService.getTablesByIds(reservationDTO.getTableIds());
+        if(selectedTables.isEmpty()){
+            throw new NotFoundException("Tables with given ids were not found!");
+        }
+
+        tableService.reserveTables(selectedTables);
+
+        User user = userService.getUserByEmail(reservationDTO.getUserEmail());
+        if(user==null){
+            throw new NotFoundException(String.format("User with given email %s was not found!", reservationDTO.getUserEmail()));
+        }
+
+        Reservation reservation = new Reservation();
+        reservation.setActive(true);
+        reservation.setDescription(reservationDTO.getDescription());
+        reservation.setAmountOfPeople(reservationDTO.getAmountOfPeople());
+        reservation.setStartTime(TimeUtil.formatLocalDateTime(reservationDTO.getStartTime()));
+        reservation.setEndTime(TimeUtil.formatLocalDateTime(reservationDTO.getEndTime()));
+        reservation.setUser(user);
+        reservation.setTables(selectedTables);
+
+        reservationRepository.save(reservation);
+        tableService.saveAll(selectedTables);
+    }
+
+    @Override
+    public void updateReservation(UpdateReservationDto updateReservationDto) throws NotFoundException {
+        Reservation outdatedReservation = reservationRepository.getById(updateReservationDto.getId());
+        if(outdatedReservation==null){
+            throw new NotFoundException(String.format("Reservation with id %s was not found!", updateReservationDto.getId()));
+        }
+
+        User user = userService.getUserByEmail(updateReservationDto.getUserEmail());
+        if(user==null){
+            throw new NotFoundException(String.format("User with given email %s was not found!", updateReservationDto.getUserEmail()));
+        }
 
         outdatedReservation.setStartTime(updateReservationDto.getStartTime());
         outdatedReservation.setEndTime(updateReservationDto.getEndTime());
         outdatedReservation.setAmountOfPeople(updateReservationDto.getAmountOfPeople());
-        outdatedReservation.setUser(userService.getUserByEmail(updateReservationDto.getUserEmail()));
+        outdatedReservation.setUser(user);
         outdatedReservation.setDescription(updateReservationDto.getDescription());
 
         if (!updateReservationDto.isActive()) {
@@ -96,7 +112,6 @@ public class ReservationService implements IReservationService {
             outdatedTables.forEach(table -> table.setReserved(false));
             tableService.saveAll(outdatedTables);
         } else if (outdatedReservation.getStartTime().toLocalDate().equals(new LocalDate())) {
-
             List<Long> newReservedTableIds = updateReservationDto.getTableIds();
             List<Table> outdatedTables = outdatedReservation.getTables();
             tableService.setNotReserveTables(outdatedTables);
@@ -108,7 +123,6 @@ public class ReservationService implements IReservationService {
             tableService.saveAll(outdatedTables);
 
             if (outdatedReservation.getStartTime().isBefore(new LocalDateTime().plusMinutes(30))) {
-                User user = userService.getUserByEmail(updateReservationDto.getUserEmail());
                 user.setRating(user.getRating() - 0.1);
                 userService.update(user);
             }

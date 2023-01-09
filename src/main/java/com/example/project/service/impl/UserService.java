@@ -1,10 +1,14 @@
 package com.example.project.service.impl;
 
+import com.example.project.dto.user.UpdateUserDto;
 import com.example.project.dto.user.UserDTO;
 import com.example.project.exceptions.CustomException;
 import com.example.project.model.User;
 import com.example.project.repository.IUserRepository;
 import com.example.project.service.IUserService;
+import javassist.NotFoundException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -28,6 +32,8 @@ public class UserService implements IUserService {
     @Autowired
     IUserRepository userRepository;
 
+    private static final Logger LOG = LogManager.getLogger(UserService.class);
+
     private String hashPassword(String password) throws NoSuchAlgorithmException {
         MessageDigest md = MessageDigest.getInstance("MD5");
         md.update(password.getBytes());
@@ -40,6 +46,9 @@ public class UserService implements IUserService {
     @Override
     public UserDTO getUserDto(User user) {
         UserDTO userDto = new UserDTO();
+        if (user == null) {
+            return userDto;
+        }
         userDto.setEmail(user.getEmail());
         userDto.setPassword(user.getPassword());
         userDto.setRating(user.getRating());
@@ -48,8 +57,7 @@ public class UserService implements IUserService {
 
     @Override
     public User getUserByEmail(String userEmail) {
-        return userRepository.findByEmail(userEmail)
-                .orElseThrow(() -> new CustomException("User Not Found with email: " + userEmail));
+        return userRepository.findByEmail(userEmail);
     }
 
     @Override
@@ -63,22 +71,39 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public void update(User updatedUser, User updateUser) {
-        updatedUser.setEmail(updateUser.getEmail());
-
-        try {
-            String encryptedPassword = hashPassword(updateUser.getPassword());
-            updatedUser.setPassword(encryptedPassword);
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+    public void update(String userEmail, UpdateUserDto updateUser) throws NotFoundException {
+        if (userEmail == null) {
+            throw new IllegalArgumentException("Email must be not null!");
         }
 
+        User updatedUser = userRepository.findByEmail(userEmail);
+        if (updatedUser == null) {
+            throw new NotFoundException(String.format("User with email %s was not found!", userEmail));
+        }
+
+        if (updateUser.getEmail() != null && !userEmail.equals(updateUser.getEmail())) {
+            updatedUser.setEmail(updateUser.getEmail());
+        }
+
+        if (updateUser.getPassword() != null && !updatedUser.getPassword().equals(updateUser.getPassword())) {
+            try {
+                String encryptedPassword = hashPassword(updateUser.getPassword());
+                updatedUser.setPassword(encryptedPassword);
+            } catch (NoSuchAlgorithmException e) {
+                LOG.error(e.getMessage());
+                return;
+            }
+        }
         userRepository.save(updatedUser);
     }
 
     @Override
     public void update(User updateUser) {
-        userRepository.save(updateUser);
+        if (updateUser != null) {
+            userRepository.save(updateUser);
+        } else {
+            LOG.error("Update user mustn't be null!");
+        }
     }
 
     @Override

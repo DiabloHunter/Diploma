@@ -11,7 +11,7 @@ public class OrderItemDTO {
     private Long orderId;
     private @NotNull Double price;
     private @NotNull List<OrderDishDTO> dishes = new ArrayList<>();
-    private @NotNull Long userId;
+    private @NotNull String userEmail;
     private @NotNull LocalDateTime createdDate;
 
     public OrderItemDTO() {
@@ -41,12 +41,12 @@ public class OrderItemDTO {
         this.dishes = dishes;
     }
 
-    public Long getUserId() {
-        return userId;
+    public String getUserEmail() {
+        return userEmail;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
     }
 
     public LocalDateTime getCreatedDate() {

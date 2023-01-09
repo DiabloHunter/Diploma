@@ -9,7 +9,9 @@ import com.example.project.model.Dish;
 import com.example.project.model.User;
 import com.example.project.repository.ICartRepository;
 import com.example.project.service.ICartService;
+import com.example.project.service.IUserService;
 import com.example.project.util.TimeUtil;
+import javassist.NotFoundException;
 import org.joda.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,11 +27,21 @@ public class CartService implements ICartService {
     DishService dishService;
 
     @Autowired
-    ICartRepository ICartRepository;
+    ICartRepository cartRepository;
+
+    @Autowired
+    IUserService userService;
 
     @Override
-    public void addToCart(AddToCartDTO addToCartDto, User user) {
+    public void addToCart(AddToCartDTO addToCartDto) throws NotFoundException {
         Dish dish = dishService.findDishById(addToCartDto.getDishId());
+        if (dish == null) {
+            throw new NotFoundException(String.format("Dish with id %s was not found!", addToCartDto.getDishId()));
+        }
+        User user = userService.getUserByEmail(addToCartDto.getUserEmail());
+        if (user == null) {
+            throw new NotFoundException(String.format("User with email %s was not found!", addToCartDto.getUserEmail()));
+        }
 
         Cart cart = new Cart();
         cart.setDish(dish);
@@ -37,12 +49,18 @@ public class CartService implements ICartService {
         cart.setQuantity(addToCartDto.getQuantity());
         cart.setCreatedDate(TimeUtil.formatLocalDateTime(new LocalDateTime()));
 
-        ICartRepository.save(cart);
+        cartRepository.save(cart);
     }
 
     @Override
-    public CartDTO getAllCartItems(User user) {
-        List<Cart> cartList = ICartRepository.findAllByUserOrderByCreatedDateDesc(user);
+    public CartDTO getAllCartItems(String userEmail) throws NotFoundException {
+        User user = userService.getUserByEmail(userEmail);
+
+        if (user == null) {
+            throw new NotFoundException(String.format("User with email %s was not found!", userEmail));
+        }
+
+        List<Cart> cartList = cartRepository.findAllByUserOrderByCreatedDateDesc(user);
         List<CartItemDTO> cartItems = new ArrayList<>();
         double totalCost = 0;
         for (Cart cart : cartList) {
@@ -53,29 +71,37 @@ public class CartService implements ICartService {
         CartDTO cartDto = new CartDTO();
         cartDto.setTotalCost(totalCost);
         cartDto.setCartItems(cartItems);
-        cartDto.setUserId(user.getId());
+        cartDto.setUserEmail(user.getEmail());
         return cartDto;
+
     }
 
     @Override
-    public void deleteCartItem(Long cartItemId, User user) {
-        Optional<Cart> optionalCart = ICartRepository.findById(cartItemId);
+    public void deleteCartItem(Long cartItemId, String userEmail) throws NotFoundException {
+        User user = userService.getUserByEmail(userEmail);
+
+        if (user == null) {
+            throw new NotFoundException(String.format("User with email %s was not found!", userEmail));
+        }
+
+        Optional<Cart> optionalCart = cartRepository.findById(cartItemId);
         if (optionalCart.isEmpty()) {
-            throw new CustomException("cart item id is invalid: " + cartItemId);
+            throw new NotFoundException(String.format("Cart item with id %s was not found!", cartItemId));
         }
         Cart cart = optionalCart.get();
-        if (cart.getUser() != user) {
-            throw new CustomException("cart item does not belong to user: " + cartItemId);
+        if (!cart.getUser().equals(user)) {
+            throw new IllegalArgumentException(String.format("Cart item with id %s does not belong to user with email %s",
+                    cartItemId, userEmail));
         }
-        ICartRepository.delete(cart);
+        cartRepository.delete(cart);
     }
 
     @Override
     public void deleteCartItemsByUser(User user) {
-        List<Cart> optionalCart = ICartRepository.findAllByUserOrderByCreatedDateDesc(user);
+        List<Cart> optionalCart = cartRepository.findAllByUserOrderByCreatedDateDesc(user);
         if (optionalCart.isEmpty()) {
             throw new CustomException("User don't have carts");
         }
-        ICartRepository.deleteAll(optionalCart);
+        cartRepository.deleteAll(optionalCart);
     }
 }

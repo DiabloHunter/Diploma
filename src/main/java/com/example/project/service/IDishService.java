@@ -4,11 +4,12 @@ import com.example.project.dto.dish.DishDTO;
 import com.example.project.exceptions.DishNotExistsException;
 import com.example.project.model.Category;
 import com.example.project.model.Dish;
+import javassist.NotFoundException;
 
 import java.util.List;
 
 public interface IDishService {
-    void create(DishDTO dishDto, Category category) throws Exception;
+    void create(DishDTO dishDto) throws NotFoundException;
 
     DishDTO getDishDto(Dish dish);
 
@@ -16,11 +17,11 @@ public interface IDishService {
 
     List<DishDTO> getAllDishes();
 
-    void update(DishDTO dishDto) throws Exception;
+    void update(DishDTO dishDto) throws NotFoundException;
 
-    Dish findDishById(Long dishId) throws DishNotExistsException;
+    Dish findDishById(Long dishId);
 
-    void deleteDishById(Long dishId);
+    void deleteDishById(Long dishId) throws NotFoundException;
 
     void checkPrices();
 }

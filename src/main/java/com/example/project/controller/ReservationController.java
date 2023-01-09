@@ -5,6 +5,9 @@ import com.example.project.dto.reservation.ReservationDTO;
 import com.example.project.dto.reservation.UpdateReservationDto;
 import com.example.project.service.IReservationService;
 import com.example.project.util.TimeUtil;
+import javassist.NotFoundException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.joda.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,20 +26,34 @@ public class ReservationController {
     @Autowired
     IReservationService reservationService;
 
+    private static final Logger LOG = LogManager.getLogger(ReservationController.class);
+
     @GetMapping("/create")
     public ResponseEntity<ApiResponse> createReservation(@RequestBody ReservationDTO reservationDTO) {
-        reservationService.createReservation(reservationDTO);
-        return new ResponseEntity<>(new ApiResponse(true, "Reservation has been created!"), HttpStatus.CREATED);
+        try {
+            reservationService.createReservation(reservationDTO);
+        } catch (NotFoundException e) {
+            LOG.error(e.getMessage());
+            return new ResponseEntity<>(new ApiResponse(false, e.getMessage()), HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(new ApiResponse(true,
+                String.format("Reservation has been created for user %s!", reservationDTO.getUserEmail())), HttpStatus.CREATED);
     }
 
     @GetMapping("/update")
     public ResponseEntity<ApiResponse> updateReservation(@RequestBody UpdateReservationDto updateReservationDto) {
-        reservationService.updateReservation(updateReservationDto);
-        return new ResponseEntity<>(new ApiResponse(true, "Reservation has been updated!"), HttpStatus.OK);
+        try {
+            reservationService.updateReservation(updateReservationDto);
+        } catch (NotFoundException e) {
+            LOG.error(e.getMessage());
+            return new ResponseEntity<>(new ApiResponse(false, e.getMessage()), HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(new ApiResponse(true,
+                String.format("Reservation has been updated for user %s!", updateReservationDto.getUserEmail())), HttpStatus.OK);
     }
 
     @GetMapping("/test")
-    public void test() {
+    public void test() throws NotFoundException {
         reservationService.createReservation(new ReservationDTO(
                 TimeUtil.formatLocalDateTime(new LocalDateTime().plusDays(2).minusHours(3)),
                 TimeUtil.formatLocalDateTime(new LocalDateTime().plusDays(2).plusHours(5)),

@@ -1,8 +1,12 @@
 package com.example.project.controller;
 
 import com.example.project.common.ApiResponse;
+import com.example.project.dto.category.CreateUpdateCategoryDto;
 import com.example.project.model.Category;
 import com.example.project.service.ICategoryService;
+import javassist.NotFoundException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,18 +19,24 @@ import java.util.List;
 @RequestMapping("/api/category")
 public class CategoryController {
 
+    private static final Logger LOG = LogManager.getLogger(CategoryController.class);
+
     @Autowired
     ICategoryService categoryService;
 
     @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER')")
     @PostMapping("/create")
-    public ResponseEntity<ApiResponse> createCategory(@RequestBody Category category) {
+    public ResponseEntity<ApiResponse> createCategory(@RequestBody CreateUpdateCategoryDto category) {
         try {
             categoryService.create(category);
-        } catch (Exception e) {
-            return new ResponseEntity<>(new ApiResponse(false, e.getMessage()), HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            LOG.error(e.getMessage());
+            return new ResponseEntity<>(new ApiResponse(false, e.getMessage()), HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(new ApiResponse(true, "a new category created"), HttpStatus.CREATED);
+
+        LOG.info(String.format("Category with name %s has been created!", category.getCategoryName()));
+        return new ResponseEntity<>(new ApiResponse(true,
+                String.format("Category with name %s has been created!", category.getCategoryName())), HttpStatus.CREATED);
     }
 
     @GetMapping("/")
@@ -36,25 +46,35 @@ public class CategoryController {
 
     @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER')")
     @PostMapping("/update/")
-    public ResponseEntity<ApiResponse> updateCategory(@RequestParam Long id, @RequestBody Category category) {
-        if (categoryService.getCategoryById(id) == null) {
-            return new ResponseEntity<>(new ApiResponse(false, "category does not exists"), HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<ApiResponse> updateCategory(@RequestParam("categoryId") Long categoryId,
+                                                      @RequestBody CreateUpdateCategoryDto createUpdateCategoryDto) {
         try {
-            categoryService.update(category.getId(), category);
-        } catch (Exception e) {
-            return new ResponseEntity<>(new ApiResponse(false, e.getMessage()), HttpStatus.OK);
+            categoryService.update(categoryId, createUpdateCategoryDto);
+        } catch (NotFoundException e) {
+            LOG.error(e.getMessage());
+            return new ResponseEntity<>(new ApiResponse(false, e.getMessage()), HttpStatus.NOT_FOUND);
+        } catch (IllegalArgumentException e) {
+            LOG.warn(e.getMessage());
+            return new ResponseEntity<>(new ApiResponse(false, e.getMessage()), HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(new ApiResponse(true, "category has been updated"), HttpStatus.OK);
+
+        LOG.info(String.format("Category with Id %s has been updated!", categoryId));
+        return new ResponseEntity<>(new ApiResponse(true,
+                String.format("Category with Id %s has been updated!", categoryId)), HttpStatus.OK);
     }
 
     @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER')")
     @DeleteMapping("/delete/")
     public ResponseEntity<ApiResponse> deleteCategory(@RequestParam Long id) {
-        if (categoryService.getCategoryById(id) == null) {
-            return new ResponseEntity<>(new ApiResponse(false, "category does not exists"), HttpStatus.NOT_FOUND);
+        try {
+            categoryService.delete(id);
+        } catch (NotFoundException e) {
+            LOG.error(e.getMessage());
+            return new ResponseEntity<>(new ApiResponse(false, e.getMessage()), HttpStatus.NOT_FOUND);
         }
-        categoryService.delete(id);
-        return new ResponseEntity<>(new ApiResponse(true, "category has been deleted"), HttpStatus.OK);
+
+        LOG.info(String.format("Category with Id %s has been deleted!", id));
+        return new ResponseEntity<>(new ApiResponse(true,
+                String.format("Category with Id %s has been deleted!", id)), HttpStatus.OK);
     }
 }

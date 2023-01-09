@@ -3,6 +3,7 @@ package com.example.project.dto.dish;
 import javax.validation.constraints.NotNull;
 
 public class DishDTO {
+
     private Long id;
     private @NotNull String searchId;
     private @NotNull String name;
@@ -14,8 +15,15 @@ public class DishDTO {
     private @NotNull double maxSales;
     private @NotNull double costPrice;
 
-
     public DishDTO() {
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -56,14 +64,6 @@ public class DishDTO {
 
     public void setCategoryId(Long categoryId) {
         this.categoryId = categoryId;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public double getMinSales() {

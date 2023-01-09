@@ -1,11 +1,13 @@
 package com.example.project.service.impl;
 
+import com.example.project.dto.table.CreateTableDto;
 import com.example.project.dto.table.TableTimeDto;
 import com.example.project.dto.table.UpdateTableDto;
 import com.example.project.model.Table;
 import com.example.project.repository.ITableRepository;
 import com.example.project.service.ITableService;
 import com.example.project.util.TimeUtil;
+import javassist.NotFoundException;
 import org.joda.time.LocalTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -38,49 +40,6 @@ public class TableService implements ITableService {
     }
 
     @Override
-    public void create(Table table) throws Exception {
-        if (tableRepository.existsBySearchId(table.getSearchId())) {
-            throw new Exception("Table with the same searchId already exists!");
-        }
-        List<Table> tablesToSave = new ArrayList<>();
-        LocalTime currentTime = dayStartTime;
-        for (int i = 0; i < timesToCreateTable; i++) {
-            Table tableToAdd = new Table(table.getSearchId(), table.getNumberOfSeats(), false);
-            tableToAdd.setReservedFrom(currentTime);
-            currentTime = currentTime.plusMinutes(15);
-            tableToAdd.setReservedTo(currentTime);
-            tablesToSave.add(tableToAdd);
-        }
-        tableRepository.saveAll(tablesToSave);
-    }
-
-    @Override
-    public void update(UpdateTableDto updateTableDto) throws Exception {
-        String previousSearchId = updateTableDto.getPreviousSearchId();
-        String searchId = updateTableDto.getSearchId();
-        Integer numberOfSeats = updateTableDto.getNumberOfSeats();
-
-
-        if (previousSearchId == null || numberOfSeats == null && searchId == null) {
-            throw new Exception("Provide correct data!");
-        }
-        if (!tableRepository.existsBySearchId(previousSearchId)) {
-            throw new Exception("Table with given searchId does not exist!");
-        }
-        if (searchId != null && tableRepository.existsBySearchId(searchId)) {
-            throw new Exception("Table with given new searchId already exists!");
-        }
-        List<Table> tables = tableRepository.findBySearchId(previousSearchId);
-        if (searchId != null) {
-            tables.forEach(table -> table.setSearchId(searchId));
-        }
-        if (numberOfSeats != null) {
-            tables.forEach(table -> table.setNumberOfSeats(numberOfSeats));
-        }
-        tableRepository.saveAll(tables);
-    }
-
-    @Override
     public List<Table> getAllTables() {
         return tableRepository.findAll();
     }
@@ -98,6 +57,72 @@ public class TableService implements ITableService {
     }
 
     @Override
+    public TableTimeDto getTableDtoBySearchId(String searchId) {
+        List<Table> tables = tableRepository.findBySearchId(searchId).stream()
+                .filter(table -> table.getReservedFrom().isAfter(new LocalTime()))
+                .collect(Collectors.toList());
+
+        return convertTablesToTableDto(tables);
+    }
+
+    @Override
+    public void create(CreateTableDto createTableDto) {
+        if (tableRepository.existsBySearchId(createTableDto.getSearchId())) {
+            throw new IllegalArgumentException(String.format("Table with searchId %s already exists!",
+                    createTableDto.getSearchId()));
+        }
+
+        List<Table> tablesToSave = new ArrayList<>();
+        LocalTime currentTime = dayStartTime;
+        for (int i = 0; i < timesToCreateTable; i++) {
+            Table tableToAdd = new Table(createTableDto.getSearchId(), createTableDto.getNumberOfSeats(), false);
+            tableToAdd.setReservedFrom(currentTime);
+            currentTime = currentTime.plusMinutes(15);
+            tableToAdd.setReservedTo(currentTime);
+            tablesToSave.add(tableToAdd);
+        }
+
+        tableRepository.saveAll(tablesToSave);
+    }
+
+    @Override
+    public void update(UpdateTableDto updateTableDto) throws NotFoundException {
+        String previousSearchId = updateTableDto.getPreviousSearchId();
+        String searchId = updateTableDto.getSearchId();
+        Integer numberOfSeats = updateTableDto.getNumberOfSeats();
+
+
+        if (previousSearchId == null || numberOfSeats == null && searchId == null) {
+            throw new IllegalArgumentException("Provide correct data!");
+        }
+        if (!tableRepository.existsBySearchId(previousSearchId)) {
+            throw new NotFoundException(String.format("Table with searchId %s was not found!", previousSearchId));
+        }
+        if (searchId != null && tableRepository.existsBySearchId(searchId)) {
+            throw new IllegalArgumentException(String.format("Table with given new searchId %s already exists!", searchId));
+        }
+
+        List<Table> tables = tableRepository.findBySearchId(previousSearchId);
+
+        if (searchId != null) {
+            tables.forEach(table -> table.setSearchId(searchId));
+        }
+        if (numberOfSeats != null && numberOfSeats != tables.get(0).getNumberOfSeats()) {
+            tables.forEach(table -> table.setNumberOfSeats(numberOfSeats));
+        }
+
+        tableRepository.saveAll(tables);
+    }
+
+    @Override
+    public void deleteTable(String searchId) throws NotFoundException {
+        if (!tableRepository.existsBySearchId(searchId)) {
+            throw new NotFoundException(String.format("Table with searchId %s was not found!", searchId));
+        }
+        tableRepository.deleteBySearchId(searchId);
+    }
+
+    @Override
     public Map<String, List<Table>> convertTablesListToMap(List<Table> list) {
         return list.stream()
                 .collect(Collectors.groupingBy(
@@ -110,18 +135,23 @@ public class TableService implements ITableService {
     public List<TableTimeDto> convertTablesToTableDtos(Map<String, List<Table>> tables) {
         List<TableTimeDto> tableTimeDtos = new ArrayList<>();
         for (Map.Entry<String, List<Table>> entry : tables.entrySet()) {
-            tableTimeDtos.add(getTableDto(entry));
+            tableTimeDtos.add(getTableDto(entry.getKey(), entry.getValue()));
         }
         return tableTimeDtos;
     }
 
-    private TableTimeDto getTableDto(Map.Entry<String, List<Table>> tableEntry) {
-        TableTimeDto tableTimeDto = new TableTimeDto(tableEntry.getKey(), tableEntry.getValue().get(0).getNumberOfSeats());
+    @Override
+    public TableTimeDto convertTablesToTableDto(List<Table> tables) {
+        return getTableDto(tables.get(0).getSearchId(), tables);
+    }
+
+    private TableTimeDto getTableDto(String searchId, List<Table> tables) {
+        TableTimeDto tableTimeDto = new TableTimeDto(searchId, tables.get(0).getNumberOfSeats());
 
         List<String> availableTime = new ArrayList<>();
         Table available = null;
 
-        Iterator<Table> it = tableEntry.getValue().iterator();
+        Iterator<Table> it = tables.iterator();
         while (it.hasNext()) {
             Table current = it.next();
             if (available == null) {
@@ -175,11 +205,6 @@ public class TableService implements ITableService {
     }
 
     @Override
-    public void deleteTable(String searchId) {
-        tableRepository.deleteBySearchId(searchId);
-    }
-
-    @Override
     public void reserveTables(List<Table> tablesToReserve) {
         if (tablesToReserve == null) {
             return;
@@ -202,6 +227,11 @@ public class TableService implements ITableService {
     @Override
     public void saveAll(List<Table> tables) {
         tableRepository.saveAll(tables);
+    }
+
+    @Override
+    public boolean existBySearchId(String searchId) {
+        return tableRepository.existsBySearchId(searchId);
     }
 
 }

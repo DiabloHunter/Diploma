@@ -16,7 +16,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "wishlists")
-public class WishList {
+public class Wishlist {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,16 +33,16 @@ public class WishList {
     @JoinColumn(name = "dish_id")
     private Dish dish;
 
-    public WishList() {
+    public Wishlist() {
     }
 
-    public WishList(User user, LocalDateTime createdDate, Dish dish) {
+    public Wishlist(User user, LocalDateTime createdDate, Dish dish) {
         this.user = user;
         this.createdDate = createdDate;
         this.dish = dish;
     }
 
-    public WishList(User user, Dish dish) {
+    public Wishlist(User user, Dish dish) {
         this.user = user;
         this.dish = dish;
         this.createdDate = TimeUtil.formatLocalDateTime(new LocalDateTime());

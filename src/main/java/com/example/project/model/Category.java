@@ -24,6 +24,22 @@ public class Category {
     @Column(name = "image_url")
     private @NotBlank String imageUrl;
 
+    public Category(Long id, String categoryName, String description, String imageUrl) {
+        this.id = id;
+        this.categoryName = categoryName;
+        this.description = description;
+        this.imageUrl = imageUrl;
+    }
+
+    public Category(String categoryName, String description, String imageUrl) {
+        this.categoryName = categoryName;
+        this.description = description;
+        this.imageUrl = imageUrl;
+    }
+
+    public Category() {
+    }
+
     public Long getId() {
         return id;
     }

@@ -3,18 +3,18 @@ package com.example.project.repository;
 
 import com.example.project.model.Dish;
 import com.example.project.model.User;
-import com.example.project.model.WishList;
+import com.example.project.model.Wishlist;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-public interface IWishListRepository extends JpaRepository<WishList, Long> {
+public interface IWishListRepository extends JpaRepository<Wishlist, Long> {
 
-    List<WishList> findAllByUserOrderByCreatedDateDesc(User user);
+    List<Wishlist> findAllByUserOrderByCreatedDateDesc(User user);
 
-    WishList findByUserAndDish(User user, Dish dish);
+    Wishlist findByUserAndDish(User user, Dish dish);
 
     void deleteByUserAndDish(User user, Dish dish);
 

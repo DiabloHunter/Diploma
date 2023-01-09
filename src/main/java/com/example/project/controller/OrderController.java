@@ -16,6 +16,9 @@ import com.example.project.service.IOrderService;
 import com.example.project.service.IUserService;
 import com.stripe.exception.StripeException;
 import com.stripe.model.checkout.Session;
+import javassist.NotFoundException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -36,10 +39,55 @@ public class OrderController {
     private IOrderService orderService;
 
     @Autowired
-    private IUserService userService;
-
-    @Autowired
     private ILiqPayService liqPayService;
+
+    private static final Logger LOG = LogManager.getLogger(OrderController.class);
+
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
+    @GetMapping("/getOrders/")
+    public ResponseEntity<OrderDTO> getOrders(@RequestParam("userEmail") String userEmail) {
+        List<OrderItemDTO> orders;
+        try {
+            orders = orderService.getAllOrders(userEmail);
+        } catch (NotFoundException e) {
+            LOG.error(e.getMessage());
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+        OrderDTO orderDto = new OrderDTO();
+        orderDto.setOrderItems(orders);
+        double totalSum = 0;
+        for (var el : orders) {
+            totalSum += el.getPrice();
+        }
+        orderDto.setTotalCost(totalSum);
+        return new ResponseEntity<>(orderDto, HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
+    @GetMapping("/getOrder/")
+    public ResponseEntity<Order> getOrder(@RequestParam Long id) {
+        Order order = orderService.getOrderById(id);
+        return new ResponseEntity<>(order, HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER')")
+    @GetMapping("/getStatistic")
+    public ResponseEntity<List<DishStatisticDTO>> getStatistic(@RequestBody StatisticDateDTO statisticDateDto) {
+        List<DishStatisticDTO> dishStatisticDTOS = orderService.getStatisticByOrders(statisticDateDto);
+        return new ResponseEntity<>(dishStatisticDTOS, HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
+    @PostMapping("/create")
+    public ResponseEntity<ApiResponse> createOrder(@RequestBody OrderItemDTO orderItemDTO) {
+        try {
+            orderService.createOrder(orderItemDTO);
+        } catch (NotFoundException e) {
+            LOG.error(e.getMessage());
+            return new ResponseEntity<>(new ApiResponse(false, e.getMessage()), HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(new ApiResponse(true, "Order created!"), HttpStatus.CREATED);
+    }
 
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
     @PostMapping("/create-checkout-session")
@@ -66,47 +114,6 @@ public class OrderController {
             throws JSONException, UnsupportedEncodingException, NoSuchAlgorithmException {
         LiqPayResponse liqPayResponse = liqPayService.createSession(checkoutItemDTOList);
         return new ResponseEntity<>(liqPayResponse, HttpStatus.OK);
-    }
-
-
-    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
-    @GetMapping("/getOrders/")
-    public ResponseEntity<OrderDTO> getOrders(@RequestParam("userEmail") String email) {
-        User user = userService.getUserByEmail(email);
-
-        List<OrderItemDTO> orders = orderService.getAllOrders(user);
-        OrderDTO orderDto = new OrderDTO();
-        orderDto.setOrderItems(orders);
-        double totalSum = 0;
-        for (var el : orders) {
-            totalSum += el.getPrice();
-        }
-        orderDto.setTotalCost(totalSum);
-        return new ResponseEntity<>(orderDto, HttpStatus.OK);
-    }
-
-    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
-    @GetMapping("/getOrder/")
-    public ResponseEntity<Order> getOrder(@RequestParam Long id, @RequestParam String email) {
-        User user = userService.getUserByEmail(email);
-
-        Order order = orderService.getOrderById(id);
-        order.setUser(user);
-        return new ResponseEntity<>(order, HttpStatus.OK);
-    }
-
-    @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER')")
-    @GetMapping("/getStatistic")
-    public ResponseEntity<List<DishStatisticDTO>> getStatistic(@RequestBody StatisticDateDTO statisticDateDto) {
-        List<DishStatisticDTO> dishStatisticDTOS = orderService.getStatisticByOrders(statisticDateDto);
-        return new ResponseEntity<>(dishStatisticDTOS, HttpStatus.OK);
-    }
-
-    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
-    @PostMapping("/create")
-    public ResponseEntity<ApiResponse> createOrder(@RequestBody OrderItemDTO orderItemDTO) {
-        orderService.createOrder(orderItemDTO);
-        return new ResponseEntity<>(new ApiResponse(true, "Order created!"), HttpStatus.CREATED);
     }
 
 }

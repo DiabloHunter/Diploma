@@ -1,7 +1,9 @@
 package com.example.project.service;
 
+import com.example.project.dto.user.UpdateUserDto;
 import com.example.project.dto.user.UserDTO;
 import com.example.project.model.User;
+import javassist.NotFoundException;
 
 import java.io.IOException;
 
@@ -13,7 +15,7 @@ public interface IUserService {
 
     Boolean existsByEmail(String email);
 
-    void update(User updatedUser, User updateUser);
+    void update(String userEmail, UpdateUserDto updateUser) throws NotFoundException;
 
     void update(User updateUser);
 

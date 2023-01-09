@@ -8,17 +8,18 @@ import com.example.project.model.Order;
 import com.example.project.model.User;
 import com.stripe.exception.StripeException;
 import com.stripe.model.checkout.Session;
+import javassist.NotFoundException;
 
 import java.util.List;
 
 public interface IOrderService {
     Session createSession(List<CheckoutItemDTO> checkoutItemDTOList) throws StripeException;
 
-    List<OrderItemDTO> getAllOrders(User user);
+    List<OrderItemDTO> getAllOrders(String userEmail) throws NotFoundException;
 
     Order getOrderById(Long id);
 
-    void createOrder(OrderItemDTO orderItemDTO);
+    void createOrder(OrderItemDTO orderItemDTO) throws NotFoundException;
 
     List<DishStatisticDTO> getStatisticByOrders(StatisticDateDTO statisticDateDto);
 }

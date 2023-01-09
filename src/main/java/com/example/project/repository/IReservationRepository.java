@@ -19,4 +19,6 @@ public interface IReservationRepository extends JpaRepository<Reservation, Long>
     List<Reservation> getReservationByTime(@Param("from") LocalDateTime start,
                                            @Param("to") LocalDateTime end);
 
+    Reservation getById(Long id);
+
 }

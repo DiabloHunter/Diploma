@@ -6,5 +6,9 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ICategoryRepository extends JpaRepository<Category, Long> {
-    Category findCategoryByCategoryName(String categoryName);
+
+    boolean existsByCategoryName(String categoryName);
+
+    Category getById(Long id);
+
 }

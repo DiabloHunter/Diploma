@@ -2,13 +2,11 @@ package com.example.project.controller;
 
 import com.example.project.common.ApiResponse;
 import com.example.project.dto.dish.DishDTO;
-import com.example.project.model.Dish;
-import com.example.project.model.User;
-import com.example.project.model.WishList;
-import com.example.project.service.impl.UserService;
-import com.example.project.service.impl.WishListService;
-import com.example.project.util.TimeUtil;
-import org.joda.time.LocalDateTime;
+import com.example.project.model.Action;
+import com.example.project.service.IWishlistService;
+import javassist.NotFoundException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,39 +20,53 @@ import java.util.List;
 public class WishListController {
 
     @Autowired
-    WishListService wishListService;
+    IWishlistService wishlistService;
 
-    @Autowired
-    UserService userService;
-
-    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
-    @PostMapping("/create")
-    public ResponseEntity<ApiResponse> addToWishList(@RequestBody Dish dish,
-                                                     @RequestParam("userEmail") String userEmail) {
-        User user = userService.getUserByEmail(userEmail);
-
-        WishList wishList = new WishList(user, TimeUtil.formatLocalDateTime(new LocalDateTime()), dish);
-        wishListService.create(wishList);
-        ApiResponse apiResponse = new ApiResponse(true, "Added to wishlist");
-        return new ResponseEntity<>(apiResponse, HttpStatus.CREATED);
-
-    }
+    private static final Logger LOG = LogManager.getLogger(WishListController.class);
 
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
     @GetMapping("/")
     public ResponseEntity<List<DishDTO>> getWishList(@RequestParam("userEmail") String userEmail) {
-        User user = userService.getUserByEmail(userEmail);
-        List<DishDTO> dishDTOS = wishListService.getWishListForUser(user);
-        return new ResponseEntity<>(dishDTOS, HttpStatus.OK);
+        try {
+            List<DishDTO> dishDTOS = wishlistService.getWishListForUser(userEmail);
+            return new ResponseEntity<>(dishDTOS, HttpStatus.OK);
+        } catch (NotFoundException e) {
+            LOG.error(e.getMessage());
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+    }
+
+
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
+    @PostMapping("/create")
+    public ResponseEntity<ApiResponse> addToWishlist(@RequestParam("dishId") Long dishId,
+                                                     @RequestParam("userEmail") String userEmail) {
+        try {
+            wishlistService.process(dishId, userEmail, Action.CREATE);
+        } catch (NotFoundException e) {
+            LOG.error(e.getMessage());
+            return new ResponseEntity<>(new ApiResponse(false, e.getMessage()), HttpStatus.NOT_FOUND);
+        }
+
+        LOG.info(String.format("Wishlist with dishId %s was created for user with email %s", dishId, userEmail));
+        return new ResponseEntity<>( new ApiResponse(true,
+                String.format("Wishlist with dishId %s was created for user with email %s", dishId, userEmail)), HttpStatus.CREATED);
+
     }
 
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
     @DeleteMapping("/delete")
-    public ResponseEntity<ApiResponse> deleteFromWishList(@RequestParam("wishlistId") Long itemId,
+    public ResponseEntity<ApiResponse> deleteFromWishlist(@RequestParam("dishId") Long dishId,
                                                           @RequestParam("userEmail") String userEmail) {
-        User user = userService.getUserByEmail(userEmail);
-        wishListService.delete(user, itemId);
-        ApiResponse apiResponse = new ApiResponse(true, "Deleted from wishlist");
-        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+        try {
+            wishlistService.process(dishId, userEmail, Action.DELETE);
+        } catch (NotFoundException e) {
+            LOG.error(e.getMessage());
+            return new ResponseEntity<>(new ApiResponse(false, e.getMessage()), HttpStatus.NOT_FOUND);
+        }
+
+        LOG.info(String.format("Wishlist with dishId %s was deleted for user with email %s", dishId, userEmail));
+        return new ResponseEntity<>(new ApiResponse(true,
+                String.format("Wishlist with dishId %s was deleted for user with email %s", dishId, userEmail)), HttpStatus.OK);
     }
 }

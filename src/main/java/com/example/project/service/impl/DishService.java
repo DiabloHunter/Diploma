@@ -1,14 +1,16 @@
 package com.example.project.service.impl;
 
 import com.example.project.dto.dish.DishDTO;
-import com.example.project.exceptions.DishNotExistsException;
 import com.example.project.model.Category;
 import com.example.project.model.Order;
 import com.example.project.model.Dish;
 import com.example.project.repository.IOrderRepository;
 import com.example.project.repository.IDishRepository;
+import com.example.project.service.ICategoryService;
 import com.example.project.service.IDishService;
 import com.example.project.util.TimeUtil;
+import com.example.project.util.ValidationUtil;
+import javassist.NotFoundException;
 import org.joda.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,16 +22,28 @@ import java.util.List;
 public class DishService implements IDishService {
 
     @Autowired
+    ICategoryService categoryService;
+
+    @Autowired
     IDishRepository dishRepository;
 
     @Autowired
     IOrderRepository orderRepository;
 
     @Override
-    public void create(DishDTO dishDto, Category category) throws Exception {
+    public void create(DishDTO dishDto) throws NotFoundException {
+        Category category = categoryService.getCategoryById(dishDto.getCategoryId());
+
+        if (category == null) {
+            throw new NotFoundException(String.format("Category with Id %s was not found!", dishDto.getCategoryId()));
+        }
+        if (dishRepository.existsBySearchId(dishDto.getSearchId())) {
+            throw new IllegalArgumentException(String.format("Dish with searchId %s already exists!", dishDto.getSearchId()));
+        }
+
+        ValidationUtil.validateImageUrl(dishDto.getImageURL());
+
         Dish dish = new Dish();
-        assertDishIsNotExistBySearchId(dishDto.getSearchId());
-        validateDishImage(dishDto);
         dish.setSearchId(dishDto.getSearchId());
         dish.setDescription(dishDto.getDescription());
         dish.setImageURL(dishDto.getImageURL());
@@ -39,28 +53,30 @@ public class DishService implements IDishService {
         dish.setCheckDate(TimeUtil.formatLocalDateTime(new LocalDateTime()));
         dish.setMinSales(dishDto.getMinSales());
         dish.setMaxSales(dishDto.getMaxSales());
+
         dishRepository.save(dish);
     }
 
     @Override
     public DishDTO getDishDto(Dish dish) {
         DishDTO dishDto = new DishDTO();
+
+        dishDto.setId(dish.getId());
+        dishDto.setName(dish.getName());
         dishDto.setSearchId(dish.getSearchId());
         dishDto.setDescription(dish.getDescription());
         dishDto.setImageURL(dish.getImageURL());
-        dishDto.setName(dish.getName());
         dishDto.setCategoryId(dish.getCategory().getId());
         dishDto.setPrice(dish.getPrice());
-        dishDto.setId(dish.getId());
         dishDto.setMinSales(dish.getMinSales());
         dishDto.setMaxSales(dish.getMaxSales());
+
         return dishDto;
     }
 
     @Override
     public Dish getDishBySearchId(String searchId) {
-        return dishRepository.findDishBySearchId(searchId)
-                .orElseThrow(() -> new DishNotExistsException("Dish searchId is invalid: " + searchId));
+        return dishRepository.findDishBySearchId(searchId);
     }
 
     @Override
@@ -76,12 +92,14 @@ public class DishService implements IDishService {
 
 
     @Override
-    public void update(DishDTO dishDto) throws Exception {
-        Dish dish = dishRepository.findDishBySearchId(dishDto.getSearchId())
-                .orElse(null);
+    public void update(DishDTO dishDto) throws NotFoundException {
+        Dish dish = dishRepository.findDishBySearchId(dishDto.getSearchId());
 
-        assertDishIsNotNull(dish);
-        validateDishImage(dishDto);
+        if (dish == null) {
+            throw new NotFoundException(String.format("Dish with searchId %s was not found!", dishDto.getSearchId()));
+        }
+
+        ValidationUtil.validateImageUrl(dishDto.getImageURL());
 
         dish.setSearchId(dishDto.getSearchId());
         dish.setDescription(dishDto.getDescription());
@@ -91,23 +109,21 @@ public class DishService implements IDishService {
         dish.setMinSales(dishDto.getMinSales());
         dish.setMaxSales(dishDto.getMaxSales());
         dish.setCostPrice(dishDto.getCostPrice());
+
         dishRepository.save(dish);
     }
 
-    private void validateDishImage(DishDTO dishDto) throws Exception {
-        if (dishDto.getImageURL().length() > 240) {
-            throw new Exception("Image URL is too long!");
+    @Override
+    public Dish findDishById(Long dishId) {
+        return dishRepository.getById(dishId);
+    }
+
+    @Override
+    public void deleteDishById(Long dishId) throws NotFoundException {
+        if (!dishRepository.existsById(dishId)) {
+            throw new NotFoundException(String.format("Dish with Id %s was not found!", dishId));
         }
-    }
 
-    @Override
-    public Dish findDishById(Long dishId) throws DishNotExistsException {
-        return dishRepository.findById(dishId)
-                .orElseThrow(() -> new DishNotExistsException("Dish id is invalid: " + dishId));
-    }
-
-    @Override
-    public void deleteDishById(Long dishId) {
         dishRepository.deleteById(dishId);
     }
 
@@ -134,19 +150,6 @@ public class DishService implements IDishService {
             }
             dish.setCheckDate(todayDate);
             dishRepository.save(dish);
-        }
-    }
-
-    private void assertDishIsNotExistBySearchId(String dishSearchId) throws IllegalArgumentException {
-        if (dishRepository.findDishBySearchId(dishSearchId)
-                .orElse(null) != null) {
-            throw new IllegalArgumentException("Dish with the same searchId already exists!");
-        }
-    }
-
-    private void assertDishIsNotNull(Dish dish) throws IllegalArgumentException {
-        if (dish != null) {
-            throw new IllegalArgumentException("Dish is not null!");
         }
     }
 }
