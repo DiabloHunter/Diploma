@@ -2,7 +2,6 @@ package com.example.project.service.impl;
 
 import com.example.project.dto.user.UpdateUserDto;
 import com.example.project.dto.user.UserDTO;
-import com.example.project.exceptions.CustomException;
 import com.example.project.model.User;
 import com.example.project.repository.IUserRepository;
 import com.example.project.service.IUserService;

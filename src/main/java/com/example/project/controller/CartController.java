@@ -4,7 +4,6 @@ package com.example.project.controller;
 import com.example.project.common.ApiResponse;
 import com.example.project.dto.cart.AddToCartDTO;
 import com.example.project.dto.cart.CartDTO;
-import com.example.project.model.User;
 import com.example.project.service.ICartService;
 import javassist.NotFoundException;
 import org.apache.logging.log4j.LogManager;

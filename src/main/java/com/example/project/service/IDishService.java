@@ -1,8 +1,6 @@
 package com.example.project.service;
 
 import com.example.project.dto.dish.DishDTO;
-import com.example.project.exceptions.DishNotExistsException;
-import com.example.project.model.Category;
 import com.example.project.model.Dish;
 import javassist.NotFoundException;
 
