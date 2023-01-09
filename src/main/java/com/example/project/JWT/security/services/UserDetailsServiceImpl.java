@@ -17,18 +17,20 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Transactional
     public UserDetails loadUserByUserEmail(String email) throws UserEmailNotFoundException {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UserEmailNotFoundException("User Not Found with email: " + email));
-
+        User user = userRepository.findByEmail(email);
+        if (user == null) {
+            throw new UserEmailNotFoundException(String.format("User with email %s was not found!", email));
+        }
         return UserDetailsImpl.build(user);
     }
 
     @Transactional
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UserEmailNotFoundException("User Not Found with email: " + email));
-
+        User user = userRepository.findByEmail(email);
+        if (user == null) {
+            throw new UsernameNotFoundException(String.format("User with email %s was not found!", email));
+        }
         return UserDetailsImpl.build(user);
     }
 }
