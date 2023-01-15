@@ -1,5 +1,6 @@
 package com.example.project.service.impl;
 
+import com.example.project.controller.TableController;
 import com.example.project.dto.dish.DishDTO;
 import com.example.project.model.Category;
 import com.example.project.model.Order;
@@ -11,12 +12,15 @@ import com.example.project.service.IDishService;
 import com.example.project.util.TimeUtil;
 import com.example.project.util.ValidationUtil;
 import javassist.NotFoundException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.joda.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.*;
 
 @Service
 public class DishService implements IDishService {
@@ -30,6 +34,8 @@ public class DishService implements IDishService {
     @Autowired
     IOrderRepository orderRepository;
 
+    private static final Logger LOG = LogManager.getLogger(DishService.class);
+
     @Override
     public void create(DishDTO dishDto) throws NotFoundException {
         Category category = categoryService.getCategoryById(dishDto.getCategoryId());
@@ -41,18 +47,19 @@ public class DishService implements IDishService {
             throw new IllegalArgumentException(String.format("Dish with searchId %s already exists!", dishDto.getSearchId()));
         }
 
-        ValidationUtil.validateImageUrl(dishDto.getImageURL());
+        ValidationUtil.validateImageUrl(dishDto.getImagePath());
 
         Dish dish = new Dish();
         dish.setSearchId(dishDto.getSearchId());
         dish.setDescription(dishDto.getDescription());
-        dish.setImageURL(dishDto.getImageURL());
+        dish.setImagePath(dishDto.getImagePath());
         dish.setName(dishDto.getName());
         dish.setCategory(category);
         dish.setPrice(dishDto.getPrice());
         dish.setCheckDate(TimeUtil.formatLocalDateTime(new LocalDateTime()));
         dish.setMinSales(dishDto.getMinSales());
         dish.setMaxSales(dishDto.getMaxSales());
+        dish.setCostPrice(dishDto.getCostPrice());
 
         dishRepository.save(dish);
     }
@@ -65,7 +72,17 @@ public class DishService implements IDishService {
         dishDto.setName(dish.getName());
         dishDto.setSearchId(dish.getSearchId());
         dishDto.setDescription(dish.getDescription());
-        dishDto.setImageURL(dish.getImageURL());
+        try {
+            dishDto.setImagePath(getEncryptedImage(dish.getImagePath()));
+        } catch (IOException e) {
+            LOG.error(e.getMessage());
+            try {
+                dishDto.setImagePath(getEncryptedImage("\\images\\default.png"));
+            } catch (IOException ex) {
+                LOG.error(e.getMessage());
+                return null;
+            }
+        }
         dishDto.setCategoryId(dish.getCategory().getId());
         dishDto.setPrice(dish.getPrice());
         dishDto.setMinSales(dish.getMinSales());
@@ -99,11 +116,11 @@ public class DishService implements IDishService {
             throw new NotFoundException(String.format("Dish with searchId %s was not found!", dishDto.getSearchId()));
         }
 
-        ValidationUtil.validateImageUrl(dishDto.getImageURL());
+        ValidationUtil.validateImageUrl(dishDto.getImagePath());
 
         dish.setSearchId(dishDto.getSearchId());
         dish.setDescription(dishDto.getDescription());
-        dish.setImageURL(dishDto.getImageURL());
+        dish.setImagePath(dishDto.getImagePath());
         dish.setName(dishDto.getName());
         dish.setPrice(dishDto.getPrice());
         dish.setMinSales(dishDto.getMinSales());
@@ -151,5 +168,11 @@ public class DishService implements IDishService {
             dish.setCheckDate(todayDate);
             dishRepository.save(dish);
         }
+    }
+
+    public String getEncryptedImage(String path) throws IOException {
+        //String path = "\\images\\pngwing.png";
+        InputStream is = TableController.class.getClassLoader().getResourceAsStream(path);
+        return Base64.getEncoder().withoutPadding().encodeToString(is.readAllBytes());
     }
 }

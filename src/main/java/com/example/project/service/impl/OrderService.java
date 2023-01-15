@@ -80,7 +80,7 @@ public class OrderService implements IOrderService {
                 Dish dish = orderUnit.getDish();
 
                 OrderDishDTO orderDishDto = new OrderDishDTO(dish.getId(), dish.getName(), dish.getSearchId(),
-                        dish.getImageURL(), dish.getPrice(), dish.getDescription(), orderUnit.getQuantity(),
+                        dish.getImagePath(), dish.getPrice(), dish.getDescription(), orderUnit.getQuantity(),
                         dish.getCategory().getId());
                 dishes.add(orderDishDto);
             }
@@ -124,7 +124,7 @@ public class OrderService implements IOrderService {
                     dishStatisticDto.setId(x.getKey().getId());
                     dishStatisticDto.setSearchId(x.getKey().getSearchId());
                     dishStatisticDto.setName(x.getKey().getName());
-                    dishStatisticDto.setImageURL(x.getKey().getImageURL());
+                    dishStatisticDto.setImageURL(x.getKey().getImagePath());
                     dishStatisticDto.setPrice(x.getKey().getPrice());
                     dishStatisticDto.setDescription(x.getKey().getDescription());
                     dishStatisticDto.setCategoryId(x.getKey().getCategory().getId());

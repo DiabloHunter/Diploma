@@ -46,7 +46,7 @@ public class DishController {
         return new ResponseEntity<>(dishDTO, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER')")
+   // @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER')")
     @PostMapping("/create")
     public ResponseEntity<ApiResponse> createDish(@RequestBody DishDTO dishDto) {
         try {

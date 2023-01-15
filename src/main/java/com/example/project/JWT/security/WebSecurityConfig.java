@@ -91,6 +91,8 @@ public class WebSecurityConfig { // extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/table/test1").permitAll()
                 .antMatchers("/api/table/").permitAll()
                 .antMatchers("/api/table/create").permitAll()
+                .antMatchers("/api/dish/create").permitAll()
+                .antMatchers("/api/table//get-image-with-media-type").permitAll()
                 .anyRequest().authenticated();
 
         http.authenticationProvider(authenticationProvider());

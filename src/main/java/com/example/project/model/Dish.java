@@ -25,7 +25,7 @@ public class Dish {
 
     private @NotNull String searchId;
     private @NotNull String name;
-    private @NotNull String imageURL;
+    private @NotNull String imagePath;
     private @NotNull Double price;
     private @NotNull String description;
     private @NotNull LocalDateTime checkDate;
@@ -39,11 +39,11 @@ public class Dish {
     @OnDelete(action = OnDeleteAction.CASCADE)
     Category category;
 
-    public Dish(String searchId, String name, String imageURL, Double price, String description, LocalDateTime checkDate,
+    public Dish(String searchId, String name, String imagePath, Double price, String description, LocalDateTime checkDate,
                 Double minSales, Double maxSales, Double costPrice, Category category) {
         this.searchId = searchId;
         this.name = name;
-        this.imageURL = imageURL;
+        this.imagePath = imagePath;
         this.price = price;
         this.description = description;
         this.checkDate = checkDate;
@@ -64,12 +64,12 @@ public class Dish {
         this.name = name;
     }
 
-    public String getImageURL() {
-        return imageURL;
+    public String getImagePath() {
+        return imagePath;
     }
 
-    public void setImageURL(String imageURL) {
-        this.imageURL = imageURL;
+    public void setImagePath(String imageURL) {
+        this.imagePath = imageURL;
     }
 
     public Double getPrice() {

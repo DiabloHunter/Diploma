@@ -13,7 +13,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Base64;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/table")
@@ -105,5 +110,60 @@ public class TableController {
 //        getAllTables();
 //    }
 
+//    @GetMapping(
+//            value = "/get-image-with-media-type"
+//    )
+//    public Graphics2D getImageWithMediaType1() {
+//        File file = new File("/com/example/project/util/pngwing.png");
+//        InputStream in = getClass()
+//                .getResourceAsStream("/com/example/project/util/pngwing.png");
+//        return IOUtils.toByteArray(String.valueOf(file));
+//        BufferedImage image = null;
+//        try {
+//            String path = "\\images\\pngwing.png";
+//            InputStream is = TableController.class.getClassLoader().getResourceAsStream(path);
+//            image = new BufferedImage(40, 40, BufferedImage.TYPE_INT_ARGB);
+//            image = ImageIO.read(is);
+//            return image.createGraphics();
+//        }
+//        catch (IOException e) {
+//            System.out.println("Error: " + e);
+//        }
+//        return null;
+//    }
+
+    @GetMapping(value = "/get-image-with-media-type")
+    public @ResponseBody
+    Map<String, String> getImage() throws IOException {
+        String path = "\\images\\pngwing.png";
+        InputStream is = TableController.class.getClassLoader().getResourceAsStream(path);
+//        File file = new ClassPathResource(imagesPath + imageName).getFile();
+        String encodeImage = Base64.getEncoder().withoutPadding().encodeToString(is.readAllBytes());
+        Map<String, String> jsonMap = new HashMap<>();
+        jsonMap.put("content", encodeImage);
+
+        return jsonMap;
+    }
+
+    @GetMapping( value = "/saveImage")
+    public void getImageWithMediaType() throws IOException {
+//        InputStream fileContent = filePart.getInputStream();
+//        BufferedImage image = ImageIO.read(fileContent);
+//        ImageIO.write (image, fileName.split("\\.")[1], new File(pictureSave));
+    }
+
+
+
+//    @GetMapping("/get-image-dynamic-type")
+//    @ResponseBody
+//    public ResponseEntity<InputStreamResource> getImageDynamicType(@RequestParam("jpg") boolean jpg) {
+//        MediaType contentType = jpg ? MediaType.IMAGE_JPEG : MediaType.IMAGE_PNG;
+//        InputStream in = jpg ?
+//                getClass().getResourceAsStream("/com/baeldung/produceimage/image.jpg") :
+//                getClass().getResourceAsStream("/com/baeldung/produceimage/image.png");
+//        return ResponseEntity.ok()
+//                .contentType(contentType)
+//                .body(new InputStreamResource(in));
+//    }
 
 }
