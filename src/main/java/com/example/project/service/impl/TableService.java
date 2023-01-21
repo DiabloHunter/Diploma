@@ -205,6 +205,21 @@ public class TableService implements ITableService {
     }
 
     @Override
+    public List<Table> getTablesByNumberOfSeatsAndTime(int numberOfSeats, LocalTime start, LocalTime end) {
+        return tableRepository.getTablesByNumberOfSeatsAndTime(numberOfSeats, start, end);
+    }
+
+    @Override
+    public List<Table> getTablesByNumberOfSeats(int numberOfSeats) {
+        return tableRepository.getTablesByNumberOfSeats(numberOfSeats);
+    }
+
+    @Override
+    public List<Table> getTablesByTime(LocalTime start, LocalTime end) {
+        return tableRepository.getTablesByTime(start, end);
+    }
+
+    @Override
     public void reserveTables(List<Table> tablesToReserve) {
         if (tablesToReserve == null) {
             return;

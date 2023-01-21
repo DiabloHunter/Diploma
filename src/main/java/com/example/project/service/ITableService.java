@@ -33,6 +33,12 @@ public interface ITableService {
 
     List<Table> getTablesBySearchIdsAndTime(List<String> searchIds, LocalTime start, LocalTime end);
 
+    List<Table> getTablesByNumberOfSeatsAndTime(int numberOfSeats, LocalTime start, LocalTime end);
+
+    List<Table> getTablesByNumberOfSeats(int numberOfSeats);
+
+    List<Table> getTablesByTime(LocalTime start, LocalTime end);
+
     void reserveTables(List<Table> tablesToReserve);
 
     void setNotReserveTables(List<Table> tablesToReserve);
