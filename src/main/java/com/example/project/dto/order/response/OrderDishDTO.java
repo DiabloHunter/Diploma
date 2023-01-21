@@ -6,18 +6,18 @@ public class OrderDishDTO {
     private @NotNull Long dishId;
     private @NotNull String name;
     private @NotNull String searchId;
-    private @NotNull String imageURL;
+    private @NotNull String imageData;
     private @NotNull Double price;
     private @NotNull String description;
     private @NotNull Double quantity;
     private @NotNull Long categoryId;
 
-    public OrderDishDTO(Long dishId, String name, String searchId, String imageURL, Double price, String description,
+    public OrderDishDTO(Long dishId, String name, String searchId, String imageData, Double price, String description,
                         Double quantity, Long categoryId) {
         this.dishId = dishId;
         this.name = name;
         this.searchId = searchId;
-        this.imageURL = imageURL;
+        this.imageData = imageData;
         this.price = price;
         this.description = description;
         this.quantity = quantity;
@@ -35,12 +35,12 @@ public class OrderDishDTO {
         this.name = name;
     }
 
-    public String getImageURL() {
-        return imageURL;
+    public String getImageData() {
+        return imageData;
     }
 
-    public void setImageURL(String imageURL) {
-        this.imageURL = imageURL;
+    public void setImageData(String imageData) {
+        this.imageData = imageData;
     }
 
     public Double getPrice() {

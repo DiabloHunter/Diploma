@@ -7,6 +7,7 @@ import javassist.NotFoundException;
 import java.util.List;
 
 public interface IDishService {
+
     void create(DishDTO dishDto) throws NotFoundException;
 
     DishDTO getDishDto(Dish dish);

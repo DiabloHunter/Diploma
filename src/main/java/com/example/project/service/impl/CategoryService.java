@@ -4,7 +4,6 @@ import com.example.project.dto.category.CreateUpdateCategoryDto;
 import com.example.project.model.Category;
 import com.example.project.repository.ICategoryRepository;
 import com.example.project.service.ICategoryService;
-import com.example.project.util.ValidationUtil;
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,10 +22,9 @@ public class CategoryService implements ICategoryService {
             throw new IllegalArgumentException(String.format("Category with name %s already exists!",
                     createUpdateCategoryDto.getCategoryName()));
         }
-        ValidationUtil.validateImageUrl(createUpdateCategoryDto.getImageUrl());
 
         Category category = new Category(createUpdateCategoryDto.getCategoryName(),
-                createUpdateCategoryDto.getDescription(), createUpdateCategoryDto.getImageUrl());
+                createUpdateCategoryDto.getDescription(), createUpdateCategoryDto.getImageData());
         categoryRepository.save(category);
     }
 
@@ -43,10 +41,9 @@ public class CategoryService implements ICategoryService {
             throw new IllegalArgumentException(String.format("Category with name %s already exists!",
                     category.getCategoryName()));
         }
-        ValidationUtil.validateImageUrl(createUpdateCategoryDto.getImageUrl());
         category.setCategoryName(createUpdateCategoryDto.getCategoryName());
         category.setDescription(createUpdateCategoryDto.getDescription());
-        category.setImageUrl(createUpdateCategoryDto.getImageUrl());
+        category.setImageData(createUpdateCategoryDto.getImageData());
         categoryRepository.save(category);
     }
 
@@ -57,7 +54,7 @@ public class CategoryService implements ICategoryService {
 
     @Override
     public void delete(Long categoryId) throws NotFoundException {
-        if(!categoryRepository.existsById(categoryId)){
+        if (!categoryRepository.existsById(categoryId)) {
             throw new NotFoundException(String.format("Category with Id %s was not found!", categoryId));
         }
         categoryRepository.deleteById(categoryId);

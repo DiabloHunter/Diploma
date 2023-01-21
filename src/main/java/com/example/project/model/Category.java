@@ -1,10 +1,6 @@
 package com.example.project.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 
@@ -15,26 +11,23 @@ public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(name = "category_name")
     private @NotBlank String categoryName;
-
     private @NotBlank String description;
+    @Lob
+    @Column(length = 100000)
+    private @NotBlank String imageData;
 
-    @Column(name = "image_url")
-    private @NotBlank String imageUrl;
-
-    public Category(Long id, String categoryName, String description, String imageUrl) {
+    public Category(Long id, String categoryName, String description, String imageData) {
         this.id = id;
         this.categoryName = categoryName;
         this.description = description;
-        this.imageUrl = imageUrl;
+        this.imageData = imageData;
     }
 
-    public Category(String categoryName, String description, String imageUrl) {
+    public Category(String categoryName, String description, String imageData) {
         this.categoryName = categoryName;
         this.description = description;
-        this.imageUrl = imageUrl;
+        this.imageData = imageData;
     }
 
     public Category() {
@@ -64,11 +57,11 @@ public class Category {
         this.description = description;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public String getImageData() {
+        return imageData;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setImageData(String imageData) {
+        this.imageData = imageData;
     }
 }

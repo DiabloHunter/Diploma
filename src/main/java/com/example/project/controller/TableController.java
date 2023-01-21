@@ -43,7 +43,7 @@ public class TableController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<ApiResponse> createTable(@RequestBody CreateTableDto createTableDto){
+    public ResponseEntity<ApiResponse> createTable(@RequestBody CreateTableDto createTableDto) {
         try {
             tableService.create(createTableDto);
         } catch (IllegalArgumentException e) {
@@ -135,7 +135,7 @@ public class TableController {
     @GetMapping(value = "/get-image-with-media-type")
     public @ResponseBody
     Map<String, String> getImage() throws IOException {
-        String path = "\\images\\pngwing.png";
+        String path = "\\images\\default.png";
         InputStream is = TableController.class.getClassLoader().getResourceAsStream(path);
 //        File file = new ClassPathResource(imagesPath + imageName).getFile();
         String encodeImage = Base64.getEncoder().withoutPadding().encodeToString(is.readAllBytes());
@@ -145,13 +145,12 @@ public class TableController {
         return jsonMap;
     }
 
-    @GetMapping( value = "/saveImage")
+    @GetMapping(value = "/saveImage")
     public void getImageWithMediaType() throws IOException {
 //        InputStream fileContent = filePart.getInputStream();
 //        BufferedImage image = ImageIO.read(fileContent);
 //        ImageIO.write (image, fileName.split("\\.")[1], new File(pictureSave));
     }
-
 
 
 //    @GetMapping("/get-image-dynamic-type")

@@ -7,7 +7,7 @@ public class DishDTO {
     private Long id;
     private @NotNull String searchId;
     private @NotNull String name;
-    private @NotNull String imagePath;
+    private @NotNull String imageData;
     private @NotNull double price;
     private @NotNull String description;
     private @NotNull Long categoryId;
@@ -34,12 +34,12 @@ public class DishDTO {
         this.name = name;
     }
 
-    public String getImagePath() {
-        return imagePath;
+    public String getImageData() {
+        return imageData;
     }
 
-    public void setImagePath(String imagePath) {
-        this.imagePath = imagePath;
+    public void setImageData(String imageData) {
+        this.imageData = imageData;
     }
 
     public double getPrice() {

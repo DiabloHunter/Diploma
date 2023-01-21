@@ -7,13 +7,12 @@ public class DishStatisticDTO {
     private Long id;
     private @NotNull String searchId;
     private @NotNull String name;
-    private @NotNull String imageURL;
+    private @NotNull String imageData;
     private @NotNull double price;
     private @NotNull String description;
     private @NotNull Long categoryId;
     private @NotNull double monthSales;
     private @NotNull int place;
-
 
     public Long getId() {
         return id;
@@ -39,12 +38,12 @@ public class DishStatisticDTO {
         this.name = name;
     }
 
-    public String getImageURL() {
-        return imageURL;
+    public String getImageData() {
+        return imageData;
     }
 
-    public void setImageURL(String imageURL) {
-        this.imageURL = imageURL;
+    public void setImageData(String imageData) {
+        this.imageData = imageData;
     }
 
     public double getPrice() {

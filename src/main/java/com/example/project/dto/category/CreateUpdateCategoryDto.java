@@ -6,7 +6,7 @@ public class CreateUpdateCategoryDto {
 
     private String description;
 
-    private String imageUrl;
+    private String imageData;
 
     public String getCategoryName() {
         return categoryName;
@@ -24,11 +24,11 @@ public class CreateUpdateCategoryDto {
         this.description = description;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public String getImageData() {
+        return imageData;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setImageData(String imageData) {
+        this.imageData = imageData;
     }
 }

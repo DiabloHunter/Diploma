@@ -5,13 +5,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.joda.time.LocalDateTime;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
@@ -25,7 +19,9 @@ public class Dish {
 
     private @NotNull String searchId;
     private @NotNull String name;
-    private @NotNull String imagePath;
+    @Lob
+    @Column(length = 100000)
+    private @NotNull String imageData;
     private @NotNull Double price;
     private @NotNull String description;
     private @NotNull LocalDateTime checkDate;
@@ -39,11 +35,11 @@ public class Dish {
     @OnDelete(action = OnDeleteAction.CASCADE)
     Category category;
 
-    public Dish(String searchId, String name, String imagePath, Double price, String description, LocalDateTime checkDate,
+    public Dish(String searchId, String name, String imageData, Double price, String description, LocalDateTime checkDate,
                 Double minSales, Double maxSales, Double costPrice, Category category) {
         this.searchId = searchId;
         this.name = name;
-        this.imagePath = imagePath;
+        this.imageData = imageData;
         this.price = price;
         this.description = description;
         this.checkDate = checkDate;
@@ -64,12 +60,12 @@ public class Dish {
         this.name = name;
     }
 
-    public String getImagePath() {
-        return imagePath;
+    public String getImageData() {
+        return imageData;
     }
 
-    public void setImagePath(String imageURL) {
-        this.imagePath = imageURL;
+    public void setImageData(String imageData) {
+        this.imageData = imageData;
     }
 
     public Double getPrice() {
