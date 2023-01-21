@@ -42,6 +42,12 @@ public class TableController {
         return new ResponseEntity<>(tableTimeDto, HttpStatus.OK);
     }
 
+    @GetMapping("/seats")
+    public ResponseEntity<List<TableTimeDto>> getTablesBySeats(@RequestParam Integer seats) {
+        List<TableTimeDto> tables = tableService.getTablesByNumberOfSeats(seats);
+        return new ResponseEntity<>(tables, HttpStatus.OK);
+    }
+
     @PostMapping("/create")
     public ResponseEntity<ApiResponse> createTable(@RequestBody CreateTableDto createTableDto) {
         try {

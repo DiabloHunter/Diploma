@@ -80,8 +80,10 @@ public class WishlistService implements IWishlistService {
         }
 
         switch (action) {
-            case CREATE -> create(dish, user);
-            case DELETE -> delete(dish, user);
+            case CREATE:
+                create(dish, user);
+            case DELETE:
+                delete(dish, user);
         }
     }
 }

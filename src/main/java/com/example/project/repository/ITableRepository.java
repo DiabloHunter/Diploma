@@ -8,7 +8,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface ITableRepository extends JpaRepository<Table, Long> {
@@ -25,6 +24,9 @@ public interface ITableRepository extends JpaRepository<Table, Long> {
             nativeQuery = true)
     List<Table> getTablesBySearchIdAndTime(@Param("ids") List<String> searchIds, @Param("from") LocalTime start,
                                            @Param("to") LocalTime end);
+
+    @Query(value = "SELECT * FROM Tables t WHERE t.numberOfSeats = :seats", nativeQuery = true)
+    List<Table> getTablesBySeats(@Param("seats") Integer seats);
 
     void deleteBySearchId(String searchId);
 

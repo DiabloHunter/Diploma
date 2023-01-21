@@ -14,7 +14,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -202,6 +205,13 @@ public class TableService implements ITableService {
     @Override
     public List<Table> getTablesBySearchIdsAndTime(List<String> searchIds, LocalTime start, LocalTime end) {
         return tableRepository.getTablesBySearchIdAndTime(searchIds, start, end);
+    }
+
+    @Override
+    public List<TableTimeDto> getTablesByNumberOfSeats(Integer seats) {
+        List<TableTimeDto> tables = getAllTablesDto();
+        tables.retainAll(tableRepository.getTablesBySeats(seats));
+        return tables;
     }
 
     @Override
