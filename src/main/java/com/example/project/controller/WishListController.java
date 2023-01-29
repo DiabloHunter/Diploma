@@ -24,7 +24,7 @@ public class WishListController {
 
     private static final Logger LOG = LogManager.getLogger(WishListController.class);
 
-    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
+    //@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
     @GetMapping("/")
     public ResponseEntity<List<DishDTO>> getWishList(@RequestParam("userEmail") String userEmail) {
         try {
@@ -37,7 +37,7 @@ public class WishListController {
     }
 
 
-    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
+    //@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
     @PostMapping("/create")
     public ResponseEntity<ApiResponse> addToWishlist(@RequestParam("dishId") Long dishId,
                                                      @RequestParam("userEmail") String userEmail) {
@@ -54,7 +54,7 @@ public class WishListController {
 
     }
 
-    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
+    //@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
     @DeleteMapping("/delete")
     public ResponseEntity<ApiResponse> deleteFromWishlist(@RequestParam("dishId") Long dishId,
                                                           @RequestParam("userEmail") String userEmail) {

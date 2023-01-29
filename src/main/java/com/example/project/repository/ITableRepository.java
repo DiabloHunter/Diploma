@@ -30,7 +30,7 @@ public interface ITableRepository extends JpaRepository<Table, Long> {
             nativeQuery = true)
     List<Table> getTablesByTime(@Param("from") LocalTime start, @Param("to") LocalTime end);
 
-    @Query(value = "SELECT * FROM TABLES u WHERE u.number_of_seats = seats AND u.reserved_from >= :from AND u.reserved_to<=:to",
+    @Query(value = "SELECT * FROM TABLES u WHERE u.number_of_seats = :seats AND u.reserved_from >= :from AND u.reserved_to<=:to",
             nativeQuery = true)
     List<Table> getTablesByNumberOfSeatsAndTime(@Param("seats") int numberOfSeats, @Param("from") LocalTime start,
                                                 @Param("to") LocalTime end);

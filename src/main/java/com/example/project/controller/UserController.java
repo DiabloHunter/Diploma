@@ -25,13 +25,13 @@ public class UserController {
 
     private static final Logger LOG = LogManager.getLogger(UserController.class);
 
-    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
+    //@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
     @GetMapping("/")
     public UserDTO getUser(@RequestParam String email) {
         return userService.getUserDto(userService.getUserByEmail(email));
     }
 
-    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
+    //@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
     @PostMapping("/update/")
     public ResponseEntity<ApiResponse> updateUser(@RequestParam("userEmail") String userEmail,
                                                   @RequestBody UpdateUserDto changedUser) {

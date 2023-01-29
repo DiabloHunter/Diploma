@@ -81,7 +81,7 @@ public class WebSecurityConfig { // extends WebSecurityConfigurerAdapter {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable()
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)/*.and()
                 .authorizeRequests().antMatchers("/api/auth/**").permitAll()
                 .antMatchers("/api/test/**").permitAll()
                 .antMatchers("/api/dish/").permitAll()
@@ -93,7 +93,8 @@ public class WebSecurityConfig { // extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/table/create").permitAll()
                 .antMatchers("/api/dish/create").permitAll()
                 .antMatchers("/api/table//get-image-with-media-type").permitAll()
-                .anyRequest().authenticated();
+                .antMatchers("/api/category/**").permitAll()
+                .anyRequest().authenticated()*/;
 
         http.authenticationProvider(authenticationProvider());
 

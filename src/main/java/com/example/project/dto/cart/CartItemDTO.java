@@ -1,22 +1,23 @@
 package com.example.project.dto.cart;
 
 
+import com.example.project.dto.dish.DishDTO;
 import com.example.project.model.Cart;
 import com.example.project.model.Dish;
 
 public class CartItemDTO {
-    private Integer id;
+    private Long id;
     private Integer quantity;
     private Dish dish;
 
     public CartItemDTO() {
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

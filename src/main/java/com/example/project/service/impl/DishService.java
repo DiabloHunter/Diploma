@@ -94,22 +94,27 @@ public class DishService implements IDishService {
 
     @Override
     public void update(DishDTO dishDto) throws NotFoundException {
-        Dish dish = dishRepository.findDishBySearchId(dishDto.getSearchId());
+        Dish updatedDish = dishRepository.getById(dishDto.getId());
+        Dish existedDish = dishRepository.findDishBySearchId(dishDto.getSearchId());
 
-        if (dish == null) {
-            throw new NotFoundException(String.format("Dish with searchId %s was not found!", dishDto.getSearchId()));
+        if (updatedDish == null) {
+            throw new NotFoundException(String.format("Dish with id %s was not found!", dishDto.getId()));
         }
 
-        dish.setSearchId(dishDto.getSearchId());
-        dish.setDescription(dishDto.getDescription());
-        dish.setImageData(dishDto.getImageData());
-        dish.setName(dishDto.getName());
-        dish.setPrice(dishDto.getPrice());
-        dish.setMinSales(dishDto.getMinSales());
-        dish.setMaxSales(dishDto.getMaxSales());
-        dish.setCostPrice(dishDto.getCostPrice());
+        if (existedDish != null && updatedDish.getId() != existedDish.getId()) {
+            throw new IllegalArgumentException(String.format("Dish with searchId %s already exists!", dishDto.getSearchId()));
+        }
 
-        dishRepository.save(dish);
+        updatedDish.setSearchId(dishDto.getSearchId());
+        updatedDish.setDescription(dishDto.getDescription());
+        updatedDish.setImageData(dishDto.getImageData());
+        updatedDish.setName(dishDto.getName());
+        updatedDish.setPrice(dishDto.getPrice());
+        updatedDish.setMinSales(dishDto.getMinSales());
+        updatedDish.setMaxSales(dishDto.getMaxSales());
+        updatedDish.setCostPrice(dishDto.getCostPrice());
+
+        dishRepository.save(updatedDish);
     }
 
     @Override

@@ -54,10 +54,13 @@ public class ReservationController {
 
     @GetMapping("/test")
     public void test() throws NotFoundException {
-        reservationService.createReservation(new ReservationDTO(
-                TimeUtil.formatLocalDateTime(new LocalDateTime().plusDays(2).minusHours(3)),
-                TimeUtil.formatLocalDateTime(new LocalDateTime().plusDays(2).plusHours(5)),
-                5, "haha@gmail.com", "test", List.of(1L, 4L, 13L)));
+        LocalDateTime localDateTime = TimeUtil.formatLocalDateTime(new LocalDateTime());
+        System.out.println(localDateTime);
+        System.out.println(TimeUtil.formatDate(localDateTime.minusDays(1).toDate()));
+//        reservationService.createReservation(new ReservationDTO(
+//                TimeUtil.formatLocalDateTime(new LocalDateTime().plusDays(2).minusHours(3)),
+//                TimeUtil.formatLocalDateTime(new LocalDateTime().plusDays(2).plusHours(5)),
+//                5, "haha@gmail.com", "test", List.of(1L, 4L, 13L)));
         //return new ResponseEntity<>(stripeResponse, HttpStatus.OK);
     }
 

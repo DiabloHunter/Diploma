@@ -24,7 +24,7 @@ public class CategoryController {
     @Autowired
     ICategoryService categoryService;
 
-    @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER')")
+   // @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER')")
     @PostMapping("/create")
     public ResponseEntity<ApiResponse> createCategory(@RequestBody CreateUpdateCategoryDto category) {
         try {
@@ -44,10 +44,10 @@ public class CategoryController {
         return categoryService.getAllCategory();
     }
 
-    @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER')")
+   // @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER')")
     @PostMapping("/update/")
-    public ResponseEntity<ApiResponse> updateCategory(@RequestParam("categoryId") Long categoryId,
-                                                      @RequestBody CreateUpdateCategoryDto createUpdateCategoryDto) {
+    public ResponseEntity<ApiResponse> updateCategory(@RequestBody CreateUpdateCategoryDto createUpdateCategoryDto) {
+        Long categoryId = createUpdateCategoryDto.getId();
         try {
             categoryService.update(categoryId, createUpdateCategoryDto);
         } catch (NotFoundException e) {
@@ -63,7 +63,7 @@ public class CategoryController {
                 String.format("Category with Id %s has been updated!", categoryId)), HttpStatus.OK);
     }
 
-    @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER')")
+   // @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER')")
     @DeleteMapping("/delete/")
     public ResponseEntity<ApiResponse> deleteCategory(@RequestParam Long id) {
         try {

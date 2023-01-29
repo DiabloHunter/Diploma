@@ -35,16 +35,17 @@ public class CategoryService implements ICategoryService {
 
     @Override
     public void update(Long categoryId, CreateUpdateCategoryDto createUpdateCategoryDto) throws NotFoundException {
-        Category category = categoryRepository.findById(categoryId).orElseThrow(() ->
+        Category updated = categoryRepository.findById(categoryId).orElseThrow(() ->
                 new NotFoundException(String.format("Category with Id %s was not found!", categoryId)));
-        if (categoryRepository.existsByCategoryName(createUpdateCategoryDto.getCategoryName())) {
+        Category existedCategory = categoryRepository.findByCategoryName(createUpdateCategoryDto.getCategoryName());
+        if (existedCategory != null && updated.getId() == existedCategory.getId()) {
             throw new IllegalArgumentException(String.format("Category with name %s already exists!",
-                    category.getCategoryName()));
+                    updated.getCategoryName()));
         }
-        category.setCategoryName(createUpdateCategoryDto.getCategoryName());
-        category.setDescription(createUpdateCategoryDto.getDescription());
-        category.setImageData(createUpdateCategoryDto.getImageData());
-        categoryRepository.save(category);
+        updated.setCategoryName(createUpdateCategoryDto.getCategoryName());
+        updated.setDescription(createUpdateCategoryDto.getDescription());
+        updated.setImageData(createUpdateCategoryDto.getImageData());
+        categoryRepository.save(updated);
     }
 
     @Override

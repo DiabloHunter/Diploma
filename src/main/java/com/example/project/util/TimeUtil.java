@@ -6,7 +6,17 @@ import org.joda.time.LocalTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
+import java.util.Date;
+
 public class TimeUtil {
+
+    public static Date formatDate(Date time) {
+        DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss");
+        String value = time.toString();
+        value = value.substring(0, value.lastIndexOf('.')).substring(0, value.lastIndexOf(':')) + ":00";
+        return formatter.parseLocalDateTime(value).toDate();
+    }
+
 
     public static LocalDateTime formatLocalDateTime(LocalDateTime time) {
         DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss");
