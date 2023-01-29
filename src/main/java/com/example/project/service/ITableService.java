@@ -49,6 +49,8 @@ public interface ITableService {
 
     void update(UpdateTableDto updateTableDto) throws NotFoundException;
 
+    List<TableTimeDto> getTablesByNumberOfSeats(Integer seats);
+
     void deleteTable(String searchId) throws NotFoundException;
 
     boolean existBySearchId(String searchId);
