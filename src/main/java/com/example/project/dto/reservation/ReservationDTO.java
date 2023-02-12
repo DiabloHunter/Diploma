@@ -11,17 +11,15 @@ public class ReservationDTO {
     private @NotNull LocalDateTime endTime;
     private @NotNull Integer amountOfPeople;
     private @NotNull String userEmail;
-    private @NotNull List<Long> tableIds;
     private String description;
 
     public ReservationDTO(LocalDateTime startTime, LocalDateTime endTime, Integer amountOfPeople,
-                          String userEmail, String description, List<Long> tableIds) {
+                          String userEmail, String description) {
         this.startTime = startTime;
         this.endTime = endTime;
         this.amountOfPeople = amountOfPeople;
         this.userEmail = userEmail;
         this.description = description;
-        this.tableIds = tableIds;
     }
 
     public ReservationDTO() {
@@ -65,13 +63,5 @@ public class ReservationDTO {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public List<Long> getTableIds() {
-        return tableIds;
-    }
-
-    public void setTableIds(List<Long> tableIds) {
-        this.tableIds = tableIds;
     }
 }

@@ -2,7 +2,6 @@ package com.example.project.controller;
 
 import com.example.project.common.ApiResponse;
 import com.example.project.dto.table.CreateTableDto;
-import com.example.project.dto.table.TableTimeDto;
 import com.example.project.dto.table.UpdateTableDto;
 import com.example.project.service.ITableService;
 import javassist.NotFoundException;
@@ -13,13 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 @RestController
 @RequestMapping("/api/table")
 public class TableController {
@@ -29,24 +21,6 @@ public class TableController {
 
     //todo add getTablesByTime
     private static final Logger LOG = LogManager.getLogger(TableController.class);
-
-    @GetMapping("/")
-    public ResponseEntity<List<TableTimeDto>> getAllTables() {
-        List<TableTimeDto> tableTimeDtos = tableService.getAllTablesDto();
-        return new ResponseEntity<>(tableTimeDtos, HttpStatus.OK);
-    }
-
-    @GetMapping("/searchId")
-    public ResponseEntity<TableTimeDto> getTableBySearchId(@RequestParam String searchId) {
-        TableTimeDto tableTimeDto = tableService.getTableDtoBySearchId(searchId);
-        return new ResponseEntity<>(tableTimeDto, HttpStatus.OK);
-    }
-
-    @GetMapping("/seats")
-    public ResponseEntity<List<TableTimeDto>> getTablesBySeats(@RequestParam Integer seats) {
-        List<TableTimeDto> tables = tableService.getTablesByNumberOfSeats(seats);
-        return new ResponseEntity<>(tables, HttpStatus.OK);
-    }
 
     @PostMapping("/create")
     public ResponseEntity<ApiResponse> createTable(@RequestBody CreateTableDto createTableDto) {
@@ -96,6 +70,24 @@ public class TableController {
                 String.format("Table with searchId %s has been deleted!", searchId)), HttpStatus.OK);
     }
 
+
+//    @GetMapping("/")
+//    public ResponseEntity<List<TableTimeDto>> getAllTables() {
+//        List<TableTimeDto> tableTimeDtos = tableService.getAllTablesDto();
+//        return new ResponseEntity<>(tableTimeDtos, HttpStatus.OK);
+//    }
+//
+//    @GetMapping("/searchId")
+//    public ResponseEntity<TableTimeDto> getTableBySearchId(@RequestParam String searchId) {
+//        TableTimeDto tableTimeDto = tableService.getTableDtoBySearchId(searchId);
+//        return new ResponseEntity<>(tableTimeDto, HttpStatus.OK);
+//    }
+//
+//    @GetMapping("/seats")
+//    public ResponseEntity<List<TableTimeDto>> getTablesBySeats(@RequestParam Integer seats) {
+//        List<TableTimeDto> tables = tableService.getTablesByNumberOfSeats(seats);
+//        return new ResponseEntity<>(tables, HttpStatus.OK);
+//    }
 //    @GetMapping("/test")
 //    public ResponseEntity<ApiResponse> test() {
 //        tableService.create(new CreateTableDto("searchId", 4));
@@ -138,25 +130,25 @@ public class TableController {
 //        return null;
 //    }
 
-    @GetMapping(value = "/get-image-with-media-type")
-    public @ResponseBody
-    Map<String, String> getImage() throws IOException {
-        String path = "\\images\\default.png";
-        InputStream is = TableController.class.getClassLoader().getResourceAsStream(path);
-//        File file = new ClassPathResource(imagesPath + imageName).getFile();
-        String encodeImage = Base64.getEncoder().withoutPadding().encodeToString(is.readAllBytes());
-        Map<String, String> jsonMap = new HashMap<>();
-        jsonMap.put("content", encodeImage);
+//    @GetMapping(value = "/get-image-with-media-type")
+//    public @ResponseBody
+//    Map<String, String> getImage() throws IOException {
+//        String path = "\\images\\default.png";
+//        InputStream is = TableController.class.getClassLoader().getResourceAsStream(path);
+////        File file = new ClassPathResource(imagesPath + imageName).getFile();
+//        String encodeImage = Base64.getEncoder().withoutPadding().encodeToString(is.readAllBytes());
+//        Map<String, String> jsonMap = new HashMap<>();
+//        jsonMap.put("content", encodeImage);
+//
+//        return jsonMap;
+//    }
 
-        return jsonMap;
-    }
-
-    @GetMapping(value = "/saveImage")
-    public void getImageWithMediaType() throws IOException {
+//    @GetMapping(value = "/saveImage")
+//    public void getImageWithMediaType() throws IOException {
 //        InputStream fileContent = filePart.getInputStream();
 //        BufferedImage image = ImageIO.read(fileContent);
 //        ImageIO.write (image, fileName.split("\\.")[1], new File(pictureSave));
-    }
+//}
 
 
 //    @GetMapping("/get-image-dynamic-type")

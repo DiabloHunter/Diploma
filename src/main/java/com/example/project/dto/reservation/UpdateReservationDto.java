@@ -13,17 +13,15 @@ public class UpdateReservationDto {
     private @NotNull LocalDateTime endTime;
     private @NotNull Integer amountOfPeople;
     private @NotNull String userEmail;
-    private @NotNull List<Long> tableIds;
     private String description;
 
     public UpdateReservationDto(Boolean isActive, LocalDateTime startTime, LocalDateTime endTime,
-                                Integer amountOfPeople, String userEmail, List<Long> tableIds, String description) {
+                                Integer amountOfPeople, String userEmail, String description) {
         this.isActive = isActive;
         this.startTime = startTime;
         this.endTime = endTime;
         this.amountOfPeople = amountOfPeople;
         this.userEmail = userEmail;
-        this.tableIds = tableIds;
         this.description = description;
     }
 
@@ -84,14 +82,6 @@ public class UpdateReservationDto {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public List<Long> getTableIds() {
-        return tableIds;
-    }
-
-    public void setTableIds(List<Long> tableIds) {
-        this.tableIds = tableIds;
     }
 
 }

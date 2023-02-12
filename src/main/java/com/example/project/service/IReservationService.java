@@ -9,11 +9,16 @@ import org.joda.time.LocalDate;
 import java.util.List;
 
 public interface IReservationService {
-
     void createReservation(ReservationDTO reservationDTO) throws NotFoundException;
 
-    List<TableTimeDto> getFreeTables(LocalDate date);
-
     void updateReservation(UpdateReservationDto updateReservationDto) throws NotFoundException;
+
+    void cancelReservation(Long id) throws NotFoundException;
+
+//    void createReservation(ReservationDTO reservationDTO) throws NotFoundException;
+//
+//    List<TableTimeDto> getFreeTables(LocalDate date);
+//
+//    void updateReservation(UpdateReservationDto updateReservationDto) throws NotFoundException;
 
 }

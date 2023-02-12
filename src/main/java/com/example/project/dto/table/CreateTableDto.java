@@ -3,14 +3,16 @@ package com.example.project.dto.table;
 public class CreateTableDto {
 
     private String searchId;
-    private Integer numberOfSeats;
+    private Integer minNumberOfSeats;
+    private Integer maxNumberOfSeats;
 
     public CreateTableDto() {
     }
 
-    public CreateTableDto(String searchId, Integer numberOfSeats) {
+    public CreateTableDto(String searchId, Integer minNumberOfSeats, Integer maxNumberOfSeats) {
         this.searchId = searchId;
-        this.numberOfSeats = numberOfSeats;
+        this.minNumberOfSeats = minNumberOfSeats;
+        this.maxNumberOfSeats = maxNumberOfSeats;
     }
 
     public String getSearchId() {
@@ -21,12 +23,19 @@ public class CreateTableDto {
         this.searchId = searchId;
     }
 
-    public Integer getNumberOfSeats() {
-        return numberOfSeats;
+    public Integer getMinNumberOfSeats() {
+        return minNumberOfSeats;
     }
 
-    public void setNumberOfSeats(Integer numberOfSeats) {
-        this.numberOfSeats = numberOfSeats;
+    public void setMinNumberOfSeats(Integer minNumberOfSeats) {
+        this.minNumberOfSeats = minNumberOfSeats;
     }
 
+    public Integer getMaxNumberOfSeats() {
+        return maxNumberOfSeats;
+    }
+
+    public void setMaxNumberOfSeats(Integer maxNumberOfSeats) {
+        this.maxNumberOfSeats = maxNumberOfSeats;
+    }
 }

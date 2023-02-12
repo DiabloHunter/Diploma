@@ -1,8 +1,5 @@
 package com.example.project.model;
 
-import org.joda.time.LocalDateTime;
-import org.joda.time.LocalTime;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
@@ -13,28 +10,14 @@ public class Table {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private @NotNull String searchId;
-    private @NotNull Integer numberOfSeats;
-    private @NotNull LocalTime reservedFrom;
-    private @NotNull LocalTime reservedTo;
+    private @NotNull Integer minNumberOfSeats;
+    private @NotNull Integer maxNumberOfSeats;
 
-    @Column(nullable = false, columnDefinition = "boolean default false")
-    private Boolean isReserved;
-
-
-    public Table(String searchId, Integer numberOfSeats, Boolean isReserved, LocalTime reservedFrom, LocalTime reservedTo) {
+    public Table(String searchId, Integer minNumberOfSeats, Integer maxNumberOfSeats) {
         this.searchId = searchId;
-        this.numberOfSeats = numberOfSeats;
-        this.isReserved = isReserved;
-        this.reservedFrom = reservedFrom;
-        this.reservedTo = reservedTo;
-    }
-
-    public Table(String searchId, Integer numberOfSeats, Boolean isReserved) {
-        this.searchId = searchId;
-        this.numberOfSeats = numberOfSeats;
-        this.isReserved = isReserved;
+        this.minNumberOfSeats = minNumberOfSeats;
+        this.maxNumberOfSeats = maxNumberOfSeats;
     }
 
     public Table() {
@@ -56,35 +39,19 @@ public class Table {
         this.searchId = searchId;
     }
 
-    public Integer getNumberOfSeats() {
-        return numberOfSeats;
+    public Integer getMinNumberOfSeats() {
+        return minNumberOfSeats;
     }
 
-    public void setNumberOfSeats(Integer numberOfSeats) {
-        this.numberOfSeats = numberOfSeats;
+    public void setMinNumberOfSeats(Integer numberOfSeats) {
+        this.minNumberOfSeats = numberOfSeats;
     }
 
-    public Boolean isReserved() {
-        return isReserved;
+    public Integer getMaxNumberOfSeats() {
+        return maxNumberOfSeats;
     }
 
-    public void setReserved(Boolean reserved) {
-        isReserved = reserved;
-    }
-
-    public LocalTime getReservedFrom() {
-        return reservedFrom;
-    }
-
-    public void setReservedFrom(LocalTime reservedFrom) {
-        this.reservedFrom = reservedFrom;
-    }
-
-    public LocalTime getReservedTo() {
-        return reservedTo;
-    }
-
-    public void setReservedTo(LocalTime reservedTo) {
-        this.reservedTo = reservedTo;
+    public void setMaxNumberOfSeats(Integer maxNumberOfSeats) {
+        this.maxNumberOfSeats = maxNumberOfSeats;
     }
 }

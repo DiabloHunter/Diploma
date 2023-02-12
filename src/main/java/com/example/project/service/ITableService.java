@@ -12,46 +12,23 @@ import java.util.List;
 import java.util.Map;
 
 public interface ITableService {
-
     List<Table> getAllTables();
-
-    List<TableTimeDto> getAllTablesDto();
-
-    TableTimeDto getTableDtoBySearchId(String searchId);
-
-    Map<String, List<Table>> convertTablesListToMap(List<Table> list);
-
-    List<TableTimeDto> convertTablesToTableDtos(Map<String, List<Table>> tables);
-
-    TableTimeDto convertTablesToTableDto(List<Table> tables);
-
-    List<Table> getTableBySearchId(String searchId);
-
-    List<Table> getTablesBySearchIds(List<String> searchIds);
-
-    List<Table> getTablesByIds(List<Long> ids);
-
-    List<Table> getTablesBySearchIdsAndTime(List<String> searchIds, LocalTime start, LocalTime end);
-
-    List<Table> getTablesByNumberOfSeatsAndTime(int numberOfSeats, LocalTime start, LocalTime end);
-
-    List<Table> getTablesByNumberOfSeats(int numberOfSeats);
-
-    List<Table> getTablesByTime(LocalTime start, LocalTime end);
-
-    void reserveTables(List<Table> tablesToReserve);
-
-    void setNotReserveTables(List<Table> tablesToReserve);
-
-    void saveAll(List<Table> tables);
 
     void create(CreateTableDto createTableDto);
 
     void update(UpdateTableDto updateTableDto) throws NotFoundException;
 
-    List<TableTimeDto> getTablesByNumberOfSeats(Integer seats);
-
     void deleteTable(String searchId) throws NotFoundException;
+
+    Table getTableBySearchId(String searchId);
+
+    List<Table> getTablesBySearchIds(List<String> searchIds);
+
+    List<Table> getTablesByIds(List<Long> ids);
+
+    List<Table> getTablesByNumberOfSeats(Integer numberOfSeats);
+
+    void saveAll(List<Table> tables);
 
     boolean existBySearchId(String searchId);
 }

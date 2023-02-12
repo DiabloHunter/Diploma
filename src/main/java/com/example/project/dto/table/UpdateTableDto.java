@@ -4,15 +4,17 @@ public class UpdateTableDto {
 
     private String previousSearchId;
     private String searchId;
-    private Integer numberOfSeats;
+    private Integer minNumberOfSeats;
+    private Integer maxNumberOfSeats;
 
     public UpdateTableDto() {
     }
 
-    public UpdateTableDto(String previousSearchId, String searchId, Integer numberOfSeats) {
+    public UpdateTableDto(String previousSearchId, String searchId, Integer minNumberOfSeats, Integer maxNumberOfSeats) {
         this.previousSearchId = previousSearchId;
         this.searchId = searchId;
-        this.numberOfSeats = numberOfSeats;
+        this.minNumberOfSeats = minNumberOfSeats;
+        this.maxNumberOfSeats = maxNumberOfSeats;
     }
 
     public String getPreviousSearchId() {
@@ -31,11 +33,19 @@ public class UpdateTableDto {
         this.searchId = searchId;
     }
 
-    public Integer getNumberOfSeats() {
-        return numberOfSeats;
+    public Integer getMinNumberOfSeats() {
+        return minNumberOfSeats;
     }
 
-    public void setNumberOfSeats(Integer numberOfSeats) {
-        this.numberOfSeats = numberOfSeats;
+    public void setMinNumberOfSeats(Integer minNumberOfSeats) {
+        this.minNumberOfSeats = minNumberOfSeats;
+    }
+
+    public Integer getMaxNumberOfSeats() {
+        return maxNumberOfSeats;
+    }
+
+    public void setMaxNumberOfSeats(Integer maxNumberOfSeats) {
+        this.maxNumberOfSeats = maxNumberOfSeats;
     }
 }

@@ -4,20 +4,13 @@ import com.example.project.common.ApiResponse;
 import com.example.project.dto.reservation.ReservationDTO;
 import com.example.project.dto.reservation.UpdateReservationDto;
 import com.example.project.service.IReservationService;
-import com.example.project.util.TimeUtil;
 import javassist.NotFoundException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.joda.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/reservation")
@@ -52,16 +45,15 @@ public class ReservationController {
                 String.format("Reservation has been updated for user %s!", updateReservationDto.getUserEmail())), HttpStatus.OK);
     }
 
-    @GetMapping("/test")
-    public void test() throws NotFoundException {
-        LocalDateTime localDateTime = TimeUtil.formatLocalDateTime(new LocalDateTime());
-        System.out.println(localDateTime);
-        System.out.println(TimeUtil.formatDate(localDateTime.minusDays(1).toDate()));
-//        reservationService.createReservation(new ReservationDTO(
-//                TimeUtil.formatLocalDateTime(new LocalDateTime().plusDays(2).minusHours(3)),
-//                TimeUtil.formatLocalDateTime(new LocalDateTime().plusDays(2).plusHours(5)),
-//                5, "haha@gmail.com", "test", List.of(1L, 4L, 13L)));
-        //return new ResponseEntity<>(stripeResponse, HttpStatus.OK);
+    @GetMapping("/cancel")
+    public ResponseEntity<ApiResponse> cancelReservation(@RequestParam("id") Long id) {
+        try {
+            reservationService.cancelReservation(id);
+        } catch (NotFoundException e) {
+            LOG.error(e.getMessage());
+            return new ResponseEntity<>(new ApiResponse(false, e.getMessage()), HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(new ApiResponse(true, "Reservation has been canceled!"), HttpStatus.OK);
     }
 
 }
