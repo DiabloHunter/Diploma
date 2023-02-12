@@ -34,22 +34,14 @@ public class UserController {
     //@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
     @PostMapping("/update/")
     public ResponseEntity<ApiResponse> updateUser(@RequestParam("userEmail") String userEmail,
-                                                  @RequestBody UpdateUserDto changedUser) {
+                                                  @RequestBody UpdateUserDto changedUser) throws NotFoundException {
         User user = userService.getUserByEmail(userEmail);
         if(user == null){
             LOG.error(String.format("User with email %s was not found!", userEmail));
             return new ResponseEntity<>(new ApiResponse(false,
                     String.format("User with email %s was not found!", userEmail)), HttpStatus.NOT_FOUND);
         }
-        try {
-            userService.update(userEmail, changedUser);
-        } catch (NotFoundException e) {
-            LOG.error(e.getMessage());
-            return new ResponseEntity<>(new ApiResponse(false, e.getMessage()), HttpStatus.NOT_FOUND);
-        } catch (IllegalArgumentException e) {
-            LOG.error(e.getMessage());
-            return new ResponseEntity<>(new ApiResponse(false, e.getMessage()), HttpStatus.BAD_REQUEST);
-        }
+        userService.update(userEmail, changedUser);
 
         LOG.info(String.format("User with email %s has been updated", userEmail));
         return new ResponseEntity<>(new ApiResponse(true,

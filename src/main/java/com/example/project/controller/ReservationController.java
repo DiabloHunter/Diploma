@@ -22,37 +22,22 @@ public class ReservationController {
     private static final Logger LOG = LogManager.getLogger(ReservationController.class);
 
     @GetMapping("/create")
-    public ResponseEntity<ApiResponse> createReservation(@RequestBody ReservationDTO reservationDTO) {
-        try {
-            reservationService.createReservation(reservationDTO);
-        } catch (NotFoundException e) {
-            LOG.error(e.getMessage());
-            return new ResponseEntity<>(new ApiResponse(false, e.getMessage()), HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<ApiResponse> createReservation(@RequestBody ReservationDTO reservationDTO) throws NotFoundException {
+        reservationService.createReservation(reservationDTO);
         return new ResponseEntity<>(new ApiResponse(true,
                 String.format("Reservation has been created for user %s!", reservationDTO.getUserEmail())), HttpStatus.CREATED);
     }
 
     @GetMapping("/update")
-    public ResponseEntity<ApiResponse> updateReservation(@RequestBody UpdateReservationDto updateReservationDto) {
-        try {
-            reservationService.updateReservation(updateReservationDto);
-        } catch (NotFoundException e) {
-            LOG.error(e.getMessage());
-            return new ResponseEntity<>(new ApiResponse(false, e.getMessage()), HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<ApiResponse> updateReservation(@RequestBody UpdateReservationDto updateReservationDto) throws NotFoundException {
+        reservationService.updateReservation(updateReservationDto);
         return new ResponseEntity<>(new ApiResponse(true,
                 String.format("Reservation has been updated for user %s!", updateReservationDto.getUserEmail())), HttpStatus.OK);
     }
 
     @GetMapping("/cancel")
-    public ResponseEntity<ApiResponse> cancelReservation(@RequestParam("id") Long id) {
-        try {
-            reservationService.cancelReservation(id);
-        } catch (NotFoundException e) {
-            LOG.error(e.getMessage());
-            return new ResponseEntity<>(new ApiResponse(false, e.getMessage()), HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<ApiResponse> cancelReservation(@RequestParam("id") Long id) throws NotFoundException {
+        reservationService.cancelReservation(id);
         return new ResponseEntity<>(new ApiResponse(true, "Reservation has been canceled!"), HttpStatus.OK);
     }
 

@@ -26,27 +26,17 @@ public class WishListController {
 
     //@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
     @GetMapping("/")
-    public ResponseEntity<List<DishDTO>> getWishList(@RequestParam("userEmail") String userEmail) {
-        try {
-            List<DishDTO> dishDTOS = wishlistService.getWishListForUser(userEmail);
-            return new ResponseEntity<>(dishDTOS, HttpStatus.OK);
-        } catch (NotFoundException e) {
-            LOG.error(e.getMessage());
-            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<List<DishDTO>> getWishList(@RequestParam("userEmail") String userEmail) throws NotFoundException {
+        List<DishDTO> dishDTOS = wishlistService.getWishListForUser(userEmail);
+        return new ResponseEntity<>(dishDTOS, HttpStatus.OK);
     }
 
 
     //@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
     @PostMapping("/create")
     public ResponseEntity<ApiResponse> addToWishlist(@RequestParam("dishId") Long dishId,
-                                                     @RequestParam("userEmail") String userEmail) {
-        try {
-            wishlistService.process(dishId, userEmail, Action.CREATE);
-        } catch (NotFoundException e) {
-            LOG.error(e.getMessage());
-            return new ResponseEntity<>(new ApiResponse(false, e.getMessage()), HttpStatus.NOT_FOUND);
-        }
+                                                     @RequestParam("userEmail") String userEmail) throws NotFoundException {
+        wishlistService.process(dishId, userEmail, Action.CREATE);
 
         LOG.info(String.format("Wishlist with dishId %s was created for user with email %s", dishId, userEmail));
         return new ResponseEntity<>( new ApiResponse(true,
@@ -57,13 +47,8 @@ public class WishListController {
     //@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
     @DeleteMapping("/delete")
     public ResponseEntity<ApiResponse> deleteFromWishlist(@RequestParam("dishId") Long dishId,
-                                                          @RequestParam("userEmail") String userEmail) {
-        try {
-            wishlistService.process(dishId, userEmail, Action.DELETE);
-        } catch (NotFoundException e) {
-            LOG.error(e.getMessage());
-            return new ResponseEntity<>(new ApiResponse(false, e.getMessage()), HttpStatus.NOT_FOUND);
-        }
+                                                          @RequestParam("userEmail") String userEmail) throws NotFoundException {
+        wishlistService.process(dishId, userEmail, Action.DELETE);
 
         LOG.info(String.format("Wishlist with dishId %s was deleted for user with email %s", dishId, userEmail));
         return new ResponseEntity<>(new ApiResponse(true,

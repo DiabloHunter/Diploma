@@ -13,6 +13,6 @@ public interface ICartService {
 
     void deleteCartItem(Long cartItemId, String userEmail) throws NotFoundException;
 
-    void deleteCartItemsByUser(User user);
+    void deleteCartItemsByUser(User user) throws NotFoundException;
 
 }

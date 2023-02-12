@@ -48,16 +48,8 @@ public class DishController {
 
    // @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER')")
     @PostMapping("/create")
-    public ResponseEntity<ApiResponse> createDish(@RequestBody DishDTO dishDto) {
-        try {
-            dishService.create(dishDto);
-        } catch (NotFoundException e) {
-            LOG.error(e.getMessage());
-            return new ResponseEntity<>(new ApiResponse(false, e.getMessage()), HttpStatus.NOT_FOUND);
-        } catch (IllegalArgumentException e) {
-            LOG.error(e.getMessage());
-            return new ResponseEntity<>(new ApiResponse(false, e.getMessage()), HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<ApiResponse> createDish(@RequestBody DishDTO dishDto) throws NotFoundException {
+        dishService.create(dishDto);
 
         LOG.info(String.format("Dish with name %s has been created!", dishDto.getSearchId()));
         return new ResponseEntity<>(new ApiResponse(true,
