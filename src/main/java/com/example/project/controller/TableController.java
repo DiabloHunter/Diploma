@@ -33,12 +33,7 @@ public class TableController {
 
     @PostMapping("/create")
     public ResponseEntity<ApiResponse> createTable(@RequestBody CreateTableDto createTableDto) {
-        try {
-            tableService.create(createTableDto);
-        } catch (IllegalArgumentException e) {
-            LOG.error(e.getMessage());
-            return new ResponseEntity<>(new ApiResponse(false, e.getMessage()), HttpStatus.BAD_REQUEST);
-        }
+        tableService.create(createTableDto);
 
         LOG.info(String.format("Table with searchId %s has been created!", createTableDto.getSearchId()));
         return new ResponseEntity<>(new ApiResponse(true, String.format("Table with searchId %s has been created!",
@@ -46,16 +41,8 @@ public class TableController {
     }
 
     @PostMapping("/update")
-    public ResponseEntity<ApiResponse> updateTable(@RequestBody UpdateTableDto updateTableDto) {
-        try {
-            tableService.update(updateTableDto);
-        } catch (NotFoundException e) {
-            LOG.error(e.getMessage());
-            return new ResponseEntity<>(new ApiResponse(false, e.getMessage()), HttpStatus.NOT_FOUND);
-        } catch (IllegalArgumentException e) {
-            LOG.error(e.getMessage());
-            return new ResponseEntity<>(new ApiResponse(false, e.getMessage()), HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<ApiResponse> updateTable(@RequestBody UpdateTableDto updateTableDto) throws NotFoundException {
+        tableService.update(updateTableDto);
 
         LOG.info(String.format("Table with searchId %s has been updated!", updateTableDto.getPreviousSearchId()));
         return new ResponseEntity<>(new ApiResponse(true,
@@ -63,16 +50,11 @@ public class TableController {
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<ApiResponse> deleteCategory(@RequestParam String searchId) {
+    public ResponseEntity<ApiResponse> deleteCategory(@RequestParam String searchId) throws NotFoundException {
         if (!tableService.existBySearchId(searchId)) {
             return new ResponseEntity<>(new ApiResponse(false, "Table does not exists"), HttpStatus.NOT_FOUND);
         }
-        try {
-            tableService.deleteTable(searchId);
-        } catch (NotFoundException e) {
-            LOG.error(e.getMessage());
-            return new ResponseEntity<>(new ApiResponse(false, e.getMessage()), HttpStatus.NOT_FOUND);
-        }
+        tableService.deleteTable(searchId);
 
         LOG.info(String.format("Table with searchId %s has been deleted!", searchId));
         return new ResponseEntity<>(new ApiResponse(true,

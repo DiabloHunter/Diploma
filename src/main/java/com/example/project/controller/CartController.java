@@ -37,14 +37,8 @@ public class CartController {
 
     //@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
     @PostMapping("/add")
-    public ResponseEntity<ApiResponse> addToCart(@RequestBody AddToCartDTO addToCartDto) {
-        try {
-            cartService.addToCart(addToCartDto);
-        } catch (NotFoundException e) {
-            LOG.error(e.getMessage());
-            return new ResponseEntity<>(new ApiResponse(false,
-                    e.getMessage()), HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<ApiResponse> addToCart(@RequestBody AddToCartDTO addToCartDto) throws NotFoundException {
+        cartService.addToCart(addToCartDto);
         LOG.info(String.format("Dish with id %s was added to %s user's bucket!",
                 addToCartDto.getDishId(), addToCartDto.getUserEmail()));
         return new ResponseEntity<>(new ApiResponse(true,
@@ -54,16 +48,8 @@ public class CartController {
     //@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
     @DeleteMapping("/delete")
     public ResponseEntity<ApiResponse> deleteCartItem(@RequestParam("cartItemId") Long itemId,
-                                                      @RequestParam("userEmail") String userEmail) {
-        try {
-            cartService.deleteCartItem(itemId, userEmail);
-        } catch (NotFoundException e) {
-            LOG.error(e.getMessage());
-            return new ResponseEntity<>(new ApiResponse(false, e.getMessage()), HttpStatus.NOT_FOUND);
-        } catch (IllegalArgumentException e) {
-            LOG.error(e.getMessage());
-            return new ResponseEntity<>(new ApiResponse(false, e.getMessage()), HttpStatus.BAD_REQUEST);
-        }
+                                                      @RequestParam("userEmail") String userEmail) throws NotFoundException {
+        cartService.deleteCartItem(itemId, userEmail);
 
         LOG.info(String.format("Cart item with id %s was deleted from %s user's bucket!",
                 itemId, userEmail));
@@ -71,22 +57,5 @@ public class CartController {
                 String.format("Cart item with id %s was deleted from %s user's bucket!", itemId, userEmail)), HttpStatus.OK);
 
     }
-
-
-//    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
-//    @GetMapping("/add/{goodSearchId}&{goodAmount}")
-//    public ResponseEntity<ApiResponse> addToCart(@PathVariable("goodSearchId") String searchId,
-//                                                 @PathVariable("goodAmount") Integer amount,
-//                                                 @RequestParam("userEmail") String userEmail) {
-//        User user = userService.getUserByEmail(userEmail);
-//
-//        AddToCartDTO addToCartDto = new AddToCartDTO();
-//        addToCartDto.setDishId(dishService.getDishBySearchId(searchId).getId());
-//        addToCartDto.setQuantity(amount);
-//
-//        cartService.addToCart(addToCartDto);
-//
-//        return new ResponseEntity<>(new ApiResponse(true, "Added to cart"), HttpStatus.CREATED);
-//    }
 
 }

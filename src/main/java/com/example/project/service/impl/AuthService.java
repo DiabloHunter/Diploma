@@ -6,7 +6,6 @@ import com.example.project.JWT.payload.response.JwtResponse;
 import com.example.project.JWT.payload.response.MessageResponse;
 import com.example.project.JWT.security.jwt.JwtUtils;
 import com.example.project.JWT.security.services.UserDetailsImpl;
-import com.example.project.exceptions.CustomException;
 import com.example.project.model.ERole;
 import com.example.project.model.Role;
 import com.example.project.model.User;
@@ -137,7 +136,7 @@ public class AuthService implements IAuthService {
                 roles);
 
         if (userService.existsByEmail(user.getEmail())) {
-            throw new CustomException("user already present");
+            throw new IllegalArgumentException("User is already exist!");
         }
         userService.create(user);
 

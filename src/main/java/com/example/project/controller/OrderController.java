@@ -1,10 +1,8 @@
 package com.example.project.controller;
 
 import com.example.project.common.ApiResponse;
-import com.example.project.dto.dish.DishStatisticDTO;
 import com.example.project.dto.liqpay.LiqPayResponse;
 import com.example.project.dto.liqpay.PayOptions;
-import com.example.project.dto.statistic.StatisticDateDTO;
 import com.example.project.dto.order.response.OrderDTO;
 import com.example.project.dto.order.response.OrderItemDTO;
 import com.example.project.dto.checkout.CheckoutItemDTO;
@@ -21,7 +19,6 @@ import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.UnsupportedEncodingException;
@@ -43,14 +40,9 @@ public class OrderController {
 
     //@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
     @GetMapping("/getOrders/")
-    public ResponseEntity<OrderDTO> getOrders(@RequestParam("userEmail") String userEmail) {
+    public ResponseEntity<OrderDTO> getOrders(@RequestParam("userEmail") String userEmail) throws NotFoundException {
         List<OrderItemDTO> orders;
-        try {
-            orders = orderService.getAllOrders(userEmail);
-        } catch (NotFoundException e) {
-            LOG.error(e.getMessage());
-            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
-        }
+        orders = orderService.getAllOrders(userEmail);
         OrderDTO orderDto = new OrderDTO();
         orderDto.setOrderItems(orders);
         double totalSum = 0;
@@ -69,21 +61,16 @@ public class OrderController {
     }
 
     //@PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER')")
-    @GetMapping("/getStatistic")
-    public ResponseEntity<List<DishStatisticDTO>> getStatistic(@RequestBody StatisticDateDTO statisticDateDto) {
-        List<DishStatisticDTO> dishStatisticDTOS = orderService.getStatisticByOrders(statisticDateDto);
-        return new ResponseEntity<>(dishStatisticDTOS, HttpStatus.OK);
-    }
+//    @GetMapping("/getStatistic")
+//    public ResponseEntity<List<DishStatisticDTO>> getStatistic(@RequestBody StatisticDateDTO statisticDateDto) {
+//        List<DishStatisticDTO> dishStatisticDTOS = orderService.getStatisticByOrders(statisticDateDto);
+//        return new ResponseEntity<>(dishStatisticDTOS, HttpStatus.OK);
+//    }
 
     //@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
     @PostMapping("/create")
-    public ResponseEntity<ApiResponse> createOrder(@RequestBody OrderItemDTO orderItemDTO) {
-        try {
-            orderService.createOrder(orderItemDTO);
-        } catch (NotFoundException e) {
-            LOG.error(e.getMessage());
-            return new ResponseEntity<>(new ApiResponse(false, e.getMessage()), HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<ApiResponse> createOrder(@RequestBody OrderItemDTO orderItemDTO) throws NotFoundException {
+        orderService.createOrder(orderItemDTO);
         return new ResponseEntity<>(new ApiResponse(true, "Order created!"), HttpStatus.CREATED);
     }
 

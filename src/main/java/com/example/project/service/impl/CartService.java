@@ -3,7 +3,6 @@ package com.example.project.service.impl;
 import com.example.project.dto.cart.AddToCartDTO;
 import com.example.project.dto.cart.CartDTO;
 import com.example.project.dto.cart.CartItemDTO;
-import com.example.project.exceptions.CustomException;
 import com.example.project.model.Cart;
 import com.example.project.model.Dish;
 import com.example.project.model.User;
@@ -97,10 +96,10 @@ public class CartService implements ICartService {
     }
 
     @Override
-    public void deleteCartItemsByUser(User user) {
+    public void deleteCartItemsByUser(User user) throws NotFoundException {
         List<Cart> optionalCart = cartRepository.findAllByUserOrderByCreatedDateDesc(user);
         if (optionalCart.isEmpty()) {
-            throw new CustomException("User don't have carts");
+            throw new NotFoundException("User's cart is empty!");
         }
         cartRepository.deleteAll(optionalCart);
     }
