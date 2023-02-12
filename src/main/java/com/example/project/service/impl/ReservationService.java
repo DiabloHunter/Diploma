@@ -136,6 +136,7 @@ public class ReservationService implements IReservationService {
         checkRating(outdatedReservation.getUser(), outdatedReservation.getStartTime(), new LocalDateTime());
 
         outdatedReservation.setActive(false);
+        outdatedReservation.setCanceled(true);
         reservationRepository.save(outdatedReservation);
     }
 
@@ -159,6 +160,7 @@ public class ReservationService implements IReservationService {
                 if (orders == null || orders.isEmpty()) {
                     reservationUser.setRating(reservationUser.getRating() - 0.1);
                     reservation.setActive(false);
+                    reservation.setCanceled(true);
                 }
             }
         }

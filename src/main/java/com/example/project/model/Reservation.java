@@ -25,6 +25,8 @@ public class Reservation {
 
     @Column(nullable = false, columnDefinition = "boolean default true")
     private Boolean isActive;
+    @Column(nullable = false, columnDefinition = "boolean default false")
+    private Boolean isCanceled;
 
     @ManyToOne(cascade = CascadeType.REFRESH)
     @JsonIgnore
@@ -120,5 +122,13 @@ public class Reservation {
 
     public void setActive(Boolean active) {
         isActive = active;
+    }
+
+    public Boolean getCanceled() {
+        return isCanceled;
+    }
+
+    public void setCanceled(Boolean canceled) {
+        isCanceled = canceled;
     }
 }
