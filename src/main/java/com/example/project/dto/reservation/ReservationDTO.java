@@ -1,13 +1,15 @@
 package com.example.project.dto.reservation;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.joda.time.LocalDateTime;
 
 import javax.validation.constraints.NotNull;
-import java.util.List;
 
 public class ReservationDTO {
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-DD HH:mm")
     private @NotNull LocalDateTime startTime;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-DD HH:mm")
     private @NotNull LocalDateTime endTime;
     private @NotNull Integer amountOfPeople;
     private @NotNull String userEmail;

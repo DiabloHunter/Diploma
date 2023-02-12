@@ -21,7 +21,7 @@ public class ReservationController {
 
     private static final Logger LOG = LogManager.getLogger(ReservationController.class);
 
-    @GetMapping("/create")
+    @PostMapping("/create")
     public ResponseEntity<ApiResponse> createReservation(@RequestBody ReservationDTO reservationDTO) {
         try {
             reservationService.createReservation(reservationDTO);
