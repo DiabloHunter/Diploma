@@ -2,10 +2,12 @@ package com.example.project.service.impl;
 
 import com.example.project.dto.reservation.ReservationDTO;
 import com.example.project.dto.reservation.UpdateReservationDto;
+import com.example.project.model.Order;
 import com.example.project.model.Reservation;
 import com.example.project.model.Table;
 import com.example.project.model.User;
 import com.example.project.repository.IReservationRepository;
+import com.example.project.service.IOrderService;
 import com.example.project.service.IReservationService;
 import com.example.project.service.ITableService;
 import com.example.project.service.IUserService;
@@ -24,12 +26,12 @@ public class ReservationService implements IReservationService {
 
     @Autowired
     IReservationRepository reservationRepository;
-
     @Autowired
     ITableService tableService;
-
     @Autowired
     IUserService userService;
+    @Autowired
+    IOrderService orderService;
 
     @Override
     public void createReservation(ReservationDTO reservationDTO) throws NotFoundException {
@@ -144,13 +146,31 @@ public class ReservationService implements IReservationService {
         }
     }
 
+    //todo check schedulers if they work
     @Scheduled(cron = "${cron.check.table.reservation.time}")
-    private void checkReservationTime() {
+    private void checkReservation() {
+        List<Reservation> outdatedReservations = reservationRepository.findByStartTimeAndActive(TimeUtil.formatLocalDateTime(new LocalDateTime()));
+        LocalDateTime currentTime = TimeUtil.formatLocalDateTime(new LocalDateTime()).minusMinutes(30);
+        for (Reservation reservation : outdatedReservations) {
+            LocalDateTime startTime = TimeUtil.formatLocalDateTime(reservation.getStartTime());
+            if (currentTime.compareTo(startTime) >= 0) {
+                User reservationUser = reservation.getUser();
+                List<Order> orders = orderService.getUserOrdersByTime(reservationUser, startTime, currentTime);
+                if (orders == null || orders.isEmpty()) {
+                    reservationUser.setRating(reservationUser.getRating() - 0.1);
+                    reservation.setActive(false);
+                }
+            }
+        }
+        reservationRepository.saveAll(outdatedReservations);
+    }
+
+    @Scheduled(cron = "${cron.check.table.reservation.time}")
+    private void checkReservationEndTime() {
         List<Reservation> outdatedReservations = reservationRepository.findByEndTimeIs(TimeUtil.formatLocalDateTime(new LocalDateTime()));
         for (Reservation reservation : outdatedReservations) {
             reservation.setActive(false);
         }
         reservationRepository.saveAll(outdatedReservations);
     }
-
 }

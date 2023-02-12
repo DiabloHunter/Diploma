@@ -14,6 +14,10 @@ public interface IReservationRepository extends JpaRepository<Reservation, Long>
 
     List<Reservation> findByEndTimeIs(LocalDateTime endTime);
 
+    @Query(value = "SELECT * FROM RESERVATIONS u WHERE u.start_time < :from AND u.is_active is true",
+            nativeQuery = true)
+    List<Reservation> findByStartTimeAndActive(@Param("from") LocalDateTime startTime);
+
     @Query(value = "SELECT * FROM RESERVATIONS u WHERE u.start_time >= :from AND u.end_time<=:to AND u.is_active is true",
             nativeQuery = true)
     List<Reservation> getReservationByTime(@Param("from") LocalDateTime start,

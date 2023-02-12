@@ -92,7 +92,7 @@ public class TableService implements ITableService {
 
     @Override
     public List<Table> getTablesByNumberOfSeats(Integer numberOfSeats) {
-        return tableRepository.getTablesByNumberOfSeats(numberOfSeats);
+        return tableRepository.getTablesByMinNumberOfSeats(numberOfSeats);
     }
 
     @Override

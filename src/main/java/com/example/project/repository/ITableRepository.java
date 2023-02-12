@@ -34,7 +34,7 @@ public interface ITableRepository extends JpaRepository<Table, Long> {
 //    List<Table> getTablesByNumberOfSeatsAndTime(@Param("seats") int numberOfSeats, @Param("from") LocalTime start,
 //                                                @Param("to") LocalTime end);
 
-    List<Table> getTablesByNumberOfSeats(int numberOfSeats);
+    List<Table> getTablesByMinNumberOfSeats(int minNumberOfSeats);
 
     void deleteBySearchId(String searchId);
 

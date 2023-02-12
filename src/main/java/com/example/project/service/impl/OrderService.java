@@ -164,6 +164,11 @@ public class OrderService implements IOrderService {
     }
 
     @Override
+    public List<Order> getUserOrdersByTime(User user, LocalDateTime start, LocalDateTime end){
+        return orderRepository.findByUserAndCreatedDate(user.getId(), start, end);
+    }
+
+    @Override
     public Session createSession(List<CheckoutItemDTO> checkoutItemDTOList) throws StripeException {
         String successURL = baseURL + "orders";
         String failureURL = baseURL + "payment/failed";
