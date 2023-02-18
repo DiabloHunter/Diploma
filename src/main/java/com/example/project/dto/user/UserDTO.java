@@ -6,6 +6,8 @@ import java.util.List;
 
 public class UserDTO {
 
+    private String name;
+
     private String email;
 
     private String password;
@@ -13,6 +15,14 @@ public class UserDTO {
     private Double rating;
 
     private List<Role> roles;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public String getEmail() {
         return email;

@@ -39,7 +39,7 @@ public class DishController {
 
         if (dish == null) {
             LOG.warn(String.format("Dish with searchId %s was not found!", dishDto.getSearchId()));
-            return new ResponseEntity<>(null,  HttpStatus.OK);
+            return new ResponseEntity<>(null,  HttpStatus.BAD_REQUEST);
         }
 
         DishDTO dishDTO = dishService.getDishDto(dish);

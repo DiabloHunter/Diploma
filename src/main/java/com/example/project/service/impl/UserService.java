@@ -46,8 +46,10 @@ public class UserService implements IUserService {
     public UserDTO getUserDto(User user) {
         UserDTO userDto = new UserDTO();
         if (user == null) {
-            return userDto;
+            return null;
         }
+
+        userDto.setName(user.getName());
         userDto.setEmail(user.getEmail());
         userDto.setPassword(user.getPassword());
         userDto.setRating(user.getRating());

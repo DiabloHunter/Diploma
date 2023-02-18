@@ -21,13 +21,13 @@ public class ExceptionControllerAdvice {
     }
 
     @ExceptionHandler(value = NotFoundException.class)
-    public final ResponseEntity<ApiResponse> handleCustomException(NotFoundException exception) {
+    public final ResponseEntity<ApiResponse> handleNotFoundException(NotFoundException exception) {
         LOG.error(exception.getMessage());
         return new ResponseEntity<>(new ApiResponse(false, exception.getMessage()), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(value = IllegalArgumentException.class)
-    public final ResponseEntity<ApiResponse> handleCustomException(IllegalArgumentException exception) {
+    public final ResponseEntity<ApiResponse> handleIllegalArgumentException(IllegalArgumentException exception) {
         LOG.error(exception.getMessage());
         return new ResponseEntity<>(new ApiResponse(false, exception.getMessage()), HttpStatus.BAD_REQUEST);
     }

@@ -13,6 +13,8 @@ import com.example.project.service.ITableService;
 import com.example.project.service.IUserService;
 import com.example.project.util.TimeUtil;
 import javassist.NotFoundException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.joda.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -24,6 +26,8 @@ import java.util.stream.Collectors;
 @Service
 public class ReservationService implements IReservationService {
 
+    private static final Logger LOG = LogManager.getLogger(ReservationService.class);
+
     @Autowired
     IReservationRepository reservationRepository;
     @Autowired
@@ -32,6 +36,17 @@ public class ReservationService implements IReservationService {
     IUserService userService;
     @Autowired
     IOrderService orderService;
+
+    @Override
+    public List<Reservation> getUserReservations(String userEmail) {
+        User user = userService.getUserByEmail(userEmail);
+        if(user == null){
+            LOG.error("User with email %s was not found");
+            return null;
+        }
+
+        return reservationRepository.findByUserIdAndActive(user.getId());
+    }
 
     @Override
     public void createReservation(ReservationDTO reservationDTO) throws NotFoundException {

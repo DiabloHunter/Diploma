@@ -27,8 +27,12 @@ public class UserController {
 
     //@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
     @GetMapping("/")
-    public UserDTO getUser(@RequestParam String email) {
-        return userService.getUserDto(userService.getUserByEmail(email));
+    public ResponseEntity<UserDTO> getUser(@RequestParam("userEmail") String email) {
+        UserDTO userDTO = userService.getUserDto(userService.getUserByEmail(email));
+        if (userDTO == null) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(userDTO, HttpStatus.OK);
     }
 
     //@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
@@ -36,7 +40,7 @@ public class UserController {
     public ResponseEntity<ApiResponse> updateUser(@RequestParam("userEmail") String userEmail,
                                                   @RequestBody UpdateUserDto changedUser) throws NotFoundException {
         User user = userService.getUserByEmail(userEmail);
-        if(user == null){
+        if (user == null) {
             LOG.error(String.format("User with email %s was not found!", userEmail));
             return new ResponseEntity<>(new ApiResponse(false,
                     String.format("User with email %s was not found!", userEmail)), HttpStatus.NOT_FOUND);
@@ -67,7 +71,7 @@ public class UserController {
             userService.restore();
         } catch (IOException e) {
             LOG.error(e.getMessage());
-            return new ResponseEntity<>(new ApiResponse(false,  e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new ApiResponse(false, e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return new ResponseEntity<>(new ApiResponse(true, "Database has been successfully restored!"), HttpStatus.OK);
     }
