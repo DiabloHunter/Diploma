@@ -107,11 +107,6 @@ public class AuthService implements IAuthService {
                                 .orElseThrow(() -> new RuntimeException("Error: Role was not found."));
                         roles.add(adminRole);
                         break;
-                    case "moderator":
-                        Role moderatorRole = roleService.findByName(ERole.ROLE_MODERATOR)
-                                .orElseThrow(() -> new RuntimeException("Error: Role was not found."));
-                        roles.add(moderatorRole);
-                        break;
                     case "manager":
                         Role managerRole = roleService.findByName(ERole.ROLE_MANAGER)
                                 .orElseThrow(() -> new RuntimeException("Error: Role was not found."));

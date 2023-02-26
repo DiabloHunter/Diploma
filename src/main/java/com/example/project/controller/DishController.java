@@ -32,7 +32,7 @@ public class DishController {
         return new ResponseEntity<>(dishes, HttpStatus.OK);
     }
 
-    //@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
+    //@PreAuthorize("hasRole('USER') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
     @GetMapping("/getBySearchId/")
     public ResponseEntity<DishDTO> getDishBySearchId(@RequestBody DishDTO dishDto) {
         Dish dish = dishService.getDishBySearchId(dishDto.getSearchId());
@@ -46,7 +46,7 @@ public class DishController {
         return new ResponseEntity<>(dishDTO, HttpStatus.OK);
     }
 
-   // @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER')")
+   // @PreAuthorize(hasRole('ADMIN') or hasRole('MANAGER')")
     @PostMapping("/create")
     public ResponseEntity<ApiResponse> createDish(@RequestBody DishDTO dishDto) throws NotFoundException {
         dishService.create(dishDto);
@@ -56,7 +56,7 @@ public class DishController {
                 String.format("Dish with name %s has been created!", dishDto.getName())), HttpStatus.CREATED);
     }
 
-   // @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER')")
+   // @PreAuthorize(hasRole('ADMIN') or hasRole('MANAGER')")
     @PostMapping("/update/")
     public ResponseEntity<ApiResponse> updateDish(@RequestBody DishDTO dishDto) {
         try {
@@ -74,7 +74,7 @@ public class DishController {
                 String.format("Dish with Id %s has been updated", dishDto.getId())), HttpStatus.OK);
     }
 
-   // @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER')")
+   // @PreAuthorize(hasRole('ADMIN') or hasRole('MANAGER')")
     @DeleteMapping("/delete")
     public ResponseEntity<ApiResponse> deleteCategory(@RequestParam Long id) {
         try {
@@ -89,7 +89,7 @@ public class DishController {
                 String.format("Dish with Id %s has been deleted", id)), HttpStatus.OK);
     }
 
-   // @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER')")
+   // @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     @PostMapping("/checkPrices")
     public ResponseEntity<ApiResponse> checkPrices() {
         LOG.info("Check price process started.");

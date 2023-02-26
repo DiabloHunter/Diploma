@@ -38,7 +38,7 @@ public class OrderController {
 
     private static final Logger LOG = LogManager.getLogger(OrderController.class);
 
-    //@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
+    //@PreAuthorize("hasRole('USER') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
     @GetMapping("/getOrders/")
     public ResponseEntity<OrderDTO> getOrders(@RequestParam("userEmail") String userEmail) throws NotFoundException {
         List<OrderItemDTO> orders;
@@ -53,28 +53,28 @@ public class OrderController {
         return new ResponseEntity<>(orderDto, HttpStatus.OK);
     }
 
-    //@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
+    //@PreAuthorize("hasRole('USER') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
     @GetMapping("/getOrder/")
     public ResponseEntity<Order> getOrder(@RequestParam Long id) {
         Order order = orderService.getOrderById(id);
         return new ResponseEntity<>(order, HttpStatus.OK);
     }
 
-    //@PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER')")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
 //    @GetMapping("/getStatistic")
 //    public ResponseEntity<List<DishStatisticDTO>> getStatistic(@RequestBody StatisticDateDTO statisticDateDto) {
 //        List<DishStatisticDTO> dishStatisticDTOS = orderService.getStatisticByOrders(statisticDateDto);
 //        return new ResponseEntity<>(dishStatisticDTOS, HttpStatus.OK);
 //    }
 
-    //@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
+    //@PreAuthorize("hasRole('USER') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
     @PostMapping("/create")
     public ResponseEntity<ApiResponse> createOrder(@RequestBody OrderItemDTO orderItemDTO) throws NotFoundException {
         orderService.createOrder(orderItemDTO);
         return new ResponseEntity<>(new ApiResponse(true, "Order created!"), HttpStatus.CREATED);
     }
 
-    //@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
+    //@PreAuthorize("hasRole('USER')or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
     @PostMapping("/create-checkout-session")
     public ResponseEntity<StripeResponse> checkoutList(@RequestBody List<CheckoutItemDTO> checkoutItemDTOList)
             throws StripeException {
@@ -84,7 +84,7 @@ public class OrderController {
 
     }
 
-    //@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
+    //@PreAuthorize("hasRole('USER') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
     @PostMapping("/liqPay")
     public ResponseEntity<LiqPayResponse> liqPay()
             throws JSONException, UnsupportedEncodingException, NoSuchAlgorithmException {
@@ -93,7 +93,7 @@ public class OrderController {
         return new ResponseEntity<>(liqPayResponse, HttpStatus.OK);
     }
 
-    //@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
+    //@PreAuthorize("hasRole('USER') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
     @PostMapping("/liqPay2")
     public ResponseEntity<LiqPayResponse> liqPay(@RequestBody List<CheckoutItemDTO> checkoutItemDTOList)
             throws JSONException, UnsupportedEncodingException, NoSuchAlgorithmException {

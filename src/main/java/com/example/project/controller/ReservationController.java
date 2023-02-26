@@ -24,7 +24,7 @@ public class ReservationController {
 
     private static final Logger LOG = LogManager.getLogger(ReservationController.class);
 
-    @PostMapping("/")
+    @PostMapping("/user")
     public ResponseEntity<List<Reservation>> getUserReservation(@RequestParam("userEmail") String userEmail) throws NotFoundException {
         List<Reservation> reservations = reservationService.getUserReservations(userEmail);
         return new ResponseEntity<>(reservations, HttpStatus.OK);

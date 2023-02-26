@@ -25,7 +25,7 @@ public class UserController {
 
     private static final Logger LOG = LogManager.getLogger(UserController.class);
 
-    //@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
+    //@PreAuthorize("hasRole('USER') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
     @GetMapping("/")
     public ResponseEntity<UserDTO> getUser(@RequestParam("userEmail") String email) {
         UserDTO userDTO = userService.getUserDto(userService.getUserByEmail(email));
@@ -35,7 +35,7 @@ public class UserController {
         return new ResponseEntity<>(userDTO, HttpStatus.OK);
     }
 
-    //@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
+    //@PreAuthorize("hasRole('USER') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
     @PostMapping("/update/")
     public ResponseEntity<ApiResponse> updateUser(@RequestParam("userEmail") String userEmail,
                                                   @RequestBody UpdateUserDto changedUser) throws NotFoundException {
@@ -52,7 +52,7 @@ public class UserController {
                 String.format("User with email %s has been updated!", userEmail)), HttpStatus.OK);
     }
 
-    @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     @PostMapping("/backup")
     public ResponseEntity<ApiResponse> backupDB() {
         try {
@@ -64,7 +64,7 @@ public class UserController {
         return new ResponseEntity<>(new ApiResponse(true, "Database has been successfully backuped!"), HttpStatus.OK);
     }
 
-    @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN') or hasRole('MANAGER')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     @PostMapping("/restore")
     public ResponseEntity<ApiResponse> restoreDB() {
         try {
