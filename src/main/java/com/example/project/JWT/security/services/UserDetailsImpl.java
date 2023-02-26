@@ -11,7 +11,7 @@ import java.util.*;
 public class UserDetailsImpl implements UserDetails {
     private static final long serialVersionUID = 1L;
 
-    private Long id;
+    private String id;
 
     private String email;
 
@@ -20,7 +20,7 @@ public class UserDetailsImpl implements UserDetails {
 
     private GrantedAuthority authority;
 
-    public UserDetailsImpl(Long id, String email, String password,
+    public UserDetailsImpl(String id, String email, String password,
                            GrantedAuthority authority) {
         this.id = id;
         this.email = email;
@@ -43,7 +43,7 @@ public class UserDetailsImpl implements UserDetails {
         return Arrays.asList(authority);
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 

@@ -118,12 +118,12 @@ public class DishService implements IDishService {
     }
 
     @Override
-    public Dish findDishById(Long dishId) {
+    public Dish findDishById(String dishId) {
         return dishRepository.getById(dishId);
     }
 
     @Override
-    public void deleteDishById(Long dishId) throws NotFoundException {
+    public void deleteDishById(String dishId) throws NotFoundException {
         if (!dishRepository.existsById(dishId)) {
             throw new NotFoundException(String.format("Dish with Id %s was not found!", dishId));
         }

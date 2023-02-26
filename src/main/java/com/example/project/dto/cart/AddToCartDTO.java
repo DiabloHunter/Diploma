@@ -4,18 +4,18 @@ import javax.validation.constraints.NotNull;
 
 public class AddToCartDTO {
 
-    private @NotNull Long dishId;
+    private @NotNull String dishId;
     private @NotNull Integer quantity;
     private @NotNull String userEmail;
 
     public AddToCartDTO() {
     }
 
-    public Long getDishId() {
+    public String getDishId() {
         return dishId;
     }
 
-    public void setDishId(Long dishId) {
+    public void setDishId(String dishId) {
         this.dishId = dishId;
     }
 

@@ -86,7 +86,7 @@ public class TableService implements ITableService {
     }
 
     @Override
-    public List<Table> getTablesByIds(List<Long> ids) {
+    public List<Table> getTablesByIds(List<String> ids) {
         return tableRepository.findAllById(ids);
     }
 

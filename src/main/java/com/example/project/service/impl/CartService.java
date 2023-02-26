@@ -76,7 +76,7 @@ public class CartService implements ICartService {
     }
 
     @Override
-    public void deleteCartItem(Long cartItemId, String userEmail) throws NotFoundException {
+    public void deleteCartItem(String cartItemId, String userEmail) throws NotFoundException {
         User user = userService.getUserByEmail(userEmail);
 
         if (user == null) {

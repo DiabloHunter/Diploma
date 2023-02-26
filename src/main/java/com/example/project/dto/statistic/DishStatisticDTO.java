@@ -4,21 +4,21 @@ import javax.validation.constraints.NotNull;
 
 public class DishStatisticDTO {
 
-    private Long id;
+    private String id;
     private @NotNull String searchId;
     private @NotNull String name;
     private @NotNull String imageData;
     private @NotNull double price;
     private @NotNull String description;
-    private @NotNull Long categoryId;
+    private @NotNull String categoryId;
     private @NotNull double monthSales;
     private @NotNull int place;
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -62,11 +62,11 @@ public class DishStatisticDTO {
         this.description = description;
     }
 
-    public Long getCategoryId() {
+    public String getCategoryId() {
         return categoryId;
     }
 
-    public void setCategoryId(Long categoryId) {
+    public void setCategoryId(String categoryId) {
         this.categoryId = categoryId;
     }
 

@@ -8,7 +8,7 @@ import java.util.List;
 
 public class OrderItemDTO {
 
-    private Long orderId;
+    private String orderId;
     private @NotNull Double price;
     private @NotNull List<OrderDishDTO> dishes = new ArrayList<>();
     private @NotNull String userEmail;
@@ -17,11 +17,11 @@ public class OrderItemDTO {
     public OrderItemDTO() {
     }
 
-    public Long getOrderId() {
+    public String getOrderId() {
         return orderId;
     }
 
-    public void setOrderId(Long orderId) {
+    public void setOrderId(String orderId) {
         this.orderId = orderId;
     }
 

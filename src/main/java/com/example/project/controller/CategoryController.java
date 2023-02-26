@@ -41,7 +41,7 @@ public class CategoryController {
    // @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     @PostMapping("/update/")
     public ResponseEntity<ApiResponse> updateCategory(@RequestBody CreateUpdateCategoryDto createUpdateCategoryDto) throws NotFoundException {
-        Long categoryId = createUpdateCategoryDto.getId();
+        String categoryId = createUpdateCategoryDto.getId();
         categoryService.update(categoryId, createUpdateCategoryDto);
 
         LOG.info(String.format("Category with Id %s has been updated!", categoryId));
@@ -51,7 +51,7 @@ public class CategoryController {
 
    // @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     @DeleteMapping("/delete/")
-    public ResponseEntity<ApiResponse> deleteCategory(@RequestParam Long id) throws NotFoundException {
+    public ResponseEntity<ApiResponse> deleteCategory(@RequestParam String id) throws NotFoundException {
         categoryService.delete(id);
 
         LOG.info(String.format("Category with Id %s has been deleted!", id));

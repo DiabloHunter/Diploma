@@ -11,14 +11,14 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface IOrderRepository extends JpaRepository<Order, Long> {
+public interface IOrderRepository extends JpaRepository<Order, String> {
     List<Order> findAllByUser(User user);
 
     List<Order> findAllByCreatedDateBetween(LocalDateTime dateStart, LocalDateTime dateEnd);
 
     @Query(value = "SELECT * FROM ORDERS u WHERE u.user_id = :userId AND u.created_date BETWEEN :start AND :end",
             nativeQuery = true)
-    List<Order> findByUserAndCreatedDate(@Param("userId") Long userId,
+    List<Order> findByUserAndCreatedDate(@Param("userId") String userId,
                                          @Param("start") LocalDateTime start,
                                          @Param("end") LocalDateTime end);
 

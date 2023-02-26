@@ -10,12 +10,12 @@ public interface ICategoryService {
 
     List<Category> getAllCategory();
 
-    Category getCategoryById(Long categoryId);
+    Category getCategoryById(String categoryId);
 
     void create(CreateUpdateCategoryDto createUpdateCategoryDto) throws IllegalArgumentException;
 
-    void update(Long categoryId, CreateUpdateCategoryDto createUpdateCategoryDto) throws NotFoundException;
+    void update(String categoryId, CreateUpdateCategoryDto createUpdateCategoryDto) throws NotFoundException;
 
-    void delete(Long categoryId) throws NotFoundException;
+    void delete(String categoryId) throws NotFoundException;
 
 }

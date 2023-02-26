@@ -55,7 +55,7 @@ public class OrderController {
 
     //@PreAuthorize("hasRole('USER') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
     @GetMapping("/getOrder/")
-    public ResponseEntity<Order> getOrder(@RequestParam Long id) {
+    public ResponseEntity<Order> getOrder(@RequestParam String id) {
         Order order = orderService.getOrderById(id);
         return new ResponseEntity<>(order, HttpStatus.OK);
     }

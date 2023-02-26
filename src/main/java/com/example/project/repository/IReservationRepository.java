@@ -10,13 +10,13 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface IReservationRepository extends JpaRepository<Reservation, Long> {
+public interface IReservationRepository extends JpaRepository<Reservation, String> {
 
     List<Reservation> findByEndTimeIs(LocalDateTime endTime);
 
     @Query(value = "SELECT * FROM RESERVATIONS u WHERE u.user_id = :userId AND u.is_active is true",
             nativeQuery = true)
-    List<Reservation> findByUserIdAndActive(@Param("userId") Long userId);
+    List<Reservation> findByUserIdAndActive(@Param("userId") String userId);
 
     @Query(value = "SELECT * FROM RESERVATIONS u WHERE u.start_time < :from AND u.is_active is true",
             nativeQuery = true)
@@ -27,6 +27,6 @@ public interface IReservationRepository extends JpaRepository<Reservation, Long>
     List<Reservation> getReservationByTime(@Param("from") LocalDateTime start,
                                            @Param("to") LocalDateTime end);
 
-    Reservation getById(Long id);
+    Reservation getById(String id);
 
 }
