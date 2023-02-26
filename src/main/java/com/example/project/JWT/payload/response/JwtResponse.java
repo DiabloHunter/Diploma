@@ -8,7 +8,6 @@ public class JwtResponse {
     private Long id;
     private String email;
     private List<String> roles;
-
     private String name;
 
     public JwtResponse(String accessToken, Long id, String email, List<String> roles, String name) {

@@ -22,7 +22,7 @@ public class AuthController {
     IAuthService authService;
 
     @PostMapping("/signin")
-    public ResponseEntity<JwtResponse> signIn(@Valid @RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<JwtResponse> signIn(@RequestBody LoginRequest loginRequest) {
         return authService.signIn(loginRequest);
     }
 

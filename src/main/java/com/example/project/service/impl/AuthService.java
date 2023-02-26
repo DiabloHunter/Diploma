@@ -98,7 +98,7 @@ public class AuthService implements IAuthService {
         return ResponseEntity.ok(new JwtResponse(jwt,
                 userDetails.getId(),
                 userDetails.getEmail(),
-                responseRoles, userDetails.getUsername()));
+                responseRoles, "anonymous"));
     }
 
 
