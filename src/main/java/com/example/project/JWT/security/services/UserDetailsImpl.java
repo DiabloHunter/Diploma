@@ -22,7 +22,7 @@ public class UserDetailsImpl implements UserDetails {
     private GrantedAuthority authority;
 
     public UserDetailsImpl(String id, String email, String password, String name,
-                           GrantedAuthority authorities) {
+                           GrantedAuthority authority) {
         this.id = id;
         this.email = email;
         this.password = password;
