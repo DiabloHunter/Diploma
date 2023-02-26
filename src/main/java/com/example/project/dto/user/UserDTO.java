@@ -14,7 +14,7 @@ public class UserDTO {
 
     private Double rating;
 
-    private List<Role> roles;
+    private Role role;
 
     public String getName() {
         return name;
@@ -48,11 +48,11 @@ public class UserDTO {
         this.rating = rating;
     }
 
-    public List<Role> getRoles() {
-        return roles;
+    public Role getRole() {
+        return role;
     }
 
-    public void setRoles(List<Role> roles) {
-        this.roles = roles;
+    public void setRole(Role role) {
+        this.role = role;
     }
 }

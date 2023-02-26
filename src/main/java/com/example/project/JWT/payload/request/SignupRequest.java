@@ -3,7 +3,6 @@ package com.example.project.JWT.payload.request;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import java.util.Set;
 
 public class SignupRequest {
 
@@ -16,7 +15,7 @@ public class SignupRequest {
     @Email
     private String email;
 
-    private Set<String> role;
+    private String role;
 
     @NotBlank
     @Size(min = 6, max = 20)
@@ -46,11 +45,11 @@ public class SignupRequest {
         this.password = password;
     }
 
-    public Set<String> getRole() {
+    public String getRole() {
         return this.role;
     }
 
-    public void setRole(Set<String> role) {
+    public void setRole(String role) {
         this.role = role;
     }
 }

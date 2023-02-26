@@ -1,4 +1,4 @@
-package com.example.project.dto.dish;
+package com.example.project.dto.statistic;
 
 import javax.validation.constraints.NotNull;
 
