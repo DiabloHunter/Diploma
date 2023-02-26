@@ -88,7 +88,7 @@ public class OrderService implements IOrderService {
     }
 
     @Override
-    public Order getOrderById(Long id) {
+    public Order getOrderById(String id) {
         return orderRepository.findById(id).orElse(null);
     }
 

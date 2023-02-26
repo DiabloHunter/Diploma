@@ -11,7 +11,7 @@ public interface ICartService {
 
     CartDTO getAllCartItems(String userEmail) throws NotFoundException;
 
-    void deleteCartItem(Long cartItemId, String userEmail) throws NotFoundException;
+    void deleteCartItem(String cartItemId, String userEmail) throws NotFoundException;
 
     void deleteCartItemsByUser(User user) throws NotFoundException;
 

@@ -1,6 +1,7 @@
 package com.example.project.model;
 
 import com.example.project.util.TimeUtil;
+import org.hibernate.annotations.GenericGenerator;
 import org.joda.time.LocalDateTime;
 
 import javax.persistence.Column;
@@ -19,8 +20,12 @@ import javax.persistence.Table;
 public class Wishlist {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(
+            name = "UUID",
+            strategy = "org.hibernate.id.UUIDGenerator"
+    )
+    private String id;
 
     @OneToOne(targetEntity = User.class, fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
@@ -48,11 +53,11 @@ public class Wishlist {
         this.createdDate = TimeUtil.formatLocalDateTime(new LocalDateTime());
     }
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 

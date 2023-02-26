@@ -1,5 +1,7 @@
 package com.example.project.model;
 
+import org.hibernate.annotations.GenericGenerator;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
@@ -8,8 +10,12 @@ import javax.validation.constraints.NotNull;
 public class Table {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(
+            name = "UUID",
+            strategy = "org.hibernate.id.UUIDGenerator"
+    )
+    private String id;
     private @NotNull String searchId;
     private @NotNull Integer minNumberOfSeats;
     private @NotNull Integer maxNumberOfSeats;
@@ -23,11 +29,11 @@ public class Table {
     public Table() {
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

@@ -45,7 +45,7 @@ public class ReservationController {
     }
 
     @PostMapping("/cancel")
-    public ResponseEntity<ApiResponse> cancelReservation(@RequestParam("id") Long id) throws NotFoundException {
+    public ResponseEntity<ApiResponse> cancelReservation(@RequestParam("id") String id) throws NotFoundException {
         reservationService.cancelReservation(id);
         return new ResponseEntity<>(new ApiResponse(true, "Reservation has been canceled!"), HttpStatus.OK);
     }

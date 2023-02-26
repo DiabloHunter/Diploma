@@ -6,15 +6,12 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
+import java.util.*;
 
 public class UserDetailsImpl implements UserDetails {
     private static final long serialVersionUID = 1L;
 
-    private Long id;
+    private String id;
 
     private String email;
     private String name;
@@ -22,36 +19,34 @@ public class UserDetailsImpl implements UserDetails {
     @JsonIgnore
     private String password;
 
-    private Collection<? extends GrantedAuthority> authorities;
+    private GrantedAuthority authority;
 
-    public UserDetailsImpl(Long id, String email, String password, String name,
-                           Collection<? extends GrantedAuthority> authorities) {
+    public UserDetailsImpl(String id, String email, String password, String name,
+                           GrantedAuthority authority) {
         this.id = id;
         this.email = email;
         this.password = password;
+        this.authority = authority;
         this.name = name;
-        this.authorities = authorities;
     }
 
     public static UserDetailsImpl build(User user) {
-        List<GrantedAuthority> authorities = user.getRoles().stream()
-                .map(role -> new SimpleGrantedAuthority(role.getName().name()))
-                .collect(Collectors.toList());
+        GrantedAuthority authority = new SimpleGrantedAuthority(user.getRole().getName().name());
 
         return new UserDetailsImpl(
                 user.getId(),
                 user.getEmail(),
                 user.getPassword(),
                 user.getName(),
-                authorities);
+                authority);
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return authorities;
+        return Arrays.asList(authority);
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 

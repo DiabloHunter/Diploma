@@ -15,7 +15,7 @@ public interface IReservationService {
 
     void updateReservation(UpdateReservationDto updateReservationDto) throws NotFoundException;
 
-    void cancelReservation(Long id) throws NotFoundException;
+    void cancelReservation(String id) throws NotFoundException;
 
 //    void createReservation(ReservationDTO reservationDTO) throws NotFoundException;
 //

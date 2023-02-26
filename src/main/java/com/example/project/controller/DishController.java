@@ -76,7 +76,7 @@ public class DishController {
 
    // @PreAuthorize(hasRole('ADMIN') or hasRole('MANAGER')")
     @DeleteMapping("/delete")
-    public ResponseEntity<ApiResponse> deleteCategory(@RequestParam Long id) {
+    public ResponseEntity<ApiResponse> deleteCategory(@RequestParam String id) {
         try {
             dishService.deleteDishById(id);
         } catch (NotFoundException e) {

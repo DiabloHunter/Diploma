@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ITableRepository extends JpaRepository<Table, Long> {
+public interface ITableRepository extends JpaRepository<Table, String> {
 
     Boolean existsBySearchId(String searchId);
 

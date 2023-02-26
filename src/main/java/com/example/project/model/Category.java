@@ -1,5 +1,7 @@
 package com.example.project.model;
 
+import org.hibernate.annotations.GenericGenerator;
+
 import javax.persistence.*;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
@@ -9,15 +11,19 @@ import javax.validation.constraints.NotBlank;
 public class Category {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(
+            name = "UUID",
+            strategy = "org.hibernate.id.UUIDGenerator"
+    )
+    private String id;
     private @NotBlank String categoryName;
     private @NotBlank String description;
     @Lob
     @Column(length = 100000)
     private @NotBlank String imageData;
 
-    public Category(Long id, String categoryName, String description, String imageData) {
+    public Category(String id, String categoryName, String description, String imageData) {
         this.id = id;
         this.categoryName = categoryName;
         this.description = description;
@@ -33,11 +39,11 @@ public class Category {
     public Category() {
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

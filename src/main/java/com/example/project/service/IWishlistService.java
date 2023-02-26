@@ -10,5 +10,5 @@ public interface IWishlistService {
 
     List<DishDTO> getWishListForUser(String userEmail) throws NotFoundException;
 
-    void process(Long dishId, String userEmail, Action action) throws NotFoundException;
+    void process(String dishId, String userEmail, Action action) throws NotFoundException;
 }

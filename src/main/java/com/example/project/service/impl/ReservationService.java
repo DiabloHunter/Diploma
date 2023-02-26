@@ -143,7 +143,7 @@ public class ReservationService implements IReservationService {
     }
 
     @Override
-    public void cancelReservation(Long id) throws NotFoundException {
+    public void cancelReservation(String id) throws NotFoundException {
         Reservation outdatedReservation = reservationRepository.getById(id);
         if (outdatedReservation == null) {
             throw new NotFoundException(String.format("Reservation with id %s was not found!", id));

@@ -18,9 +18,9 @@ public interface IDishService {
 
     void update(DishDTO dishDto) throws NotFoundException;
 
-    Dish findDishById(Long dishId);
+    Dish findDishById(String dishId);
 
-    void deleteDishById(Long dishId) throws NotFoundException;
+    void deleteDishById(String dishId) throws NotFoundException;
 
     void checkPrices();
 }

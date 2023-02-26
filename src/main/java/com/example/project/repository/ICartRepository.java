@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface ICartRepository extends JpaRepository<Cart, Long> {
+public interface ICartRepository extends JpaRepository<Cart, String> {
 
     List<Cart> findAllByUserOrderByCreatedDateDesc(User user);
 

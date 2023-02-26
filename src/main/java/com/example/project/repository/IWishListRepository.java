@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface IWishListRepository extends JpaRepository<Wishlist, Long> {
+public interface IWishListRepository extends JpaRepository<Wishlist, String> {
 
     List<Wishlist> findAllByUserOrderByCreatedDateDesc(User user);
 

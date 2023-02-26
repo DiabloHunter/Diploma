@@ -47,7 +47,7 @@ public class CartController {
 
     //@PreAuthorize("hasRole('USER') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
     @DeleteMapping("/delete")
-    public ResponseEntity<ApiResponse> deleteCartItem(@RequestParam("cartItemId") Long itemId,
+    public ResponseEntity<ApiResponse> deleteCartItem(@RequestParam("cartItemId") String itemId,
                                                       @RequestParam("userEmail") String userEmail) throws NotFoundException {
         cartService.deleteCartItem(itemId, userEmail);
 

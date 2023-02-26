@@ -7,7 +7,7 @@ import java.util.List;
 
 public class UpdateReservationDto {
 
-    private @NotNull Long id;
+    private @NotNull String id;
     private @NotNull Boolean isActive;
     private @NotNull LocalDateTime startTime;
     private @NotNull LocalDateTime endTime;
@@ -28,11 +28,11 @@ public class UpdateReservationDto {
     public UpdateReservationDto() {
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

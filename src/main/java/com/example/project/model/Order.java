@@ -1,5 +1,6 @@
 package com.example.project.model;
 
+import org.hibernate.annotations.GenericGenerator;
 import org.joda.time.LocalDateTime;
 
 import javax.persistence.Column;
@@ -20,8 +21,12 @@ import java.util.List;
 public class Order {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(
+            name = "UUID",
+            strategy = "org.hibernate.id.UUIDGenerator"
+    )
+    private String id;
 
     @Column(name = "price")
     private double price;
@@ -47,11 +52,11 @@ public class Order {
     public Order() {
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

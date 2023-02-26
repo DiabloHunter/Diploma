@@ -68,7 +68,7 @@ public class WishlistService implements IWishlistService {
     }
 
     @Override
-    public void process(Long dishId, String userEmail, Action action) throws NotFoundException {
+    public void process(String dishId, String userEmail, Action action) throws NotFoundException {
         User user = userService.getUserByEmail(userEmail);
         if (user == null) {
             throw new NotFoundException(String.format("User with email %s was not found!", userEmail));

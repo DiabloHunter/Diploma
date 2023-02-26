@@ -6,18 +6,18 @@ import com.example.project.model.Cart;
 import com.example.project.model.Dish;
 
 public class CartItemDTO {
-    private Long id;
+    private String id;
     private Integer quantity;
     private Dish dish;
 
     public CartItemDTO() {
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

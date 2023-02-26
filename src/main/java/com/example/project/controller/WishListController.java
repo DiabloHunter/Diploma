@@ -34,7 +34,7 @@ public class WishListController {
 
     //@PreAuthorize("hasRole('USER') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
     @PostMapping("/create")
-    public ResponseEntity<ApiResponse> addToWishlist(@RequestParam("dishId") Long dishId,
+    public ResponseEntity<ApiResponse> addToWishlist(@RequestParam("dishId") String dishId,
                                                      @RequestParam("userEmail") String userEmail) throws NotFoundException {
         wishlistService.process(dishId, userEmail, Action.CREATE);
 
@@ -46,7 +46,7 @@ public class WishListController {
 
     //@PreAuthorize("hasRole('USER') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
     @DeleteMapping("/delete")
-    public ResponseEntity<ApiResponse> deleteFromWishlist(@RequestParam("dishId") Long dishId,
+    public ResponseEntity<ApiResponse> deleteFromWishlist(@RequestParam("dishId") String dishId,
                                                           @RequestParam("userEmail") String userEmail) throws NotFoundException {
         wishlistService.process(dishId, userEmail, Action.DELETE);
 

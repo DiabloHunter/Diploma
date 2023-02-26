@@ -7,9 +7,9 @@ import java.util.Set;
 public class SignInResponseDTO {
 
     private String status;
-    private Set<ERole> role;
+    private ERole role;
 
-    public SignInResponseDTO(String status, Set<ERole> role) {
+    public SignInResponseDTO(String status, ERole role) {
         this.status = status;
         this.role = role;
     }
@@ -22,11 +22,11 @@ public class SignInResponseDTO {
         this.status = status;
     }
 
-    public Set<ERole> getRole() {
+    public ERole getRole() {
         return role;
     }
 
-    public void setRole(Set<ERole> role) {
+    public void setRole(ERole role) {
         this.role = role;
     }
 }

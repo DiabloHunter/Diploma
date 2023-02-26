@@ -24,7 +24,7 @@ public interface ITableService {
 
     List<Table> getTablesBySearchIds(List<String> searchIds);
 
-    List<Table> getTablesByIds(List<Long> ids);
+    List<Table> getTablesByIds(List<String> ids);
 
     List<Table> getTablesByNumberOfSeats(Integer numberOfSeats);
 

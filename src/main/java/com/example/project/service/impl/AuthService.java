@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -56,30 +57,28 @@ public class AuthService implements IAuthService {
         String jwt = jwtUtils.generateJwtToken(authentication);
 
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-        List<String> roles = userDetails.getAuthorities().stream()
-                .map(item -> item.getAuthority())
-                .collect(Collectors.toList());
+        String role = userDetails.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.toList()).get(0);
 
         return ResponseEntity.ok(new JwtResponse(jwt,
                 userDetails.getId(),
                 userDetails.getEmail(),
-                roles, userDetails.getUsername()));
+                role, userDetails.getUsername()));
     }
 
     @Override
     public ResponseEntity<JwtResponse> anonymousSignIn() {
         int randomNumber = random.nextInt(90000000) + 10000000;
         String email = "anonymous" + randomNumber + "@anonymous.com";
-        Set<Role> roles = new HashSet<>();
         Role userRole = roleService.findByName(ERole.ROLE_USER)
                 .orElseThrow(() -> new RuntimeException("Error: Role was not found."));
-        roles.add(userRole);
 
         User user = new User("anonymous",
                 email,
                 encoder.encode("anonymous"),
                 0.0,
-                roles);
+                userRole);
 
         userService.create(user);
 
@@ -91,35 +90,15 @@ public class AuthService implements IAuthService {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtUtils.generateJwtToken(authentication);
 
-        List<String> responseRoles = userDetails.getAuthorities().stream()
-                .map(item -> item.getAuthority())
-                .collect(Collectors.toList());
+        String responseRole = userDetails.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.toList()).get(0);
 
         return ResponseEntity.ok(new JwtResponse(jwt,
                 userDetails.getId(),
                 userDetails.getEmail(),
-                responseRoles, "anonymous"));
+                responseRole, userDetails.getUsername()));
     }
-
-
-//    @Override
-//    public SignInResponseDTO signInMob(SignInDTO signInDto) {
-//        String userEmail = signInDto.getEmail();
-//        User user = userRepository.findByEmail(signInDto.getEmail())
-//                .orElseThrow(() -> new CustomException("User Not Found with email: " + userEmail));
-//        if (Objects.isNull(user)) {
-//            return new SignInResponseDTO("fail", null);
-//        }
-//        try {
-//            if (!user.getPassword().equals(hashPassword(signInDto.getPassword()))) {
-//                return new SignInResponseDTO("fail", null);
-//            }
-//        } catch (NoSuchAlgorithmException e) {
-//            return new SignInResponseDTO("fail", null);
-//        }
-//
-//        return new SignInResponseDTO("success", /*user.getRoles()*/ null);
-//    }
 
     @Transactional
     public ResponseEntity<MessageResponse> signUp(SignupRequest signUpRequest) {
@@ -130,44 +109,37 @@ public class AuthService implements IAuthService {
                     .body(new MessageResponse("Error: Email is already in use!"));
         }
 
-        Set<String> strRoles = signUpRequest.getRole();
-        Set<Role> roles = new HashSet<>();
+        String strRole = signUpRequest.getRole();
+        Role role;
 
-        if (strRoles == null) {
-            Role userRole = roleService.findByName(ERole.ROLE_USER)
+        if (strRole == null) {
+            role = roleService.findByName(ERole.ROLE_USER)
                     .orElseThrow(() -> new RuntimeException("Error: Role was not found."));
-            roles.add(userRole);
         } else {
-            strRoles.forEach(role -> {
-                switch (role) {
-                    case "admin":
-                        Role adminRole = roleService.findByName(ERole.ROLE_ADMIN)
-                                .orElseThrow(() -> new RuntimeException("Error: Role was not found."));
-                        roles.add(adminRole);
-                        break;
-                    case "manager":
-                        Role managerRole = roleService.findByName(ERole.ROLE_MANAGER)
-                                .orElseThrow(() -> new RuntimeException("Error: Role was not found."));
-                        roles.add(managerRole);
-                        break;
-                    case "cashier":
-                        Role cashierRole = roleService.findByName(ERole.ROLE_CASHIER)
-                                .orElseThrow(() -> new RuntimeException("Error: Role was not found."));
-                        roles.add(cashierRole);
-                        break;
-                    default:
-                        Role userRole = roleService.findByName(ERole.ROLE_USER)
-                                .orElseThrow(() -> new RuntimeException("Error: Role was not found."));
-                        roles.add(userRole);
-                }
-            });
+            switch (strRole) {
+                case "admin":
+                    role = roleService.findByName(ERole.ROLE_ADMIN)
+                            .orElseThrow(() -> new RuntimeException("Error: Role was not found."));
+                    break;
+                case "manager":
+                    role = roleService.findByName(ERole.ROLE_MANAGER)
+                            .orElseThrow(() -> new RuntimeException("Error: Role was not found."));
+                    break;
+                case "cashier":
+                    role = roleService.findByName(ERole.ROLE_CASHIER)
+                            .orElseThrow(() -> new RuntimeException("Error: Role was not found."));
+                    break;
+                default:
+                    role = roleService.findByName(ERole.ROLE_USER)
+                            .orElseThrow(() -> new RuntimeException("Error: Role was not found."));
+            }
         }
 
         User user = new User(signUpRequest.getName(),
                 signUpRequest.getEmail(),
                 encoder.encode(signUpRequest.getPassword()),
                 0.0,
-                roles);
+                role);
 
         userService.create(user);
 

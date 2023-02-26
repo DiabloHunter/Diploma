@@ -1,20 +1,18 @@
 package com.example.project.JWT.payload.response;
 
-import java.util.List;
-
 public class JwtResponse {
     private String token;
     private String type = "Bearer";
-    private Long id;
+    private String id;
     private String email;
-    private List<String> roles;
+    private String role;
     private String name;
 
-    public JwtResponse(String accessToken, Long id, String email, List<String> roles, String name) {
+    public JwtResponse(String accessToken, String id, String email, String role, String name) {
         this.token = accessToken;
         this.id = id;
         this.email = email;
-        this.roles = roles;
+        this.role = role;
         this.name = name;
     }
 
@@ -34,11 +32,11 @@ public class JwtResponse {
         this.type = tokenType;
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -50,8 +48,8 @@ public class JwtResponse {
         this.email = email;
     }
 
-    public List<String> getRoles() {
-        return roles;
+    public String getRole() {
+        return role;
     }
 
     public String getName() {
