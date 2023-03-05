@@ -17,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 
 public class StatisticService implements IStatisticService {
 
@@ -65,7 +64,8 @@ public class StatisticService implements IStatisticService {
                     dishStatisticDto.setName(x.getKey().getName());
                     dishStatisticDto.setImageData(x.getKey().getImageData());
                     dishStatisticDto.setPrice(x.getKey().getPrice());
-                    dishStatisticDto.setDescription(x.getKey().getDescription());
+                    dishStatisticDto.setDescriptionEn(x.getKey().getDescriptionEn());
+                    dishStatisticDto.setDescriptionUa(x.getKey().getDescriptionUa());
                     dishStatisticDto.setCategoryId(x.getKey().getCategory().getId());
                     dishStatisticDto.setMonthSales(x.getValue());
                     dishStatisticDto.setPlace(count.get());

@@ -75,8 +75,8 @@ public class OrderService implements IOrderService {
                 Dish dish = orderUnit.getDish();
 
                 OrderDishDTO orderDishDto = new OrderDishDTO(dish.getId(), dish.getName(), dish.getSearchId(),
-                        dish.getImageData(), dish.getPrice(), dish.getDescription(), orderUnit.getQuantity(),
-                        dish.getCategory().getId());
+                        dish.getImageData(), dish.getPrice(), dish.getDescriptionEn(), dish.getDescriptionUa(),
+                        orderUnit.getQuantity(), dish.getCategory().getId());
                 dishes.add(orderDishDto);
             }
 

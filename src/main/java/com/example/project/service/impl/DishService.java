@@ -45,7 +45,8 @@ public class DishService implements IDishService {
 
         Dish dish = new Dish();
         dish.setSearchId(dishDto.getSearchId());
-        dish.setDescription(dishDto.getDescription());
+        dish.setDescriptionEn(dishDto.getDescriptionEn());
+        dish.setDescriptionUa(dishDto.getDescriptionUa());
         dish.setImageData(dishDto.getImageData());
         dish.setName(dishDto.getName());
         dish.setCategory(category);
@@ -65,7 +66,8 @@ public class DishService implements IDishService {
         dishDto.setId(dish.getId());
         dishDto.setName(dish.getName());
         dishDto.setSearchId(dish.getSearchId());
-        dishDto.setDescription(dish.getDescription());
+        dishDto.setDescriptionEn(dish.getDescriptionEn());
+        dishDto.setDescriptionUa(dish.getDescriptionUa());
         dishDto.setImageData(dish.getImageData());
         dishDto.setCategoryId(dish.getCategory().getId());
         dishDto.setPrice(dish.getPrice());
@@ -106,7 +108,8 @@ public class DishService implements IDishService {
         }
 
         updatedDish.setSearchId(dishDto.getSearchId());
-        updatedDish.setDescription(dishDto.getDescription());
+        updatedDish.setDescriptionEn(dishDto.getDescriptionEn());
+        updatedDish.setDescriptionUa(dishDto.getDescriptionUa());
         updatedDish.setImageData(dishDto.getImageData());
         updatedDish.setName(dishDto.getName());
         updatedDish.setPrice(dishDto.getPrice());

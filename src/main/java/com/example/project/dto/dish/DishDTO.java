@@ -9,7 +9,8 @@ public class DishDTO {
     private @NotNull String name;
     private @NotNull String imageData;
     private @NotNull double price;
-    private @NotNull String description;
+    private @NotNull String descriptionEn;
+    private @NotNull String descriptionUa;
     private @NotNull String categoryId;
     private @NotNull double minSales;
     private @NotNull double maxSales;
@@ -50,12 +51,20 @@ public class DishDTO {
         this.price = price;
     }
 
-    public String getDescription() {
-        return description;
+    public String getDescriptionEn() {
+        return descriptionEn;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setDescriptionEn(String descriptionEn) {
+        this.descriptionEn = descriptionEn;
+    }
+
+    public String getDescriptionUa() {
+        return descriptionUa;
+    }
+
+    public void setDescriptionUa(String descriptionUa) {
+        this.descriptionUa = descriptionUa;
     }
 
     public String getCategoryId() {

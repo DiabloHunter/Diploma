@@ -8,18 +8,20 @@ public class OrderDishDTO {
     private @NotNull String searchId;
     private @NotNull String imageData;
     private @NotNull Double price;
-    private @NotNull String description;
+    private @NotNull String descriptionEn;
+    private @NotNull String descriptionUa;
     private @NotNull Double quantity;
     private @NotNull String categoryId;
 
-    public OrderDishDTO(String dishId, String name, String searchId, String imageData, Double price, String description,
-                        Double quantity, String categoryId) {
+    public OrderDishDTO(String dishId, String name, String searchId, String imageData, Double price, String descriptionEn,
+                        String descriptionUa, Double quantity, String categoryId) {
         this.dishId = dishId;
         this.name = name;
         this.searchId = searchId;
         this.imageData = imageData;
         this.price = price;
-        this.description = description;
+        this.descriptionEn = descriptionEn;
+        this.descriptionUa = descriptionUa;
         this.quantity = quantity;
         this.categoryId = categoryId;
     }
@@ -51,12 +53,20 @@ public class OrderDishDTO {
         this.price = price;
     }
 
-    public String getDescription() {
-        return description;
+    public String getDescriptionEn() {
+        return descriptionEn;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setDescriptionEn(String descriptionEn) {
+        this.descriptionEn = descriptionEn;
+    }
+
+    public String getDescriptionUa() {
+        return descriptionUa;
+    }
+
+    public void setDescriptionUa(String descriptionUa) {
+        this.descriptionUa = descriptionUa;
     }
 
     public String getCategoryId() {
