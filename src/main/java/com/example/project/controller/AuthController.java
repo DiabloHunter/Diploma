@@ -22,18 +22,13 @@ public class AuthController {
     IAuthService authService;
 
     @PostMapping("/signin")
-    public ResponseEntity<JwtResponse> signIn(@Valid @RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<JwtResponse> signIn(@RequestBody LoginRequest loginRequest) {
         return authService.signIn(loginRequest);
     }
 
     @PostMapping("/signup")
     public ResponseEntity<MessageResponse> signUp(@Valid @RequestBody SignupRequest signUpRequest) {
         return authService.signUp(signUpRequest);
-    }
-
-    @PostMapping("/anonymous")
-    public ResponseEntity<JwtResponse> anonymousSignIn() {
-        return authService.anonymousSignIn();
     }
 
 }

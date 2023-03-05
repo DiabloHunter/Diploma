@@ -15,7 +15,6 @@ public interface IAuthService {
 
     ResponseEntity<JwtResponse> signIn(LoginRequest loginRequest);
 
-    ResponseEntity<JwtResponse> anonymousSignIn();
 
 //    SignInResponseDTO signInMob(SignInDTO signInDto);
 

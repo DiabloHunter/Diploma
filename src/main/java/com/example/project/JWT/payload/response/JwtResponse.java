@@ -6,7 +6,6 @@ public class JwtResponse {
     private String id;
     private String email;
     private String role;
-
     private String name;
 
     public JwtResponse(String accessToken, String id, String email, String role, String name) {

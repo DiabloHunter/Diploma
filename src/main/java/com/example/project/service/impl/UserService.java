@@ -10,7 +10,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.xml.bind.DatatypeConverter;
@@ -30,6 +30,9 @@ public class UserService implements IUserService {
 
     @Autowired
     IUserRepository userRepository;
+
+    @Autowired
+    PasswordEncoder encoder;
 
     private static final Logger LOG = LogManager.getLogger(UserService.class);
 
@@ -87,13 +90,7 @@ public class UserService implements IUserService {
         }
 
         if (updateUser.getPassword() != null && !updatedUser.getPassword().equals(updateUser.getPassword())) {
-            try {
-                String encryptedPassword = hashPassword(updateUser.getPassword());
-                updatedUser.setPassword(encryptedPassword);
-            } catch (NoSuchAlgorithmException e) {
-                LOG.error(e.getMessage());
-                return;
-            }
+            updatedUser.setPassword(encoder.encode(updateUser.getPassword()));
         }
         userRepository.save(updatedUser);
     }
