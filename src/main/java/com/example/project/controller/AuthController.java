@@ -31,9 +31,4 @@ public class AuthController {
         return authService.signUp(signUpRequest);
     }
 
-    @PostMapping("/anonymous")
-    public ResponseEntity<JwtResponse> anonymousSignIn() {
-        return authService.anonymousSignIn();
-    }
-
 }

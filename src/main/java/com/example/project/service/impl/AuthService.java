@@ -23,10 +23,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Random;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -65,39 +62,6 @@ public class AuthService implements IAuthService {
                 userDetails.getId(),
                 userDetails.getEmail(),
                 role, userDetails.getUsername()));
-    }
-
-    @Override
-    public ResponseEntity<JwtResponse> anonymousSignIn() {
-        int randomNumber = random.nextInt(90000000) + 10000000;
-        String email = "anonymous" + randomNumber + "@anonymous.com";
-        Role userRole = roleService.findByName(ERole.ROLE_USER)
-                .orElseThrow(() -> new RuntimeException("Error: Role was not found."));
-
-        User user = new User("anonymous",
-                email,
-                encoder.encode("anonymous"),
-                0.0,
-                userRole);
-
-        userService.create(user);
-
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(email, "anonymous"));
-
-        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = jwtUtils.generateJwtToken(authentication);
-
-        String responseRole = userDetails.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.toList()).get(0);
-
-        return ResponseEntity.ok(new JwtResponse(jwt,
-                userDetails.getId(),
-                userDetails.getEmail(),
-                responseRole, userDetails.getUsername()));
     }
 
     @Transactional
