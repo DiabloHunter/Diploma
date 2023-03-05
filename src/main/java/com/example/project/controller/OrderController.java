@@ -3,6 +3,7 @@ package com.example.project.controller;
 import com.example.project.common.ApiResponse;
 import com.example.project.dto.liqpay.LiqPayResponse;
 import com.example.project.dto.liqpay.PayOptions;
+import com.example.project.dto.order.response.CreateOrderItemDTO;
 import com.example.project.dto.order.response.OrderDTO;
 import com.example.project.dto.order.response.OrderItemDTO;
 import com.example.project.dto.checkout.CheckoutItemDTO;
@@ -69,7 +70,7 @@ public class OrderController {
 
     //@PreAuthorize("hasRole('USER') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
     @PostMapping("/create")
-    public ResponseEntity<ApiResponse> createOrder(@RequestBody OrderItemDTO orderItemDTO) throws NotFoundException {
+    public ResponseEntity<ApiResponse> createOrder(@RequestBody CreateOrderItemDTO orderItemDTO) throws NotFoundException {
         orderService.createOrder(orderItemDTO);
         return new ResponseEntity<>(new ApiResponse(true, "Order created!"), HttpStatus.CREATED);
     }

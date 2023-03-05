@@ -1,6 +1,7 @@
 package com.example.project.service;
 
 import com.example.project.dto.checkout.CheckoutItemDTO;
+import com.example.project.dto.order.response.CreateOrderItemDTO;
 import com.example.project.dto.order.response.OrderItemDTO;
 import com.example.project.model.Order;
 import com.example.project.model.User;
@@ -20,5 +21,5 @@ public interface IOrderService {
 
     Order getOrderById(String id);
 
-    void createOrder(OrderItemDTO orderItemDTO) throws NotFoundException;
+    void createOrder(CreateOrderItemDTO orderItemDTO) throws NotFoundException;
 }

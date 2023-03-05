@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -51,9 +50,9 @@ public class DishController {
     public ResponseEntity<ApiResponse> createDish(@RequestBody DishDTO dishDto) throws NotFoundException {
         dishService.create(dishDto);
 
-        LOG.info(String.format("Dish with name %s has been created!", dishDto.getSearchId()));
+        LOG.info(String.format("Dish with searchId %s has been created!", dishDto.getSearchId()));
         return new ResponseEntity<>(new ApiResponse(true,
-                String.format("Dish with name %s has been created!", dishDto.getName())), HttpStatus.CREATED);
+                String.format("Dish with searchId %s has been created!", dishDto.getSearchId())), HttpStatus.CREATED);
     }
 
    // @PreAuthorize(hasRole('ADMIN') or hasRole('MANAGER')")

@@ -61,7 +61,8 @@ public class StatisticService implements IStatisticService {
                     DishStatisticDTO dishStatisticDto = new DishStatisticDTO();
                     dishStatisticDto.setId(x.getKey().getId());
                     dishStatisticDto.setSearchId(x.getKey().getSearchId());
-                    dishStatisticDto.setName(x.getKey().getName());
+                    dishStatisticDto.setNameEn(x.getKey().getNameEn());
+                    dishStatisticDto.setNameUa(x.getKey().getNameUa());
                     dishStatisticDto.setImageData(x.getKey().getImageData());
                     dishStatisticDto.setPrice(x.getKey().getPrice());
                     dishStatisticDto.setDescriptionEn(x.getKey().getDescriptionEn());

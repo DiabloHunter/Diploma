@@ -1,5 +1,7 @@
 package com.example.project.service.impl;
 
+import com.example.project.dto.order.response.CreateOrderDishDTO;
+import com.example.project.dto.order.response.CreateOrderItemDTO;
 import com.example.project.dto.order.response.OrderDishDTO;
 import com.example.project.dto.order.response.OrderItemDTO;
 import com.example.project.dto.checkout.CheckoutItemDTO;
@@ -74,7 +76,7 @@ public class OrderService implements IOrderService {
             for (OrderUnit orderUnit : order.getOrderUnits()) {
                 Dish dish = orderUnit.getDish();
 
-                OrderDishDTO orderDishDto = new OrderDishDTO(dish.getId(), dish.getName(), dish.getSearchId(),
+                OrderDishDTO orderDishDto = new OrderDishDTO(dish.getId(), dish.getNameEn(), dish.getNameUa(), dish.getSearchId(),
                         dish.getImageData(), dish.getPrice(), dish.getDescriptionEn(), dish.getDescriptionUa(),
                         orderUnit.getQuantity(), dish.getCategory().getId());
                 dishes.add(orderDishDto);
@@ -93,7 +95,7 @@ public class OrderService implements IOrderService {
     }
 
     @Override
-    public void createOrder(OrderItemDTO orderItemDTO) throws NotFoundException {
+    public void createOrder(CreateOrderItemDTO orderItemDTO) throws NotFoundException {
         Order order = new Order();
         User user = userService.getUserByEmail(orderItemDTO.getUserEmail());
         if (user == null) {
@@ -104,7 +106,7 @@ public class OrderService implements IOrderService {
         order.setCreatedDate(TimeUtil.formatLocalDateTime(new LocalDateTime()));
         order.setPrice(orderItemDTO.getPrice());
         List<OrderUnit> orderUnits = new ArrayList<>();
-        for (OrderDishDTO orderDishDto : orderItemDTO.getDishes()) {
+        for (CreateOrderDishDTO orderDishDto : orderItemDTO.getDishes()) {
             Dish dish = dishRepository.findDishBySearchId(orderDishDto.getSearchId());
             if (dish == null) {
                 throw new NotFoundException(String.format("Dish with searchId %s was not found!", orderDishDto.getSearchId()));
