@@ -28,9 +28,9 @@ public class CategoryController {
     public ResponseEntity<ApiResponse> createCategory(@RequestBody CreateUpdateCategoryDto category) {
         categoryService.create(category);
 
-        LOG.info(String.format("Category with name %s has been created!", category.getCategoryName()));
+        LOG.info(String.format("Category with name %s has been created!", category.getCategoryNameEn()));
         return new ResponseEntity<>(new ApiResponse(true,
-                String.format("Category with name %s has been created!", category.getCategoryName())), HttpStatus.CREATED);
+                String.format("Category with name %s has been created!", category.getCategoryNameEn())), HttpStatus.CREATED);
     }
 
     @GetMapping("/")
