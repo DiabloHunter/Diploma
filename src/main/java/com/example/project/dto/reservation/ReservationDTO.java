@@ -1,5 +1,6 @@
 package com.example.project.dto.reservation;
 
+import com.example.project.model.Reservation;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.joda.time.LocalDateTime;
 
@@ -22,6 +23,14 @@ public class ReservationDTO {
         this.amountOfPeople = amountOfPeople;
         this.userEmail = userEmail;
         this.description = description;
+    }
+
+    public ReservationDTO(Reservation reservation) {
+        this.startTime = reservation.getStartTime();
+        this.endTime = reservation.getEndTime();
+        this.amountOfPeople = reservation.getAmountOfPeople();
+        this.userEmail = reservation.getUser().getEmail();
+        this.description = reservation.getDescription();
     }
 
     public ReservationDTO() {
