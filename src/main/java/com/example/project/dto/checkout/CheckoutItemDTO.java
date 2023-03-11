@@ -5,8 +5,8 @@ public class CheckoutItemDTO {
     private String dishName;
     private int quantity;
     private double price;
-    private long dishId;
-    private int userId;
+    private String dishId;
+    private String userId;
 
     public CheckoutItemDTO() {
     }
@@ -35,19 +35,19 @@ public class CheckoutItemDTO {
         this.price = price;
     }
 
-    public long getDishId() {
+    public String getDishId() {
         return dishId;
     }
 
-    public void setDishId(long dishId) {
+    public void setDishId(String dishId) {
         this.dishId = dishId;
     }
 
-    public int getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 }

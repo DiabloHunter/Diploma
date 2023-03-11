@@ -3,11 +3,10 @@ package com.example.project.dto.category;
 public class CreateUpdateCategoryDto {
 
     private String id;
-
-    private String categoryName;
-
-    private String description;
-
+    private String categoryNameEn;
+    private String categoryNameUa;
+    private String descriptionEn;
+    private String descriptionUa;
     private String imageData;
 
     public String getId() {
@@ -18,20 +17,36 @@ public class CreateUpdateCategoryDto {
         this.id = id;
     }
 
-    public String getCategoryName() {
-        return categoryName;
+    public String getCategoryNameEn() {
+        return categoryNameEn;
     }
 
-    public void setCategoryName(String categoryName) {
-        this.categoryName = categoryName;
+    public void setCategoryNameEn(String categoryNameEn) {
+        this.categoryNameEn = categoryNameEn;
     }
 
-    public String getDescription() {
-        return description;
+    public String getCategoryNameUa() {
+        return categoryNameUa;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setCategoryNameUa(String categoryNameUa) {
+        this.categoryNameUa = categoryNameUa;
+    }
+
+    public String getDescriptionEn() {
+        return descriptionEn;
+    }
+
+    public void setDescriptionEn(String descriptionEn) {
+        this.descriptionEn = descriptionEn;
+    }
+
+    public String getDescriptionUa() {
+        return descriptionUa;
+    }
+
+    public void setDescriptionUa(String descriptionUa) {
+        this.descriptionUa = descriptionUa;
     }
 
     public String getImageData() {

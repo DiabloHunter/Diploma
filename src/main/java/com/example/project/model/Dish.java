@@ -23,12 +23,14 @@ public class Dish {
     private String id;
 
     private @NotNull String searchId;
-    private @NotNull String name;
+    private @NotNull String nameEn;
+    private @NotNull String nameUa;
     @Lob
     @Column(length = 100000)
     private @NotNull String imageData;
     private @NotNull Double price;
-    private @NotNull String description;
+    private @NotNull String descriptionEn;
+    private @NotNull String descriptionUa;
     private @NotNull LocalDateTime checkDate;
     private @NotNull Double minSales;
     private @NotNull Double maxSales;
@@ -40,13 +42,15 @@ public class Dish {
     @OnDelete(action = OnDeleteAction.CASCADE)
     Category category;
 
-    public Dish(String searchId, String name, String imageData, Double price, String description, LocalDateTime checkDate,
-                Double minSales, Double maxSales, Double costPrice, Category category) {
+    public Dish(String searchId, String nameEn, String nameUa, String imageData, Double price, String descriptionEn, String descriptionUa,
+                LocalDateTime checkDate, Double minSales, Double maxSales, Double costPrice, Category category) {
         this.searchId = searchId;
-        this.name = name;
+        this.nameEn = nameEn;
+        this.nameUa = nameUa;
         this.imageData = imageData;
         this.price = price;
-        this.description = description;
+        this.descriptionEn = descriptionEn;
+        this.descriptionUa = descriptionUa;
         this.checkDate = checkDate;
         this.minSales = minSales;
         this.maxSales = maxSales;
@@ -57,12 +61,20 @@ public class Dish {
     public Dish() {
     }
 
-    public String getName() {
-        return name;
+    public String getNameEn() {
+        return nameEn;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setNameEn(String nameEn) {
+        this.nameEn = nameEn;
+    }
+
+    public String getNameUa() {
+        return nameUa;
+    }
+
+    public void setNameUa(String nameUa) {
+        this.nameUa = nameUa;
     }
 
     public String getImageData() {
@@ -81,12 +93,20 @@ public class Dish {
         this.price = price;
     }
 
-    public String getDescription() {
-        return description;
+    public String getDescriptionEn() {
+        return descriptionEn;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setDescriptionEn(String descriptionEn) {
+        this.descriptionEn = descriptionEn;
+    }
+
+    public String getDescriptionUa() {
+        return descriptionUa;
+    }
+
+    public void setDescriptionUa(String descriptionUa) {
+        this.descriptionUa = descriptionUa;
     }
 
     public Category getCategory() {

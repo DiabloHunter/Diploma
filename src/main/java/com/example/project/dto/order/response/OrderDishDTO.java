@@ -3,23 +3,28 @@ package com.example.project.dto.order.response;
 import javax.validation.constraints.NotNull;
 
 public class OrderDishDTO {
+
     private @NotNull String dishId;
-    private @NotNull String name;
+    private @NotNull String nameEn;
+    private @NotNull String nameUa;
     private @NotNull String searchId;
     private @NotNull String imageData;
     private @NotNull Double price;
-    private @NotNull String description;
+    private @NotNull String descriptionEn;
+    private @NotNull String descriptionUa;
     private @NotNull Double quantity;
     private @NotNull String categoryId;
 
-    public OrderDishDTO(String dishId, String name, String searchId, String imageData, Double price, String description,
-                        Double quantity, String categoryId) {
+    public OrderDishDTO(String dishId, String nameEn, String nameUa, String searchId, String imageData, Double price,
+                        String descriptionEn, String descriptionUa, Double quantity, String categoryId) {
         this.dishId = dishId;
-        this.name = name;
+        this.nameEn = nameEn;
+        this.nameUa = nameUa;
         this.searchId = searchId;
         this.imageData = imageData;
         this.price = price;
-        this.description = description;
+        this.descriptionEn = descriptionEn;
+        this.descriptionUa = descriptionUa;
         this.quantity = quantity;
         this.categoryId = categoryId;
     }
@@ -27,12 +32,20 @@ public class OrderDishDTO {
     public OrderDishDTO() {
     }
 
-    public String getName() {
-        return name;
+    public String getNameEn() {
+        return nameEn;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setNameEn(String nameEn) {
+        this.nameEn = nameEn;
+    }
+
+    public String getNameUa() {
+        return nameUa;
+    }
+
+    public void setNameUa(String nameUa) {
+        this.nameUa = nameUa;
     }
 
     public String getImageData() {
@@ -51,12 +64,20 @@ public class OrderDishDTO {
         this.price = price;
     }
 
-    public String getDescription() {
-        return description;
+    public String getDescriptionEn() {
+        return descriptionEn;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setDescriptionEn(String descriptionEn) {
+        this.descriptionEn = descriptionEn;
+    }
+
+    public String getDescriptionUa() {
+        return descriptionUa;
+    }
+
+    public void setDescriptionUa(String descriptionUa) {
+        this.descriptionUa = descriptionUa;
     }
 
     public String getCategoryId() {

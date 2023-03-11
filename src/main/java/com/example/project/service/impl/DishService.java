@@ -39,15 +39,23 @@ public class DishService implements IDishService {
         if (category == null) {
             throw new NotFoundException(String.format("Category with Id %s was not found!", dishDto.getCategoryId()));
         }
+
         if (dishRepository.existsBySearchId(dishDto.getSearchId())) {
             throw new IllegalArgumentException(String.format("Dish with searchId %s already exists!", dishDto.getSearchId()));
         }
 
+//        if (dishRepository.existsByNameEnOrNameUa(dishDto.getNameEn()) || dishRepository.existsByNameEnOrNameUa(dishDto.getNameUa())) {
+//            throw new IllegalArgumentException(String.format("Dish with english name %s or ukrainian name already exists!",
+//                            dishDto.getNameEn(), dishDto.getNameUa()));
+//        }
+
         Dish dish = new Dish();
         dish.setSearchId(dishDto.getSearchId());
-        dish.setDescription(dishDto.getDescription());
+        dish.setDescriptionEn(dishDto.getDescriptionEn());
+        dish.setDescriptionUa(dishDto.getDescriptionUa());
         dish.setImageData(dishDto.getImageData());
-        dish.setName(dishDto.getName());
+        dish.setNameEn(dishDto.getNameEn());
+        dish.setNameUa(dishDto.getNameUa());
         dish.setCategory(category);
         dish.setPrice(dishDto.getPrice());
         dish.setCheckDate(TimeUtil.formatLocalDateTime(new LocalDateTime()));
@@ -63,9 +71,11 @@ public class DishService implements IDishService {
         DishDTO dishDto = new DishDTO();
 
         dishDto.setId(dish.getId());
-        dishDto.setName(dish.getName());
+        dishDto.setNameEn(dish.getNameEn());
+        dishDto.setNameUa(dish.getNameUa());
         dishDto.setSearchId(dish.getSearchId());
-        dishDto.setDescription(dish.getDescription());
+        dishDto.setDescriptionEn(dish.getDescriptionEn());
+        dishDto.setDescriptionUa(dish.getDescriptionUa());
         dishDto.setImageData(dish.getImageData());
         dishDto.setCategoryId(dish.getCategory().getId());
         dishDto.setPrice(dish.getPrice());
@@ -106,9 +116,11 @@ public class DishService implements IDishService {
         }
 
         updatedDish.setSearchId(dishDto.getSearchId());
-        updatedDish.setDescription(dishDto.getDescription());
+        updatedDish.setDescriptionEn(dishDto.getDescriptionEn());
+        updatedDish.setDescriptionUa(dishDto.getDescriptionUa());
         updatedDish.setImageData(dishDto.getImageData());
-        updatedDish.setName(dishDto.getName());
+        updatedDish.setNameEn(dishDto.getNameEn());
+        updatedDish.setNameUa(dishDto.getNameUa());
         updatedDish.setPrice(dishDto.getPrice());
         updatedDish.setMinSales(dishDto.getMinSales());
         updatedDish.setMaxSales(dishDto.getMaxSales());

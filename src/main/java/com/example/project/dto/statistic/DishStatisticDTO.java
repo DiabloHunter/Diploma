@@ -6,10 +6,12 @@ public class DishStatisticDTO {
 
     private String id;
     private @NotNull String searchId;
-    private @NotNull String name;
+    private @NotNull String nameEn;
+    private @NotNull String nameUa;
     private @NotNull String imageData;
     private @NotNull double price;
-    private @NotNull String description;
+    private @NotNull String descriptionEn;
+    private @NotNull String descriptionUa;
     private @NotNull String categoryId;
     private @NotNull double monthSales;
     private @NotNull int place;
@@ -30,12 +32,20 @@ public class DishStatisticDTO {
         this.searchId = searchId;
     }
 
-    public String getName() {
-        return name;
+    public String getNameEn() {
+        return nameEn;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setNameEn(String nameEn) {
+        this.nameEn = nameEn;
+    }
+
+    public String getNameUa() {
+        return nameUa;
+    }
+
+    public void setNameUa(String nameUa) {
+        this.nameUa = nameUa;
     }
 
     public String getImageData() {
@@ -54,12 +64,20 @@ public class DishStatisticDTO {
         this.price = price;
     }
 
-    public String getDescription() {
-        return description;
+    public String getDescriptionEn() {
+        return descriptionEn;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setDescriptionEn(String descriptionEn) {
+        this.descriptionEn = descriptionEn;
+    }
+
+    public String getDescriptionUa() {
+        return descriptionUa;
+    }
+
+    public void setDescriptionUa(String descriptionUa) {
+        this.descriptionUa = descriptionUa;
     }
 
     public String getCategoryId() {
