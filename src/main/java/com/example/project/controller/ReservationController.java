@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -24,10 +25,14 @@ public class ReservationController {
 
     private static final Logger LOG = LogManager.getLogger(ReservationController.class);
 
-    @PostMapping("/user")
-    public ResponseEntity<List<Reservation>> getUserReservation(@RequestParam("userEmail") String userEmail) throws NotFoundException {
+    @GetMapping("/user")
+    public ResponseEntity<List<ReservationDTO>> getUserReservation(@RequestParam("userEmail") String userEmail) throws NotFoundException {
         List<Reservation> reservations = reservationService.getUserReservations(userEmail);
-        return new ResponseEntity<>(reservations, HttpStatus.OK);
+        List<ReservationDTO> reservationDTOS = new ArrayList<>();
+        for (Reservation reservation : reservations) {
+            reservationDTOS.add(new ReservationDTO(reservation));
+        }
+        return new ResponseEntity<>(reservationDTOS, HttpStatus.OK);
     }
 
     @PostMapping("/create")
