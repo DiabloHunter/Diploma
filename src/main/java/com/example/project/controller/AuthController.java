@@ -6,6 +6,7 @@ import com.example.project.JWT.payload.response.JwtResponse;
 import com.example.project.common.ApiResponse;
 import com.example.project.service.IAuthService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,7 +30,7 @@ public class AuthController {
     @PostMapping("/signup")
     public ResponseEntity<ApiResponse> signUp(@Valid @RequestBody SignupRequest signUpRequest) {
         authService.signUp(signUpRequest);
-        return ResponseEntity.ok(new ApiResponse(true, "User successfully created!"));
+        return new ResponseEntity<>(new ApiResponse(true, "User successfully created!"), HttpStatus.OK);
     }
 
 }
