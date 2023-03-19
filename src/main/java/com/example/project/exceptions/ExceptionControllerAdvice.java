@@ -1,5 +1,6 @@
 package com.example.project.exceptions;
 
+import com.example.project.JWT.payload.response.MessageResponse;
 import com.example.project.common.ApiResponse;
 import javassist.NotFoundException;
 import org.apache.log4j.LogManager;
@@ -17,18 +18,18 @@ public class ExceptionControllerAdvice {
     @ExceptionHandler(value = AuthenticationFailException.class)
     public final ResponseEntity<ApiResponse> handleAuthenticationFailException(AuthenticationFailException exception) {
         LOG.error(exception.getMessage());
-        return new ResponseEntity<>(new ApiResponse(false, exception.getMessage()), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(new ApiResponse(false, exception.getMessage()), HttpStatus.OK);
     }
 
     @ExceptionHandler(value = NotFoundException.class)
     public final ResponseEntity<ApiResponse> handleNotFoundException(NotFoundException exception) {
         LOG.error(exception.getMessage());
-        return new ResponseEntity<>(new ApiResponse(false, exception.getMessage()), HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(new ApiResponse(false, exception.getMessage()), HttpStatus.OK);
     }
 
     @ExceptionHandler(value = IllegalArgumentException.class)
     public final ResponseEntity<ApiResponse> handleIllegalArgumentException(IllegalArgumentException exception) {
         LOG.error(exception.getMessage());
-        return new ResponseEntity<>(new ApiResponse(false, exception.getMessage()), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(new ApiResponse(false, exception.getMessage()), HttpStatus.OK);
     }
 }

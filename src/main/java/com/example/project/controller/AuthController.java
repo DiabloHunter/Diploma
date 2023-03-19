@@ -3,7 +3,7 @@ package com.example.project.controller;
 import com.example.project.JWT.payload.request.LoginRequest;
 import com.example.project.JWT.payload.request.SignupRequest;
 import com.example.project.JWT.payload.response.JwtResponse;
-import com.example.project.JWT.payload.response.MessageResponse;
+import com.example.project.common.ApiResponse;
 import com.example.project.service.IAuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -27,8 +27,9 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<MessageResponse> signUp(@Valid @RequestBody SignupRequest signUpRequest) {
-        return authService.signUp(signUpRequest);
+    public ResponseEntity<ApiResponse> signUp(@Valid @RequestBody SignupRequest signUpRequest) {
+        authService.signUp(signUpRequest);
+        return ResponseEntity.ok(new ApiResponse(true, "User successfully created!"));
     }
 
 }

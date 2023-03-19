@@ -21,6 +21,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.webjars.NotFoundException;
 
 import javax.transaction.Transactional;
 import java.util.Random;
@@ -65,12 +66,9 @@ public class AuthService implements IAuthService {
     }
 
     @Transactional
-    public ResponseEntity<MessageResponse> signUp(SignupRequest signUpRequest) {
-
+    public void signUp(SignupRequest signUpRequest) {
         if (userService.existsByEmail(signUpRequest.getEmail())) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(new MessageResponse("Error: Email is already in use!"));
+            throw  new IllegalArgumentException("Email is already in use!");
         }
 
         String strRole = signUpRequest.getRole();
@@ -78,24 +76,24 @@ public class AuthService implements IAuthService {
 
         if (strRole == null) {
             role = roleService.findByName(ERole.ROLE_USER)
-                    .orElseThrow(() -> new RuntimeException("Error: Role was not found."));
+                    .orElseThrow(() -> new NotFoundException("Error: Role was not found."));
         } else {
             switch (strRole) {
                 case "admin":
                     role = roleService.findByName(ERole.ROLE_ADMIN)
-                            .orElseThrow(() -> new RuntimeException("Error: Role was not found."));
+                            .orElseThrow(() -> new NotFoundException("Error: Role was not found."));
                     break;
                 case "manager":
                     role = roleService.findByName(ERole.ROLE_MANAGER)
-                            .orElseThrow(() -> new RuntimeException("Error: Role was not found."));
+                            .orElseThrow(() -> new NotFoundException("Error: Role was not found."));
                     break;
                 case "cashier":
                     role = roleService.findByName(ERole.ROLE_CASHIER)
-                            .orElseThrow(() -> new RuntimeException("Error: Role was not found."));
+                            .orElseThrow(() -> new NotFoundException("Error: Role was not found."));
                     break;
                 default:
                     role = roleService.findByName(ERole.ROLE_USER)
-                            .orElseThrow(() -> new RuntimeException("Error: Role was not found."));
+                            .orElseThrow(() -> new NotFoundException("Error: Role was not found."));
             }
         }
 
@@ -106,7 +104,5 @@ public class AuthService implements IAuthService {
                 role);
 
         userService.create(user);
-
-        return ResponseEntity.ok(new MessageResponse("User successfully created!"));
     }
 }

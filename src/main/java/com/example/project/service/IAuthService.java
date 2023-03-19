@@ -11,11 +11,9 @@ import javax.transaction.Transactional;
 public interface IAuthService {
 
     @Transactional
-    ResponseEntity<MessageResponse> signUp(SignupRequest signupRequest);
+    void signUp(SignupRequest signupRequest);
 
     ResponseEntity<JwtResponse> signIn(LoginRequest loginRequest);
 
-
 //    SignInResponseDTO signInMob(SignInDTO signInDto);
-
 }

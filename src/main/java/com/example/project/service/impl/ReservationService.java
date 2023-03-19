@@ -17,6 +17,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.joda.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +28,12 @@ import java.util.stream.Collectors;
 public class ReservationService implements IReservationService {
 
     private static final Logger LOG = LogManager.getLogger(ReservationService.class);
+
+    @Value("${day.start.time}")
+    private String startWorkingTime;
+
+    @Value("${day.end.time}")
+    private String endWorkingTime;
 
     @Autowired
     IReservationRepository reservationRepository;
@@ -62,6 +69,10 @@ public class ReservationService implements IReservationService {
             throw new NotFoundException(String.format("User with given email %s was not found!", reservationDTO.getUserEmail()));
         }
 
+        if (getUserReservations(user.getEmail()).size() > 5) {
+            throw new IllegalArgumentException(String.format("User %s has too much planned reservations!", user.getEmail()));
+        }
+
         Reservation reservation = new Reservation();
         reservation.setActive(true);
         reservation.setDescription(reservationDTO.getDescription());
@@ -79,6 +90,21 @@ public class ReservationService implements IReservationService {
     private List<Table> getAvailableTable(LocalDateTime startTime, LocalDateTime endTime, Integer amountOfPeople) {
         List<Table> allTables = tableService.getAllTables();
         Set<Table> reservedTables = new HashSet<>();
+        if(endTime.isBefore(startTime)){
+            throw new IllegalArgumentException("End time of reservation can not be before start time!");
+        }
+
+        if(endTime.toLocalTime().isAfter(TimeUtil.formatStringToLocalTime(endWorkingTime)) ||
+                startTime.toLocalTime().isBefore(TimeUtil.formatStringToLocalTime(startWorkingTime))){
+            throw new IllegalArgumentException(String.format("Invalid time selected! Start time: %s. End time: %s",
+                    startWorkingTime.substring(0,4), endWorkingTime.substring(0,5)));
+        }
+
+        if(TimeUtil.formatLocalDateTimeFromLocalDate(startTime.toLocalDate()).plusDays(1)
+                        .compareTo(TimeUtil.formatLocalDateTimeFromLocalDate(endTime.toLocalDate())) <= 0){
+            throw new IllegalArgumentException("Too big time gap for reservation!");
+        }
+
         List<Reservation> reservations = reservationRepository.getReservationByTime(startTime, endTime);
         reservations.forEach(reservation -> reservedTables.addAll(reservation.getTables()));
         allTables.removeAll(reservedTables);
