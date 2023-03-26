@@ -14,10 +14,12 @@ import com.example.project.service.IReservationService;
 import com.example.project.service.IStatisticService;
 import org.joda.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
+@Service
 public class StatisticService implements IStatisticService {
 
     @Autowired
