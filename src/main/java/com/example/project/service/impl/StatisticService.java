@@ -62,6 +62,7 @@ public class StatisticService implements IStatisticService {
                 .forEach(x -> {
                     DishStatisticDTO dishStatisticDto = new DishStatisticDTO();
                     dishStatisticDto.setId(x.getKey().getId());
+                    dishStatisticDto.setSearchId(x.getKey().getSearchId());
                     dishStatisticDto.setNameEn(x.getKey().getNameEn());
                     dishStatisticDto.setNameUa(x.getKey().getNameUa());
                     dishStatisticDto.setPrice(x.getKey().getPrice());

@@ -5,6 +5,7 @@ import javax.validation.constraints.NotNull;
 public class DishStatisticDTO {
 
     private String id;
+    private @NotNull String searchId;
     private @NotNull String nameEn;
     private @NotNull String nameUa;
     private @NotNull double price;
@@ -21,6 +22,16 @@ public class DishStatisticDTO {
     public void setId(String id) {
         this.id = id;
     }
+
+
+    public String getSearchId() {
+        return searchId;
+    }
+
+    public void setSearchId(String searchId) {
+        this.searchId = searchId;
+    }
+
     public String getNameEn() {
         return nameEn;
     }
