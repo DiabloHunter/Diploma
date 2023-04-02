@@ -17,26 +17,26 @@ public class Category {
             strategy = "org.hibernate.id.UUIDGenerator"
     )
     private String id;
-    private @NotBlank String categoryNameEn;
-    private @NotBlank String categoryNameUa;
+    private @NotBlank String nameEn;
+    private @NotBlank String nameUa;
     private @NotBlank String descriptionEn;
     private @NotBlank String descriptionUa;
     @Lob
     @Column(length = 100000)
     private @NotBlank String imageData;
 
-    public Category(String categoryNameEn, String categoryNameUa, String descriptionEn, String descriptionUa, String imageData) {
-        this.categoryNameEn = categoryNameEn;
-        this.categoryNameUa = categoryNameUa;
+    public Category(String nameEn, String nameUa, String descriptionEn, String descriptionUa, String imageData) {
+        this.nameEn = nameEn;
+        this.nameUa = nameUa;
         this.descriptionEn = descriptionEn;
         this.descriptionUa = descriptionUa;
         this.imageData = imageData;
     }
 
-    public Category(String id, String categoryNameEn, String categoryNameUa, String descriptionEn, String descriptionUa, String imageData) {
+    public Category(String id, String nameEn, String nameUa, String descriptionEn, String descriptionUa, String imageData) {
         this.id = id;
-        this.categoryNameEn = categoryNameEn;
-        this.categoryNameUa = categoryNameUa;
+        this.nameEn = nameEn;
+        this.nameUa = nameUa;
         this.descriptionEn = descriptionEn;
         this.descriptionUa = descriptionUa;
         this.imageData = imageData;
@@ -53,20 +53,20 @@ public class Category {
         this.id = id;
     }
 
-    public String getCategoryNameEn() {
-        return categoryNameEn;
+    public String getNameEn() {
+        return nameEn;
     }
 
-    public void setCategoryNameEn(String categoryNameEn) {
-        this.categoryNameEn = categoryNameEn;
+    public void setNameEn(String nameEn) {
+        this.nameEn = nameEn;
     }
 
-    public String getCategoryNameUa() {
-        return categoryNameUa;
+    public String getNameUa() {
+        return nameUa;
     }
 
-    public void setCategoryNameUa(String categoryNameUa) {
-        this.categoryNameUa = categoryNameUa;
+    public void setNameUa(String nameUa) {
+        this.nameUa = nameUa;
     }
 
     public String getDescriptionEn() {

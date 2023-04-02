@@ -1,6 +1,7 @@
 package com.example.project.service.impl;
 
 import com.example.project.dto.dish.DishDTO;
+import com.example.project.dto.filter.FilterDishDTO;
 import com.example.project.model.Category;
 import com.example.project.model.Order;
 import com.example.project.model.Dish;
@@ -17,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class DishService implements IDishService {
@@ -91,6 +93,29 @@ public class DishService implements IDishService {
     }
 
     @Override
+    public List<Dish> getFilteredDishes(FilterDishDTO filterDishDTO) {
+        List<Dish> dishes = dishRepository.findAll();
+        String filterName = filterDishDTO.getName();
+        Double filterMinPrice = filterDishDTO.getMinPrice();
+        Double filterMaxPrice = filterDishDTO.getMaxPrice();
+        if (filterName != null) {
+            dishes.retainAll(dishes.stream().filter(dish -> dish.getNameEn().equals(filterName) ||
+                    dish.getNameUa().equals(filterName) ||
+                    dish.getSearchId().equals(filterName)).collect(Collectors.toList()));
+        }
+
+        if (filterMinPrice != null) {
+            dishes.retainAll(dishes.stream().filter(dish -> dish.getPrice() >= filterMinPrice).collect(Collectors.toList()));
+        }
+
+        if (filterMaxPrice != null) {
+            dishes.retainAll(dishes.stream().filter(dish -> dish.getPrice() <= filterMaxPrice).collect(Collectors.toList()));
+        }
+
+        return dishes;
+    }
+
+    @Override
     public List<DishDTO> getAllDishes() {
         List<Dish> allDishes = dishRepository.findAll();
         List<DishDTO> dishDTOS = new ArrayList<>();
@@ -111,7 +136,7 @@ public class DishService implements IDishService {
             throw new NotFoundException(String.format("Dish with id %s was not found!", dishDto.getId()));
         }
 
-        if (existedDish != null && updatedDish.getId() != existedDish.getId()) {
+        if (existedDish != null && !updatedDish.getId().equals(existedDish.getId())) {
             throw new IllegalArgumentException(String.format("Dish with searchId %s already exists!", dishDto.getSearchId()));
         }
 
@@ -153,7 +178,7 @@ public class DishService implements IDishService {
             double count = 0;
             for (var order : orders) {
                 for (var orderUnit : order.getOrderUnits()) {
-                    if (orderUnit.getDish().getId() == dish.getId()) {
+                    if (orderUnit.getDish().getId().equals(dish.getId())) {
                         count += orderUnit.getQuantity();
                     }
                 }

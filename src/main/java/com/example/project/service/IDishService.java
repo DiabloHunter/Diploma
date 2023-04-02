@@ -1,6 +1,7 @@
 package com.example.project.service;
 
 import com.example.project.dto.dish.DishDTO;
+import com.example.project.dto.filter.FilterDishDTO;
 import com.example.project.model.Dish;
 import javassist.NotFoundException;
 
@@ -13,6 +14,8 @@ public interface IDishService {
     DishDTO getDishDto(Dish dish);
 
     Dish getDishBySearchId(String searchId);
+
+    List<Dish> getFilteredDishes(FilterDishDTO filterDishDTO);
 
     List<DishDTO> getAllDishes();
 

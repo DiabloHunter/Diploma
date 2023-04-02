@@ -1,6 +1,7 @@
 package com.example.project.service;
 
 import com.example.project.dto.category.CreateUpdateCategoryDto;
+import com.example.project.dto.filter.FilterCategoryDTO;
 import com.example.project.model.Category;
 import javassist.NotFoundException;
 
@@ -13,6 +14,8 @@ public interface ICategoryService {
     Category getCategoryById(String categoryId);
 
     void create(CreateUpdateCategoryDto createUpdateCategoryDto) throws IllegalArgumentException;
+
+    List<Category> getFilteredCategories(FilterCategoryDTO filterCategoryDTO);
 
     void update(String categoryId, CreateUpdateCategoryDto createUpdateCategoryDto) throws NotFoundException;
 
