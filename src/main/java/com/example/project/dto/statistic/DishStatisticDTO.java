@@ -5,10 +5,8 @@ import javax.validation.constraints.NotNull;
 public class DishStatisticDTO {
 
     private String id;
-    private @NotNull String searchId;
     private @NotNull String nameEn;
     private @NotNull String nameUa;
-    private @NotNull String imageData;
     private @NotNull double price;
     private @NotNull String descriptionEn;
     private @NotNull String descriptionUa;
@@ -23,15 +21,6 @@ public class DishStatisticDTO {
     public void setId(String id) {
         this.id = id;
     }
-
-    public String getSearchId() {
-        return searchId;
-    }
-
-    public void setSearchId(String searchId) {
-        this.searchId = searchId;
-    }
-
     public String getNameEn() {
         return nameEn;
     }
@@ -46,14 +35,6 @@ public class DishStatisticDTO {
 
     public void setNameUa(String nameUa) {
         this.nameUa = nameUa;
-    }
-
-    public String getImageData() {
-        return imageData;
-    }
-
-    public void setImageData(String imageData) {
-        this.imageData = imageData;
     }
 
     public double getPrice() {
@@ -103,4 +84,6 @@ public class DishStatisticDTO {
     public void setPlace(int place) {
         this.place = place;
     }
+
+
 }
