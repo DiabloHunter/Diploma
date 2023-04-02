@@ -2,6 +2,7 @@ package com.example.project.controller;
 
 import com.example.project.common.ApiResponse;
 import com.example.project.dto.category.CreateUpdateCategoryDto;
+import com.example.project.dto.filter.FilterCategoryDTO;
 import com.example.project.model.Category;
 import com.example.project.service.ICategoryService;
 import javassist.NotFoundException;
@@ -12,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -28,14 +30,26 @@ public class CategoryController {
     public ResponseEntity<ApiResponse> createCategory(@RequestBody CreateUpdateCategoryDto category) {
         categoryService.create(category);
 
-        LOG.info(String.format("Category with name %s has been created!", category.getCategoryNameEn()));
+        LOG.info(String.format("Category with name %s has been created!", category.getNameEn()));
         return new ResponseEntity<>(new ApiResponse(true,
-                String.format("Category with name %s has been created!", category.getCategoryNameEn())), HttpStatus.CREATED);
+                String.format("Category with name %s has been created!", category.getNameEn())), HttpStatus.CREATED);
     }
 
     @GetMapping("/")
     public List<Category> listCategory() {
         return categoryService.getAllCategory();
+    }
+
+    @GetMapping("/getFilteredCategories/")
+    public ResponseEntity<List<Category>> getFilteredDishes(@RequestBody FilterCategoryDTO filterCategoryDTO) {
+        List<Category> categories = categoryService.getFilteredCategories(filterCategoryDTO);
+
+        if (categories == null) {
+            LOG.warn(String.format("Categories with given filters %s was not found!", filterCategoryDTO));
+            return new ResponseEntity<>(new ArrayList<>(),  HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>(categories, HttpStatus.OK);
     }
 
    // @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")

@@ -1,6 +1,7 @@
 package com.example.project.service.impl;
 
 import com.example.project.dto.category.CreateUpdateCategoryDto;
+import com.example.project.dto.filter.FilterCategoryDTO;
 import com.example.project.model.Category;
 import com.example.project.repository.ICategoryRepository;
 import com.example.project.service.ICategoryService;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CategoryService implements ICategoryService {
@@ -18,18 +20,18 @@ public class CategoryService implements ICategoryService {
 
     @Override
     public void create(CreateUpdateCategoryDto createUpdateCategoryDto) throws IllegalArgumentException {
-        if (categoryRepository.existsByCategoryNameEn(createUpdateCategoryDto.getCategoryNameEn())) {
+        if (categoryRepository.existsByNameEn(createUpdateCategoryDto.getNameEn())) {
             throw new IllegalArgumentException(String.format("Category with name %s already exists!",
-                    createUpdateCategoryDto.getCategoryNameEn()));
+                    createUpdateCategoryDto.getNameEn()));
         }
 
-        if (categoryRepository.existsByCategoryNameUa(createUpdateCategoryDto.getCategoryNameUa())) {
+        if (categoryRepository.existsByNameUa(createUpdateCategoryDto.getNameUa())) {
             throw new IllegalArgumentException(String.format("Category with name %s already exists!",
-                    createUpdateCategoryDto.getCategoryNameUa()));
+                    createUpdateCategoryDto.getNameUa()));
         }
 
-        Category category = new Category(createUpdateCategoryDto.getCategoryNameEn(),
-                createUpdateCategoryDto.getCategoryNameUa(), createUpdateCategoryDto.getDescriptionEn(),
+        Category category = new Category(createUpdateCategoryDto.getNameEn(),
+                createUpdateCategoryDto.getNameUa(), createUpdateCategoryDto.getDescriptionEn(),
                 createUpdateCategoryDto.getDescriptionUa(), createUpdateCategoryDto.getImageData());
         categoryRepository.save(category);
     }
@@ -40,23 +42,36 @@ public class CategoryService implements ICategoryService {
     }
 
     @Override
+    public List<Category> getFilteredCategories(FilterCategoryDTO filterCategoryDTO) {
+        List<Category> categories =  categoryRepository.findAll();
+        String filterName = filterCategoryDTO.getName();
+        if (filterName != null) {
+            categories.retainAll(categories.stream().filter(category -> category.getNameEn().equals(filterName) ||
+                    category.getNameUa().equals(filterName)).collect(Collectors.toList()));
+        }
+
+        return categories;
+    }
+
+    @Override
     public void update(String categoryId, CreateUpdateCategoryDto createUpdateCategoryDto) throws NotFoundException {
         Category updated = categoryRepository.findById(categoryId).orElseThrow(() ->
                 new NotFoundException(String.format("Category with Id %s was not found!", categoryId)));
-        Category existedCategoryByEnName = categoryRepository.findByCategoryNameEn(createUpdateCategoryDto.getCategoryNameEn());
-        Category existedCategoryByUaName = categoryRepository.findByCategoryNameUa(createUpdateCategoryDto.getCategoryNameUa());
-        if (existedCategoryByEnName != null && updated.getId() != existedCategoryByEnName.getId()) {
+
+        Category existedCategoryByEnName = categoryRepository.findByNameEn(createUpdateCategoryDto.getNameEn());
+        Category existedCategoryByUaName = categoryRepository.findByNameUa(createUpdateCategoryDto.getNameUa());
+        if (existedCategoryByEnName != null && !updated.getId().equals(existedCategoryByEnName.getId())) {
             throw new IllegalArgumentException(String.format("Category with name %s already exists!",
-                    updated.getCategoryNameEn()));
+                    updated.getNameEn()));
         }
 
-        if (existedCategoryByUaName != null && updated.getId() != existedCategoryByUaName.getId()) {
+        if (existedCategoryByUaName != null && !updated.getId().equals(existedCategoryByUaName.getId())) {
             throw new IllegalArgumentException(String.format("Category with name %s already exists!",
-                    updated.getCategoryNameUa()));
+                    updated.getNameUa()));
         }
 
-        updated.setCategoryNameEn(createUpdateCategoryDto.getCategoryNameEn());
-        updated.setCategoryNameUa(createUpdateCategoryDto.getCategoryNameUa());
+        updated.setNameEn(createUpdateCategoryDto.getNameEn());
+        updated.setNameUa(createUpdateCategoryDto.getNameUa());
         updated.setDescriptionEn(createUpdateCategoryDto.getDescriptionEn());
         updated.setDescriptionUa(createUpdateCategoryDto.getDescriptionUa());
         updated.setImageData(createUpdateCategoryDto.getImageData());
