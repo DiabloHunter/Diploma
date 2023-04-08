@@ -1,9 +1,5 @@
 package com.example.project.dto.statistic;
 
-import com.example.project.model.Role;
-
-import java.util.List;
-
 public class UserStatisticDTO {
 
     private String name;

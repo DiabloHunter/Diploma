@@ -33,8 +33,8 @@ public class StatisticController {
     }
 
     @GetMapping("/user")
-    public ResponseEntity<List<UserStatisticDTO>> getUserStatistic(@RequestBody StatisticDateDTO statisticDateDTO) {
-        List<UserStatisticDTO> statistic = statisticService.getUserStatisticByOrders(statisticDateDTO);
+    public ResponseEntity<List<UserStatisticDTO>> getUserStatistic(@RequestParam Date startDate, @RequestParam Date endDate) {
+        List<UserStatisticDTO> statistic = statisticService.getUserStatisticByOrders(new StatisticDateDTO(LocalDateTime.fromDateFields(startDate), LocalDateTime.fromDateFields(endDate)));
         return new ResponseEntity<>(statistic, HttpStatus.OK);
     }
 
