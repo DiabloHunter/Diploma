@@ -1,6 +1,7 @@
 package com.example.project.JWT.payload.response;
 
 public class MessageResponse {
+
   private String message;
 
   public MessageResponse(String message) {

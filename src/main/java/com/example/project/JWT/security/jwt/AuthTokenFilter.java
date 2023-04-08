@@ -1,6 +1,5 @@
 package com.example.project.JWT.security.jwt;
 
-import com.example.project.JWT.security.services.UserDetailsImpl;
 import com.example.project.JWT.security.services.UserDetailsServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -47,7 +47,7 @@ public class ReservationService implements IReservationService {
     @Override
     public List<Reservation> getUserReservations(String userEmail) {
         User user = userService.getUserByEmail(userEmail);
-        if(user == null){
+        if (user == null) {
             LOG.error("User with email %s was not found");
             return null;
         }
@@ -90,18 +90,18 @@ public class ReservationService implements IReservationService {
     private List<Table> getAvailableTable(LocalDateTime startTime, LocalDateTime endTime, Integer amountOfPeople) {
         List<Table> allTables = tableService.getAllTables();
         Set<Table> reservedTables = new HashSet<>();
-        if(endTime.isBefore(startTime)){
+        if (endTime.isBefore(startTime)) {
             throw new IllegalArgumentException("End time of reservation can not be before start time!");
         }
 
-        if(endTime.toLocalTime().isAfter(TimeUtil.formatStringToLocalTime(endWorkingTime)) ||
-                startTime.toLocalTime().isBefore(TimeUtil.formatStringToLocalTime(startWorkingTime))){
+        if (endTime.toLocalTime().isAfter(TimeUtil.formatStringToLocalTime(endWorkingTime)) ||
+                startTime.toLocalTime().isBefore(TimeUtil.formatStringToLocalTime(startWorkingTime))) {
             throw new IllegalArgumentException(String.format("Invalid time selected! Start time: %s. End time: %s",
-                    startWorkingTime.substring(0,4), endWorkingTime.substring(0,5)));
+                    startWorkingTime.substring(0, 4), endWorkingTime.substring(0, 5)));
         }
 
-        if(TimeUtil.formatLocalDateTimeFromLocalDate(startTime.toLocalDate()).plusDays(1)
-                        .compareTo(TimeUtil.formatLocalDateTimeFromLocalDate(endTime.toLocalDate())) <= 0){
+        if (TimeUtil.formatLocalDateTimeFromLocalDate(startTime.toLocalDate()).plusDays(1)
+                .compareTo(TimeUtil.formatLocalDateTimeFromLocalDate(endTime.toLocalDate())) <= 0) {
             throw new IllegalArgumentException("Too big time gap for reservation!");
         }
 

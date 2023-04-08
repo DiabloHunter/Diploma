@@ -5,9 +5,6 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
 
 @Entity
 @Table(name = "users",

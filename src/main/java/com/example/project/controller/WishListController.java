@@ -39,7 +39,7 @@ public class WishListController {
         wishlistService.process(dishId, userEmail, Action.CREATE);
 
         LOG.info(String.format("Wishlist with dishId %s was created for user with email %s", dishId, userEmail));
-        return new ResponseEntity<>( new ApiResponse(true,
+        return new ResponseEntity<>(new ApiResponse(true,
                 String.format("Wishlist with dishId %s was created for user with email %s", dishId, userEmail)), HttpStatus.CREATED);
 
     }

@@ -43,7 +43,7 @@ public class CategoryService implements ICategoryService {
 
     @Override
     public List<Category> getFilteredCategories(FilterCategoryDTO filterCategoryDTO) {
-        List<Category> categories =  categoryRepository.findAll();
+        List<Category> categories = categoryRepository.findAll();
         String filterName = filterCategoryDTO.getName();
         if (filterName != null) {
             categories.retainAll(categories.stream().filter(category -> category.getNameEn().equals(filterName) ||

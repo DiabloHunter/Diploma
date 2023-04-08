@@ -3,7 +3,6 @@ package com.example.project.dto.reservation;
 import org.joda.time.LocalDateTime;
 
 import javax.validation.constraints.NotNull;
-import java.util.List;
 
 public class UpdateReservationDto {
 

@@ -16,12 +16,12 @@ public class RoleService implements IRoleService {
     IRoleRepository roleRepository;
 
     @Override
-    public Role findByName(String roleName){
+    public Role findByName(String roleName) {
         return roleRepository.findByName(roleName).orElse(null);
     }
 
     @Override
-    public Optional<Role> findByName(ERole roleName){
+    public Optional<Role> findByName(ERole roleName) {
         return roleRepository.findByName(roleName);
     }
 }

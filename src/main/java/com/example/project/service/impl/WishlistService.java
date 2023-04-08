@@ -43,9 +43,9 @@ public class WishlistService implements IWishlistService {
         List<DishDTO> dishDTOS = new ArrayList<>();
         for (Wishlist wishList : wishlists) {
             DishDTO dishDTO = dishService.getDishDto(wishList.getDish());
-            if(dishDTO!=null){
+            if (dishDTO != null) {
                 dishDTOS.add(dishDTO);
-            } else{
+            } else {
                 LOG.warn(String.format("Dish with id %s was not found!", wishList.getDish().getId()));
             }
             dishDTOS.add(dishService.getDishDto(wishList.getDish()));

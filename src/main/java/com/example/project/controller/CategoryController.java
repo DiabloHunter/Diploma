@@ -47,7 +47,7 @@ public class CategoryController {
 
         if (categories == null) {
             LOG.warn(String.format("Categories with given filters %s was not found!", filterCategoryDTO));
-            return new ResponseEntity<>(new ArrayList<>(),  HttpStatus.OK);
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
         }
 
         return new ResponseEntity<>(categories, HttpStatus.OK);

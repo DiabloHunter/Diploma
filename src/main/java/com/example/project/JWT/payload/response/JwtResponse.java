@@ -1,6 +1,7 @@
 package com.example.project.JWT.payload.response;
 
 public class JwtResponse {
+
     private String token;
     private String type = "Bearer";
     private String id;

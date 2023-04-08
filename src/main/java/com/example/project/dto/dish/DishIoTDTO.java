@@ -3,6 +3,7 @@ package com.example.project.dto.dish;
 import javax.validation.constraints.NotNull;
 
 public class DishIoTDTO {
+
     private Long id;
     private @NotNull String searchId;
     private @NotNull String name;

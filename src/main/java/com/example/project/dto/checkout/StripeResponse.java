@@ -1,6 +1,7 @@
 package com.example.project.dto.checkout;
 
 public class StripeResponse {
+
     private String sessionId;
 
     public StripeResponse(String sessionId) {

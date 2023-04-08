@@ -41,7 +41,7 @@ public class DishController {
 
         if (dish == null) {
             LOG.warn(String.format("Dish with searchId %s was not found!", searchId));
-            return new ResponseEntity<>(null,  HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
 
         DishDTO dishDTO = dishService.getDishDto(dish);
@@ -54,7 +54,7 @@ public class DishController {
 
         if (dishes == null) {
             LOG.warn(String.format("Dishes with given filters %s was not found!", filterDishDTO));
-            return new ResponseEntity<>(new ArrayList<>(),  HttpStatus.OK);
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
         }
 
         return new ResponseEntity<>(dishes, HttpStatus.OK);

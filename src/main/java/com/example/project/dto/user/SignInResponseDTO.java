@@ -2,8 +2,6 @@ package com.example.project.dto.user;
 
 import com.example.project.model.ERole;
 
-import java.util.Set;
-
 public class SignInResponseDTO {
 
     private String status;

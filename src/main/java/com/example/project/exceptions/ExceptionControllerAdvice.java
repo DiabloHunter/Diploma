@@ -1,6 +1,5 @@
 package com.example.project.exceptions;
 
-import com.example.project.JWT.payload.response.MessageResponse;
 import com.example.project.common.ApiResponse;
 import javassist.NotFoundException;
 import org.apache.log4j.LogManager;

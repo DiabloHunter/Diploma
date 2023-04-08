@@ -21,5 +21,4 @@ public interface IOrderRepository extends JpaRepository<Order, String> {
     List<Order> findByUserAndCreatedDate(@Param("userId") String userId,
                                          @Param("start") LocalDateTime start,
                                          @Param("end") LocalDateTime end);
-
 }

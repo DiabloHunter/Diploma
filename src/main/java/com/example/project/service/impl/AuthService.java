@@ -3,7 +3,6 @@ package com.example.project.service.impl;
 import com.example.project.JWT.payload.request.LoginRequest;
 import com.example.project.JWT.payload.request.SignupRequest;
 import com.example.project.JWT.payload.response.JwtResponse;
-import com.example.project.JWT.payload.response.MessageResponse;
 import com.example.project.JWT.security.jwt.JwtUtils;
 import com.example.project.JWT.security.services.UserDetailsImpl;
 import com.example.project.model.ERole;
@@ -68,7 +67,7 @@ public class AuthService implements IAuthService {
     @Transactional
     public void signUp(SignupRequest signUpRequest) {
         if (userService.existsByEmail(signUpRequest.getEmail())) {
-            throw  new IllegalArgumentException("Email is already in use!");
+            throw new IllegalArgumentException("Email is already in use!");
         }
 
         String strRole = signUpRequest.getRole();

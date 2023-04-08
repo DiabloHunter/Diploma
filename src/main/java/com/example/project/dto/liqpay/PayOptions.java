@@ -1,6 +1,5 @@
 package com.example.project.dto.liqpay;
 
-
 public class PayOptions {
 
     private String version;

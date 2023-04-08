@@ -2,8 +2,6 @@ package com.example.project.dto.user;
 
 import com.example.project.model.Role;
 
-import java.util.List;
-
 public class UserDTO {
 
     private String name;

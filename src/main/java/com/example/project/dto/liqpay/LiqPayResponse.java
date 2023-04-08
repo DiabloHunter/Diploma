@@ -1,7 +1,7 @@
 package com.example.project.dto.liqpay;
 
-
 public class LiqPayResponse {
+
     private String data;
     private String signature;
 

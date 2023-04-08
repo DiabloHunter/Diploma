@@ -14,5 +14,4 @@ public interface ICartService {
     void deleteCartItem(String cartItemId, String userEmail) throws NotFoundException;
 
     void deleteCartItemsByUser(User user) throws NotFoundException;
-
 }

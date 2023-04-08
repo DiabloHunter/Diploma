@@ -1,15 +1,11 @@
 package com.example.project.service;
 
-
 import com.example.project.dto.table.CreateTableDto;
-import com.example.project.dto.table.TableTimeDto;
 import com.example.project.dto.table.UpdateTableDto;
 import com.example.project.model.Table;
 import javassist.NotFoundException;
-import org.joda.time.LocalTime;
 
 import java.util.List;
-import java.util.Map;
 
 public interface ITableService {
     List<Table> getAllTables();
