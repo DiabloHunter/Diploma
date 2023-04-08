@@ -25,7 +25,7 @@ public class UserController {
 
     private static final Logger LOG = LogManager.getLogger(UserController.class);
 
-    //@PreAuthorize("hasRole('USER') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
     @GetMapping("/")
     public ResponseEntity<UserDTO> getUser(@RequestParam("userEmail") String email) {
         UserDTO userDTO = userService.getUserDto(userService.getUserByEmail(email));
@@ -35,7 +35,7 @@ public class UserController {
         return new ResponseEntity<>(userDTO, HttpStatus.OK);
     }
 
-    //@PreAuthorize("hasRole('USER') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
     @PostMapping("/update/")
     public ResponseEntity<ApiResponse> updateUser(@RequestParam("userEmail") String userEmail,
                                                   @RequestBody UpdateUserDto changedUser) throws NotFoundException {
@@ -75,6 +75,4 @@ public class UserController {
         }
         return new ResponseEntity<>(new ApiResponse(true, "Database has been successfully restored!"), HttpStatus.OK);
     }
-
-
 }

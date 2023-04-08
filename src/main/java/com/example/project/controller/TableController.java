@@ -11,6 +11,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,6 +32,7 @@ public class TableController {
         return new ResponseEntity<>(tables, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     @PostMapping("/create")
     public ResponseEntity<ApiResponse> createTable(@RequestBody CreateTableDto createTableDto) {
         tableService.create(createTableDto);
@@ -40,6 +42,7 @@ public class TableController {
                 createTableDto.getSearchId())), HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     @PostMapping("/update")
     public ResponseEntity<ApiResponse> updateTable(@RequestBody UpdateTableDto updateTableDto) throws NotFoundException {
         tableService.update(updateTableDto);
@@ -49,6 +52,7 @@ public class TableController {
                 String.format("Table with searchId %s has been updated!", updateTableDto.getPreviousSearchId())), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     @DeleteMapping("/delete")
     public ResponseEntity<ApiResponse> deleteCategory(@RequestParam String searchId) throws NotFoundException {
         if (!tableService.existBySearchId(searchId)) {

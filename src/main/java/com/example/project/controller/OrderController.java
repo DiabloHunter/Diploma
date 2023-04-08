@@ -20,6 +20,7 @@ import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.UnsupportedEncodingException;
@@ -39,7 +40,7 @@ public class OrderController {
 
     private static final Logger LOG = LogManager.getLogger(OrderController.class);
 
-    //@PreAuthorize("hasRole('USER') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
     @GetMapping("/getOrders/")
     public ResponseEntity<OrderDTO> getOrders(@RequestParam("userEmail") String userEmail) throws NotFoundException {
         List<OrderItemDTO> orders;
@@ -54,28 +55,21 @@ public class OrderController {
         return new ResponseEntity<>(orderDto, HttpStatus.OK);
     }
 
-    //@PreAuthorize("hasRole('USER') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
     @GetMapping("/getOrder/")
     public ResponseEntity<Order> getOrder(@RequestParam String id) {
         Order order = orderService.getOrderById(id);
         return new ResponseEntity<>(order, HttpStatus.OK);
     }
 
-    //@PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
-//    @GetMapping("/getStatistic")
-//    public ResponseEntity<List<DishStatisticDTO>> getStatistic(@RequestBody StatisticDateDTO statisticDateDto) {
-//        List<DishStatisticDTO> dishStatisticDTOS = orderService.getStatisticByOrders(statisticDateDto);
-//        return new ResponseEntity<>(dishStatisticDTOS, HttpStatus.OK);
-//    }
-
-    //@PreAuthorize("hasRole('USER') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
     @PostMapping("/create")
     public ResponseEntity<ApiResponse> createOrder(@RequestBody CreateOrderItemDTO orderItemDTO) throws NotFoundException {
         orderService.createOrder(orderItemDTO);
         return new ResponseEntity<>(new ApiResponse(true, "Order created!"), HttpStatus.CREATED);
     }
 
-    //@PreAuthorize("hasRole('USER')or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
+    @PreAuthorize("hasRole('USER')or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
     @PostMapping("/create-checkout-session")
     public ResponseEntity<StripeResponse> checkoutList(@RequestBody List<CheckoutItemDTO> checkoutItemDTOList)
             throws StripeException {
@@ -85,7 +79,7 @@ public class OrderController {
 
     }
 
-    //@PreAuthorize("hasRole('USER') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
     @PostMapping("/liqPay")
     public ResponseEntity<LiqPayResponse> liqPay()
             throws JSONException, UnsupportedEncodingException, NoSuchAlgorithmException {
@@ -94,7 +88,7 @@ public class OrderController {
         return new ResponseEntity<>(liqPayResponse, HttpStatus.OK);
     }
 
-    //@PreAuthorize("hasRole('USER') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
     @PostMapping("/liqPay2")
     public ResponseEntity<LiqPayResponse> liqPay(@RequestBody List<CheckoutItemDTO> checkoutItemDTOList)
             throws JSONException, UnsupportedEncodingException, NoSuchAlgorithmException {

@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -33,7 +34,7 @@ public class DishController {
         return new ResponseEntity<>(dishes, HttpStatus.OK);
     }
 
-    //@PreAuthorize("hasRole('USER') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
     @GetMapping("/getBySearchId/")
     public ResponseEntity<DishDTO> getDishBySearchId(@RequestParam String searchId) {
         Dish dish = dishService.getDishBySearchId(searchId);
@@ -59,7 +60,7 @@ public class DishController {
         return new ResponseEntity<>(dishes, HttpStatus.OK);
     }
 
-   // @PreAuthorize(hasRole('ADMIN') or hasRole('MANAGER')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     @PostMapping("/create")
     public ResponseEntity<ApiResponse> createDish(@RequestBody DishDTO dishDto) throws NotFoundException {
         dishService.create(dishDto);
@@ -69,7 +70,7 @@ public class DishController {
                 String.format("Dish with searchId %s has been created!", dishDto.getSearchId())), HttpStatus.CREATED);
     }
 
-   // @PreAuthorize(hasRole('ADMIN') or hasRole('MANAGER')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     @PostMapping("/update/")
     public ResponseEntity<ApiResponse> updateDish(@RequestBody DishDTO dishDto) throws NotFoundException {
         dishService.update(dishDto);
@@ -78,7 +79,7 @@ public class DishController {
                 String.format("Dish with Id %s has been updated", dishDto.getId())), HttpStatus.OK);
     }
 
-   // @PreAuthorize(hasRole('ADMIN') or hasRole('MANAGER')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     @DeleteMapping("/delete")
     public ResponseEntity<ApiResponse> deleteCategory(@RequestParam String id) throws NotFoundException {
         dishService.deleteDishById(id);
@@ -87,7 +88,7 @@ public class DishController {
                 String.format("Dish with Id %s has been deleted", id)), HttpStatus.OK);
     }
 
-   // @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     @PostMapping("/checkPrices")
     public ResponseEntity<ApiResponse> checkPrices() {
         LOG.info("Check price process started.");

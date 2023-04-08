@@ -11,6 +11,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -25,6 +26,7 @@ public class ReservationController {
 
     private static final Logger LOG = LogManager.getLogger(ReservationController.class);
 
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
     @GetMapping("/user")
     public ResponseEntity<List<ReservationDTO>> getUserReservation(@RequestParam("userEmail") String userEmail) throws NotFoundException {
         List<Reservation> reservations = reservationService.getUserReservations(userEmail);
@@ -35,6 +37,7 @@ public class ReservationController {
         return new ResponseEntity<>(reservationDTOS, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
     @PostMapping("/create")
     public ResponseEntity<ApiResponse> createReservation(@RequestBody ReservationDTO reservationDTO) throws NotFoundException {
         reservationService.createReservation(reservationDTO);
@@ -42,6 +45,7 @@ public class ReservationController {
                 String.format("Reservation has been created for user %s!", reservationDTO.getUserEmail())), HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
     @PostMapping("/update")
     public ResponseEntity<ApiResponse> updateReservation(@RequestBody UpdateReservationDto updateReservationDto) throws NotFoundException {
         reservationService.updateReservation(updateReservationDto);
@@ -49,6 +53,7 @@ public class ReservationController {
                 String.format("Reservation has been updated for user %s!", updateReservationDto.getUserEmail())), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
     @PostMapping("/cancel")
     public ResponseEntity<ApiResponse> cancelReservation(@RequestParam("id") String id) throws NotFoundException {
         reservationService.cancelReservation(id);

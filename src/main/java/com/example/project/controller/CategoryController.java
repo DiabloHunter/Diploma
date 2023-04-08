@@ -11,6 +11,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -25,7 +26,7 @@ public class CategoryController {
     @Autowired
     ICategoryService categoryService;
 
-   // @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     @PostMapping("/create")
     public ResponseEntity<ApiResponse> createCategory(@RequestBody CreateUpdateCategoryDto category) {
         categoryService.create(category);
@@ -52,7 +53,7 @@ public class CategoryController {
         return new ResponseEntity<>(categories, HttpStatus.OK);
     }
 
-   // @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     @PostMapping("/update/")
     public ResponseEntity<ApiResponse> updateCategory(@RequestBody CreateUpdateCategoryDto createUpdateCategoryDto) throws NotFoundException {
         String categoryId = createUpdateCategoryDto.getId();
@@ -63,7 +64,7 @@ public class CategoryController {
                 String.format("Category with Id %s has been updated!", categoryId)), HttpStatus.OK);
     }
 
-   // @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     @DeleteMapping("/delete/")
     public ResponseEntity<ApiResponse> deleteCategory(@RequestParam String id) throws NotFoundException {
         categoryService.delete(id);
