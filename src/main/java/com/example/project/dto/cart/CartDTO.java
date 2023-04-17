@@ -4,6 +4,7 @@ import java.util.List;
 
 public class CartDTO {
     private List<CartItemDTO> cartItems;
+    private double discount;
     private double totalCost;
     private String userEmail;
 
@@ -16,6 +17,14 @@ public class CartDTO {
 
     public void setCartItems(List<CartItemDTO> cartItems) {
         this.cartItems = cartItems;
+    }
+
+    public double getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(double discount) {
+        this.discount = discount;
     }
 
     public double getTotalCost() {
