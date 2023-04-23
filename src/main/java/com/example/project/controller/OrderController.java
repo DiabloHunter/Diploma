@@ -43,8 +43,7 @@ public class OrderController {
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
     @GetMapping("/getOrders/")
     public ResponseEntity<OrderDTO> getOrders(@RequestParam("userEmail") String userEmail) throws NotFoundException {
-        List<OrderItemDTO> orders;
-        orders = orderService.getAllOrders(userEmail);
+        List<OrderItemDTO> orders = orderService.getAllOrders(userEmail);
         OrderDTO orderDto = new OrderDTO();
         orderDto.setOrderItems(orders);
         double totalSum = 0;

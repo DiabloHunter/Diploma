@@ -151,7 +151,7 @@ public class OrderService implements IOrderService {
 
     @Override
     public Session createSession(List<CheckoutItemDTO> checkoutItemDTOList) throws StripeException {
-        String successURL = baseURL + "orders";
+        String successURL = baseURL + "payment/success";
         String failureURL = baseURL + "payment/failed";
         Stripe.apiKey = apiKey;
 
