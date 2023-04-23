@@ -7,18 +7,16 @@ public class UserStatisticDTO {
     private Double ordersCount;
     private Double moneyCount;
     private Double rating;
-    private int place;
 
     public UserStatisticDTO() {
     }
 
-    public UserStatisticDTO(String name, String email, Double ordersCount, Double moneyCount, Double rating, int place) {
+    public UserStatisticDTO(String name, String email, Double ordersCount, Double moneyCount, Double rating) {
         this.name = name;
         this.email = email;
         this.ordersCount = ordersCount;
         this.moneyCount = moneyCount;
         this.rating = rating;
-        this.place = place;
     }
 
     public String getName() {
@@ -59,13 +57,5 @@ public class UserStatisticDTO {
 
     public void setRating(Double rating) {
         this.rating = rating;
-    }
-
-    public int getPlace() {
-        return place;
-    }
-
-    public void setPlace(int place) {
-        this.place = place;
     }
 }

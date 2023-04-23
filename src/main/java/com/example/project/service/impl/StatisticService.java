@@ -44,7 +44,6 @@ public class StatisticService implements IStatisticService {
         List<Order> allOrders = orderRepository.findAllByCreatedDateBetween(start, end);
         Map<Dish, Double> dishMap = new HashMap<>();
         List<DishStatisticDTO> dishesStatistic = new ArrayList<>();
-        AtomicInteger count = new AtomicInteger(1);
 
         for (Order order : allOrders) {
             for (OrderUnit orderUnit : order.getOrderUnits()) {
@@ -70,8 +69,6 @@ public class StatisticService implements IStatisticService {
                     dishStatisticDto.setDescriptionUa(x.getKey().getDescriptionUa());
                     dishStatisticDto.setCategoryId(x.getKey().getCategory().getId());
                     dishStatisticDto.setMonthSales(x.getValue());
-                    dishStatisticDto.setPlace(count.get());
-                    count.getAndIncrement();
                     dishesStatistic.add(dishStatisticDto);
                 });
         return dishesStatistic;
@@ -84,7 +81,6 @@ public class StatisticService implements IStatisticService {
 
         List<Order> allOrders = orderRepository.findAllByCreatedDateBetween(start, end);
         Map<String, UserStatisticDTO> userStatisticMap = new HashMap<>();
-        AtomicInteger count = new AtomicInteger(1);
 
         for (Order order : allOrders) {
             User user = order.getUser();
@@ -109,8 +105,6 @@ public class StatisticService implements IStatisticService {
                 userStatisticMap.put(userEmail, userStatisticDTO);
             }
 
-            count.getAndIncrement();
-            userStatisticDTO.setPlace(count.get());
         }
 
         List<UserStatisticDTO> result = new ArrayList<>(userStatisticMap.values());

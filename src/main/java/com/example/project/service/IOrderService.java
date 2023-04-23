@@ -19,7 +19,7 @@ public interface IOrderService {
 
     List<OrderItemDTO> getAllOrders(String userEmail) throws NotFoundException;
 
-    Order getOrderById(String id);
+    OrderItemDTO getOrderById(String id);
 
     void createOrder(CreateOrderItemDTO orderItemDTO) throws NotFoundException;
 }

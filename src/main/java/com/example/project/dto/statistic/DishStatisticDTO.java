@@ -13,7 +13,6 @@ public class DishStatisticDTO {
     private @NotNull String descriptionUa;
     private @NotNull String categoryId;
     private @NotNull double monthSales;
-    private @NotNull int place;
 
     public String getId() {
         return id;
@@ -87,14 +86,5 @@ public class DishStatisticDTO {
     public void setMonthSales(double monthSales) {
         this.monthSales = monthSales;
     }
-
-    public int getPlace() {
-        return place;
-    }
-
-    public void setPlace(int place) {
-        this.place = place;
-    }
-
 
 }

@@ -27,6 +27,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -63,8 +64,12 @@ public class OrderService implements IOrderService {
 
         List<Order> allOrders = orderRepository.findAllByUser(user);
 
+        return convertOrder(allOrders);
+    }
+
+    private List<OrderItemDTO> convertOrder(List<Order> orders){
         List<OrderItemDTO> orderItemDTOS = new ArrayList<>();
-        for (var order : allOrders) {
+        for (var order : orders) {
             OrderItemDTO orderItemDTO = new OrderItemDTO();
 
             orderItemDTO.setOrderId(order.getId());
@@ -85,13 +90,12 @@ public class OrderService implements IOrderService {
             orderItemDTO.setDishes(dishes);
             orderItemDTOS.add(orderItemDTO);
         }
-
         return orderItemDTOS;
     }
 
     @Override
-    public Order getOrderById(String id) {
-        return orderRepository.findById(id).orElse(null);
+    public OrderItemDTO getOrderById(String id) {
+        return convertOrder(Collections.singletonList(orderRepository.findById(id).orElse(null))).get(0);
     }
 
     @Override
