@@ -68,27 +68,27 @@ public class CartService implements ICartService {
             cartItems.add(cartItemDto);
         }
 
-        double discount = getDiscount(user.getRating(), totalCost);
+        double discount = getDiscount(user.getRating());
 
         CartDTO cartDto = new CartDTO();
-        cartDto.setTotalCost(totalCost - discount);
+        cartDto.setTotalCost(totalCost);
         cartDto.setCartItems(cartItems);
         cartDto.setUserEmail(user.getEmail());
         cartDto.setDiscount(discount);
         return cartDto;
     }
 
-    private double getDiscount(double rating, double total) {
-        if (rating > 1 && rating < 3) {
-            return total * 0.03;
+    private double getDiscount(double rating) {
+        if (rating > 1500 && rating < 3000) {
+            return 0.97;
         }
-        if (rating > 3 && rating < 5) {
-            return total * 0.05;
+        if (rating > 3000 && rating < 5000) {
+            return 0.95;
         }
-        if (rating > 5) {
-            return total * 0.07;
+        if (rating > 5000) {
+            return 0.93;
         }
-        return 0;
+        return 1;
     }
 
     @Override

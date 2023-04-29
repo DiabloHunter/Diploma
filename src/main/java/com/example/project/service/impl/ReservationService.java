@@ -184,7 +184,7 @@ public class ReservationService implements IReservationService {
 
     private void checkRating(User user, LocalDateTime reservationStartTime, LocalDateTime currentTime) {
         if (reservationStartTime.minusHours(1).isBefore(currentTime) && user.getRating() > 0) {
-            user.setRating(user.getRating() - 0.1);
+            user.setRating(user.getRating() - 500);
             userService.update(user);
         }
     }
@@ -200,7 +200,7 @@ public class ReservationService implements IReservationService {
                 User reservationUser = reservation.getUser();
                 List<Order> orders = orderService.getUserOrdersByTime(reservationUser, startTime, currentTime);
                 if (orders == null || orders.isEmpty()) {
-                    reservationUser.setRating(reservationUser.getRating() - 0.1);
+                    reservationUser.setRating(reservationUser.getRating() - 500);
                     reservation.setActive(false);
                     reservation.setCanceled(true);
                 }

@@ -123,25 +123,9 @@ public class OrderService implements IOrderService {
 
         orderRepository.save(order);
 
-        user.setRating(user.getRating() + calculateRating(orderItemDTO.getPrice()));
+        user.setRating(user.getRating() + orderItemDTO.getPrice());
         userService.update(user);
         cartService.deleteCartItemsByUser(user);
-    }
-
-    private double calculateRating(double sum) {
-        if (sum > 100 && sum < 500) {
-            return 0.03;
-        }
-        if (sum > 500 && sum < 1000) {
-            return 0.05;
-        }
-        if (sum > 1000 && sum < 1500) {
-            return 0.1;
-        }
-        if (sum > 1500) {
-            return 0.2;
-        }
-        return 0;
     }
 
     @Override
