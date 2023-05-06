@@ -56,7 +56,7 @@ public class OrderController {
 
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
     @GetMapping("/getOrder/")
-    public ResponseEntity<OrderItemDTO> getOrder(@RequestParam String id) {
+    public ResponseEntity<OrderItemDTO> getOrder(@RequestParam("id") String id) {
         OrderItemDTO order = orderService.getOrderById(id);
         return new ResponseEntity<>(order, HttpStatus.OK);
     }
@@ -70,14 +70,14 @@ public class OrderController {
 
     @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
     @PostMapping("/ready")
-    public ResponseEntity<ApiResponse> setOrderReady(@RequestParam String id) throws NotFoundException {
+    public ResponseEntity<ApiResponse> setOrderReady(@RequestParam("id") String id) throws NotFoundException {
         orderService.setOrderState(id, OrderState.READY);
         return new ResponseEntity<>(new ApiResponse(true, "Order's state is READY now!"), HttpStatus.OK);
     }
 
     @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
     @PostMapping("/close")
-    public ResponseEntity<ApiResponse> closeOrder(@RequestParam String id) throws NotFoundException {
+    public ResponseEntity<ApiResponse> closeOrder(@RequestParam("id") String id) throws NotFoundException {
         orderService.setOrderState(id, OrderState.CLOSED);
         return new ResponseEntity<>(new ApiResponse(true, "Order's state is CLOSED now!"), HttpStatus.OK);
     }
