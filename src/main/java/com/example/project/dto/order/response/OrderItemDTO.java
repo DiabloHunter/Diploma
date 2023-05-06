@@ -1,5 +1,6 @@
 package com.example.project.dto.order.response;
 
+import com.example.project.model.OrderState;
 import org.joda.time.LocalDateTime;
 
 import javax.validation.constraints.NotNull;
@@ -13,6 +14,7 @@ public class OrderItemDTO {
     private @NotNull List<OrderDishDTO> dishes = new ArrayList<>();
     private @NotNull String userEmail;
     private @NotNull LocalDateTime createdDate;
+    private @NotNull OrderState orderState;
 
     public OrderItemDTO() {
     }
@@ -55,5 +57,13 @@ public class OrderItemDTO {
 
     public void setCreatedDate(LocalDateTime createdDate) {
         this.createdDate = createdDate;
+    }
+
+    public OrderState getOrderState() {
+        return orderState;
+    }
+
+    public void setOrderState(OrderState orderState) {
+        this.orderState = orderState;
     }
 }

@@ -8,7 +8,7 @@ import com.example.project.dto.order.response.OrderDTO;
 import com.example.project.dto.order.response.OrderItemDTO;
 import com.example.project.dto.checkout.CheckoutItemDTO;
 import com.example.project.dto.checkout.StripeResponse;
-import com.example.project.model.Order;
+import com.example.project.model.OrderState;
 import com.example.project.service.ILiqPayService;
 import com.example.project.service.IOrderService;
 import com.stripe.exception.StripeException;
@@ -68,7 +68,21 @@ public class OrderController {
         return new ResponseEntity<>(new ApiResponse(true, "Order created!"), HttpStatus.CREATED);
     }
 
-    @PreAuthorize("hasRole('USER')or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
+    @PostMapping("/ready")
+    public ResponseEntity<ApiResponse> setOrderReady(@RequestParam String id) throws NotFoundException {
+        orderService.setOrderState(id, OrderState.READY);
+        return new ResponseEntity<>(new ApiResponse(true, "Order's state is READY now!"), HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
+    @PostMapping("/close")
+    public ResponseEntity<ApiResponse> closeOrder(@RequestParam String id) throws NotFoundException {
+        orderService.setOrderState(id, OrderState.CLOSED);
+        return new ResponseEntity<>(new ApiResponse(true, "Order's state is CLOSED now!"), HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
     @PostMapping("/create-checkout-session")
     public ResponseEntity<StripeResponse> checkoutList(@RequestBody List<CheckoutItemDTO> checkoutItemDTOList)
             throws StripeException {

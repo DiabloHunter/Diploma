@@ -4,6 +4,7 @@ import com.example.project.dto.checkout.CheckoutItemDTO;
 import com.example.project.dto.order.response.CreateOrderItemDTO;
 import com.example.project.dto.order.response.OrderItemDTO;
 import com.example.project.model.Order;
+import com.example.project.model.OrderState;
 import com.example.project.model.User;
 import com.stripe.exception.StripeException;
 import com.stripe.model.checkout.Session;
@@ -22,4 +23,6 @@ public interface IOrderService {
     OrderItemDTO getOrderById(String id);
 
     void createOrder(CreateOrderItemDTO orderItemDTO) throws NotFoundException;
+
+    void setOrderState(String id, OrderState state) throws NotFoundException;
 }

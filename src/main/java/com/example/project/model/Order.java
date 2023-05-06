@@ -41,11 +41,15 @@ public class Order {
     @MapKey(name = "id")
     private List<OrderUnit> orderUnits;
 
-    public Order(double price, User user, LocalDateTime createdDate, List<OrderUnit> orderUnits) {
+    @Column(name = "order_state")
+    private OrderState orderState;
+
+    public Order(double price, User user, LocalDateTime createdDate, List<OrderUnit> orderUnits, OrderState orderState) {
         this.price = price;
         this.user = user;
         this.createdDate = createdDate;
         this.orderUnits = orderUnits;
+        this.orderState = orderState;
     }
 
     public Order() {
@@ -89,5 +93,13 @@ public class Order {
 
     public void setOrderUnits(List<OrderUnit> orderUnits) {
         this.orderUnits = orderUnits;
+    }
+
+    public OrderState getOrderState() {
+        return orderState;
+    }
+
+    public void setOrderState(OrderState orderState) {
+        this.orderState = orderState;
     }
 }

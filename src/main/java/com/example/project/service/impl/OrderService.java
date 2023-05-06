@@ -5,10 +5,7 @@ import com.example.project.dto.order.response.CreateOrderItemDTO;
 import com.example.project.dto.order.response.OrderDishDTO;
 import com.example.project.dto.order.response.OrderItemDTO;
 import com.example.project.dto.checkout.CheckoutItemDTO;
-import com.example.project.model.Dish;
-import com.example.project.model.Order;
-import com.example.project.model.OrderUnit;
-import com.example.project.model.User;
+import com.example.project.model.*;
 import com.example.project.repository.IDishRepository;
 import com.example.project.repository.IOrderRepository;
 import com.example.project.repository.IOrderUnitRepository;
@@ -67,7 +64,7 @@ public class OrderService implements IOrderService {
         return convertOrder(allOrders);
     }
 
-    private List<OrderItemDTO> convertOrder(List<Order> orders){
+    private List<OrderItemDTO> convertOrder(List<Order> orders) {
         List<OrderItemDTO> orderItemDTOS = new ArrayList<>();
         for (var order : orders) {
             OrderItemDTO orderItemDTO = new OrderItemDTO();
@@ -75,6 +72,7 @@ public class OrderService implements IOrderService {
             orderItemDTO.setOrderId(order.getId());
             orderItemDTO.setPrice(order.getPrice());
             orderItemDTO.setCreatedDate(order.getCreatedDate());
+            orderItemDTO.setOrderState(order.getOrderState());
             orderItemDTO.setUserEmail(order.getUser().getEmail());
 
             List<OrderDishDTO> dishes = new ArrayList<>();
@@ -120,12 +118,21 @@ public class OrderService implements IOrderService {
             orderUnitRepository.save(orderUnit);
         }
         order.setOrderUnits(orderUnits);
+        order.setOrderState(OrderState.IN_PROGRESS);
 
         orderRepository.save(order);
 
         user.setRating(user.getRating() + orderItemDTO.getPrice());
         userService.update(user);
         cartService.deleteCartItemsByUser(user);
+    }
+
+    @Override
+    public void setOrderState(String id, OrderState state) throws NotFoundException {
+        Order order = orderRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException(String.format("Order with id %s was not found", id)));
+        order.setOrderState(state);
+        orderRepository.save(order);
     }
 
     @Override
