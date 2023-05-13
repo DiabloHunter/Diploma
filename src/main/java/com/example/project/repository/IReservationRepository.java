@@ -12,7 +12,9 @@ import java.util.List;
 @Repository
 public interface IReservationRepository extends JpaRepository<Reservation, String> {
 
-    List<Reservation> findByEndTimeIs(LocalDateTime endTime);
+    @Query(value = "SELECT * FROM RESERVATIONS u WHERE u.end_time<=:to",
+            nativeQuery = true)
+    List<Reservation> findByEndTimeIs(@Param("to") LocalDateTime endTime);
 
     @Query(value = "SELECT * FROM RESERVATIONS u WHERE u.user_id = :userId AND u.is_active is true",
             nativeQuery = true)
