@@ -8,42 +8,24 @@ import com.example.project.service.IUserService;
 import javassist.NotFoundException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.xml.bind.DatatypeConverter;
-import java.io.BufferedOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 @Service
 public class UserService implements IUserService {
 
     @Autowired
     IUserRepository userRepository;
-
     @Autowired
     PasswordEncoder encoder;
 
     private static final Logger LOG = LogManager.getLogger(UserService.class);
-
-    private String hashPassword(String password) throws NoSuchAlgorithmException {
-        MessageDigest md = MessageDigest.getInstance("MD5");
-        md.update(password.getBytes());
-        byte[] digest = md.digest();
-        String hash = DatatypeConverter
-                .printHexBinary(digest).toUpperCase();
-        return hash;
-    }
 
     @Override
     public UserDTO getUserDto(User user) {
@@ -102,42 +84,5 @@ public class UserService implements IUserService {
         } else {
             LOG.error("Update user mustn't be null!");
         }
-    }
-
-    @Override
-    public boolean backup()
-            throws IOException {
-        DateTime backupDate = new DateTime();
-        SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
-        String backupDateStr = format.format(backupDate);
-
-        String fileName = "DbBackup";
-
-        String saveFileName = fileName + "_" + backupDateStr + ".sql";
-        Path sqlFile = Paths.get(saveFileName);
-        OutputStream stdOut = new BufferedOutputStream(Files.newOutputStream(sqlFile, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING));
-        stdOut.close();
-
-        String command = "D:\\projects\\CourseWork\\Project\\backup.bat && mysqldump -u root -proot atarkv2 >" +
-                "D:\\projects\\CourseWork\\DBBackup\\" + saveFileName;
-        Runtime.getRuntime().exec(command);
-        return true;
-    }
-
-    @Override
-    public boolean restore()
-            throws IOException {
-        DateTime restoreDate = new DateTime();
-        SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
-        String backupDateStr = format.format(restoreDate);
-
-        String fileName = "DbBackup";
-
-        String restoreFileName = fileName + "_" + backupDateStr + ".sql";
-
-        String command = "D:\\projects\\CourseWork\\Project\\backup.bat && mysql -u root -proot atarkv2 <" +
-                "D:\\projects\\CourseWork\\DBBackup\\" + restoreFileName;
-        Runtime.getRuntime().exec(command);
-        return true;
     }
 }

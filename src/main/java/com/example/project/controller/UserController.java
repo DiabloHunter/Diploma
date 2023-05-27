@@ -51,28 +51,4 @@ public class UserController {
         return new ResponseEntity<>(new ApiResponse(true,
                 String.format("User with email %s has been updated!", userEmail)), HttpStatus.OK);
     }
-
-    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
-    @PostMapping("/backup")
-    public ResponseEntity<ApiResponse> backupDB() {
-        try {
-            userService.backup();
-        } catch (IOException | InterruptedException e) {
-            LOG.error(e.getMessage());
-            return new ResponseEntity<>(new ApiResponse(false, e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        return new ResponseEntity<>(new ApiResponse(true, "Database has been successfully backuped!"), HttpStatus.OK);
-    }
-
-    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
-    @PostMapping("/restore")
-    public ResponseEntity<ApiResponse> restoreDB() {
-        try {
-            userService.restore();
-        } catch (IOException e) {
-            LOG.error(e.getMessage());
-            return new ResponseEntity<>(new ApiResponse(false, e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        return new ResponseEntity<>(new ApiResponse(true, "Database has been successfully restored!"), HttpStatus.OK);
-    }
 }

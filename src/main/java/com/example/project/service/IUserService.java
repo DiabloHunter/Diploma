@@ -19,11 +19,5 @@ public interface IUserService {
 
     void update(User updateUser);
 
-    boolean backup()
-            throws IOException, InterruptedException;
-
-    boolean restore()
-            throws IOException;
-
     void create(User user);
 }
