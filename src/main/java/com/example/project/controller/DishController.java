@@ -12,12 +12,14 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @RestController
 @RequestMapping("/api/dish")
@@ -28,36 +30,39 @@ public class DishController {
 
     private static final Logger LOG = LogManager.getLogger(DishController.class);
 
+    @Async
     @GetMapping("/")
-    public ResponseEntity<List<DishDTO>> getDishes() {
+    public CompletableFuture<ResponseEntity<List<DishDTO>>> getDishes() {
         List<DishDTO> dishes = dishService.getAllDishes();
-        return new ResponseEntity<>(dishes, HttpStatus.OK);
+        return CompletableFuture.completedFuture(ResponseEntity.ok(dishes));
     }
 
+    @Async
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
     @GetMapping("/getBySearchId/")
-    public ResponseEntity<DishDTO> getDishBySearchId(@RequestParam String searchId) {
+    public CompletableFuture<ResponseEntity<DishDTO>> getDishBySearchId(@RequestParam String searchId) {
         Dish dish = dishService.getDishBySearchId(searchId);
 
         if (dish == null) {
             LOG.warn(String.format("Dish with searchId %s was not found!", searchId));
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            return CompletableFuture.completedFuture(ResponseEntity.badRequest().body(null));
         }
 
         DishDTO dishDTO = dishService.getDishDto(dish);
-        return new ResponseEntity<>(dishDTO, HttpStatus.OK);
+        return CompletableFuture.completedFuture(ResponseEntity.ok(dishDTO));
     }
 
+    @Async
     @GetMapping("/getFilteredDishes/")
-    public ResponseEntity<List<Dish>> getFilteredDishes(@RequestBody FilterDishDTO filterDishDTO) {
+    public CompletableFuture<ResponseEntity<List<Dish>>> getFilteredDishes(@RequestBody FilterDishDTO filterDishDTO) {
         List<Dish> dishes = dishService.getFilteredDishes(filterDishDTO);
 
         if (dishes == null) {
             LOG.warn(String.format("Dishes with given filters %s was not found!", filterDishDTO));
-            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
+            return CompletableFuture.completedFuture(ResponseEntity.ok(new ArrayList<>()));
         }
 
-        return new ResponseEntity<>(dishes, HttpStatus.OK);
+        return CompletableFuture.completedFuture(ResponseEntity.ok(dishes));
     }
 
     @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")

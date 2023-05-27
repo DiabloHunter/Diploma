@@ -11,10 +11,12 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.concurrent.CompletableFuture;
 
 @RequestMapping("/api/user")
 @RestController
@@ -25,14 +27,15 @@ public class UserController {
 
     private static final Logger LOG = LogManager.getLogger(UserController.class);
 
+    @Async
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
     @GetMapping("/")
-    public ResponseEntity<UserDTO> getUser(@RequestParam("userEmail") String email) {
+    public CompletableFuture<ResponseEntity<UserDTO>> getUser(@RequestParam("userEmail") String email) {
         UserDTO userDTO = userService.getUserDto(userService.getUserByEmail(email));
         if (userDTO == null) {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            return CompletableFuture.completedFuture(ResponseEntity.badRequest().body(null));
         }
-        return new ResponseEntity<>(userDTO, HttpStatus.OK);
+        return CompletableFuture.completedFuture(ResponseEntity.ok(userDTO));
     }
 
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")

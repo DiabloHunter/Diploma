@@ -11,10 +11,12 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @RestController
 @RequestMapping("/api/table")
@@ -23,13 +25,13 @@ public class TableController {
     @Autowired
     ITableService tableService;
 
-    //todo add getTablesByTime
     private static final Logger LOG = LogManager.getLogger(TableController.class);
 
+    @Async
     @GetMapping("/")
-    public ResponseEntity<List<Table>> getAllTables() {
+    public CompletableFuture<ResponseEntity<List<Table>>> getAllTables() {
         List<Table> tables = tableService.getAllTables();
-        return new ResponseEntity<>(tables, HttpStatus.OK);
+        return CompletableFuture.completedFuture(ResponseEntity.ok(tables));
     }
 
     @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
