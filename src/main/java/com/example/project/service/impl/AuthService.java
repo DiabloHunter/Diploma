@@ -29,8 +29,6 @@ import java.util.stream.Collectors;
 @Service
 public class AuthService implements IAuthService {
 
-    private static Random random = new Random();
-
     @Autowired
     IUserService userService;
 

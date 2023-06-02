@@ -11,11 +11,13 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @RestController
 @RequestMapping("/api/category")
@@ -36,21 +38,23 @@ public class CategoryController {
                 String.format("Category with name %s has been created!", category.getNameEn())), HttpStatus.CREATED);
     }
 
+    @Async
     @GetMapping("/")
-    public List<Category> listCategory() {
-        return categoryService.getAllCategory();
+    public CompletableFuture<List<Category>> listCategory() {
+        return CompletableFuture.completedFuture(categoryService.getAllCategory());
     }
 
+    @Async
     @GetMapping("/getFilteredCategories/")
-    public ResponseEntity<List<Category>> getFilteredDishes(@RequestBody FilterCategoryDTO filterCategoryDTO) {
+    public CompletableFuture<ResponseEntity<List<Category>>> getFilteredDishes(@RequestBody FilterCategoryDTO filterCategoryDTO) {
         List<Category> categories = categoryService.getFilteredCategories(filterCategoryDTO);
 
         if (categories == null) {
             LOG.warn(String.format("Categories with given filters %s was not found!", filterCategoryDTO));
-            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
+            return CompletableFuture.completedFuture(ResponseEntity.ok(new ArrayList<>()));
         }
 
-        return new ResponseEntity<>(categories, HttpStatus.OK);
+        return CompletableFuture.completedFuture(ResponseEntity.ok(categories));
     }
 
     @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")

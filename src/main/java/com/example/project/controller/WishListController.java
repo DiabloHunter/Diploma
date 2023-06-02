@@ -10,10 +10,12 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @RestController
 @RequestMapping("/api/wishlist")
@@ -24,11 +26,12 @@ public class WishListController {
 
     private static final Logger LOG = LogManager.getLogger(WishListController.class);
 
+    @Async
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
     @GetMapping("/")
-    public ResponseEntity<List<DishDTO>> getWishList(@RequestParam("userEmail") String userEmail) throws NotFoundException {
+    public CompletableFuture<ResponseEntity<List<DishDTO>>> getWishList(@RequestParam("userEmail") String userEmail) throws NotFoundException {
         List<DishDTO> dishDTOS = wishlistService.getWishListForUser(userEmail);
-        return new ResponseEntity<>(dishDTOS, HttpStatus.OK);
+        return CompletableFuture.completedFuture(ResponseEntity.ok(dishDTOS));
     }
 
 

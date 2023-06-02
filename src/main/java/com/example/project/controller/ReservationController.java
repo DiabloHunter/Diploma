@@ -11,11 +11,13 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @RestController
 @RequestMapping("/api/reservation")
@@ -26,15 +28,16 @@ public class ReservationController {
 
     private static final Logger LOG = LogManager.getLogger(ReservationController.class);
 
+    @Async
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
     @GetMapping("/user")
-    public ResponseEntity<List<ReservationDTO>> getUserReservation(@RequestParam("userEmail") String userEmail) throws NotFoundException {
+    public CompletableFuture<ResponseEntity<List<ReservationDTO>>> getUserReservation(@RequestParam("userEmail") String userEmail) throws NotFoundException {
         List<Reservation> reservations = reservationService.getUserReservations(userEmail);
         List<ReservationDTO> reservationDTOS = new ArrayList<>();
         for (Reservation reservation : reservations) {
             reservationDTOS.add(new ReservationDTO(reservation));
         }
-        return new ResponseEntity<>(reservationDTOS, HttpStatus.OK);
+        return CompletableFuture.completedFuture(ResponseEntity.ok(reservationDTOS));
     }
 
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")

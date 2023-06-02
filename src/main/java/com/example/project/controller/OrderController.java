@@ -20,6 +20,7 @@ import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,6 +28,7 @@ import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 @RestController
 @RequestMapping("/api/order")
@@ -40,9 +42,10 @@ public class OrderController {
 
     private static final Logger LOG = LogManager.getLogger(OrderController.class);
 
+    @Async
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
     @GetMapping("/getOrders/")
-    public ResponseEntity<OrderDTO> getOrders(@RequestParam("userEmail") String userEmail) throws NotFoundException {
+    public CompletableFuture<ResponseEntity<OrderDTO>> getOrders(@RequestParam("userEmail") String userEmail) throws NotFoundException {
         List<OrderItemDTO> orders = orderService.getAllOrders(userEmail);
         OrderDTO orderDto = new OrderDTO();
         orderDto.setOrderItems(orders);
@@ -51,14 +54,15 @@ public class OrderController {
             totalSum += el.getPrice();
         }
         orderDto.setTotalCost(totalSum);
-        return new ResponseEntity<>(orderDto, HttpStatus.OK);
+        return CompletableFuture.completedFuture(ResponseEntity.ok(orderDto));
     }
 
+    @Async
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
     @GetMapping("/getOrder/")
-    public ResponseEntity<OrderItemDTO> getOrder(@RequestParam("id") String id) {
+    public CompletableFuture<ResponseEntity<OrderItemDTO>> getOrder(@RequestParam("id") String id) {
         OrderItemDTO order = orderService.getOrderById(id);
-        return new ResponseEntity<>(order, HttpStatus.OK);
+        return CompletableFuture.completedFuture(ResponseEntity.ok(order));
     }
 
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
