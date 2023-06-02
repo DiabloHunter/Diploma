@@ -28,7 +28,7 @@ public class TableController {
     private static final Logger LOG = LogManager.getLogger(TableController.class);
 
     @Async
-    @GetMapping("/all")
+    @GetMapping("/")
     public CompletableFuture<ResponseEntity<List<Table>>> getAllTables() {
         List<Table> tables = tableService.getAllTables();
         return CompletableFuture.completedFuture(ResponseEntity.ok(tables));
