@@ -26,7 +26,7 @@ public class TableController {
     //todo add getTablesByTime
     private static final Logger LOG = LogManager.getLogger(TableController.class);
 
-    @GetMapping("/")
+    @GetMapping("/all")
     public ResponseEntity<List<Table>> getAllTables() {
         List<Table> tables = tableService.getAllTables();
         return new ResponseEntity<>(tables, HttpStatus.OK);
