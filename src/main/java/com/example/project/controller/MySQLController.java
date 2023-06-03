@@ -7,7 +7,6 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,9 +41,8 @@ public class MySQLController {
 
     @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     @PostMapping("/restore")
-    public CompletableFuture<ResponseEntity<ApiResponse>> restoreDB() {
+    public CompletableFuture<ResponseEntity<ApiResponse>> restoreDB(@RequestParam String backupName) {
         try {
-            String backupName = "DbBackup_27-05-2023_01-59-33.sql";
             boolean result = mySQLService.restore(backupName);
             if (result) {
                 return CompletableFuture.completedFuture(ResponseEntity.ok(
