@@ -34,9 +34,7 @@ public class MySQLService implements IMySQLService {
         SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy_hh-mm-ss");
         String backupDateStr = format.format(new Date());
 
-        String fileName = "DbBackup";
-
-        String saveFileName = fileName + "_" + backupDateStr + ".sql";
+        String saveFileName = backupDateStr + ".sql";
 
         String command = String.format("%s %s %s%s", batFilePath, backupQuery, backupPath, saveFileName);
         Process process = Runtime.getRuntime().exec(command);

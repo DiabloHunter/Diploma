@@ -15,6 +15,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.joda.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -23,12 +24,17 @@ import java.util.stream.Collectors;
 @Service
 public class DishService implements IDishService {
 
+    @Value("${check.price.enabled:false}")
+    private boolean checkPriceEnabled;
+    @Value("${check.price.increase.percents:5}")
+    private double checkPriceIncreasePercents;
+    @Value("${check.price.decrease.percents:5}")
+    private double checkPriceDecreasePercents;
+
     @Autowired
     ICategoryService categoryService;
-
     @Autowired
     IDishRepository dishRepository;
-
     @Autowired
     IOrderRepository orderRepository;
 
@@ -170,6 +176,10 @@ public class DishService implements IDishService {
 
     @Override
     public void checkPrices() {
+        if (!checkPriceEnabled) {
+            return;
+        }
+
         List<Dish> dishes = dishRepository.findAll();
 
         LocalDateTime todayDate = TimeUtil.formatLocalDateTime(new LocalDateTime());
@@ -184,13 +194,22 @@ public class DishService implements IDishService {
                 }
             }
             if (count > dish.getMaxSales()) {
-                dish.setPrice(Math.ceil(dish.getPrice() * 1.1));
+                dish.setPrice(increasePrice(dish.getPrice(), checkPriceIncreasePercents));
             } else if (count < dish.getMinSales()) {
-                Double newPrice = Math.max(Math.ceil(dish.getPrice() / 1.1), dish.getCostPrice() * 1.05);
+                Double newPrice = Math.max(Math.ceil(decreasePrice(dish.getPrice(), checkPriceDecreasePercents)),
+                        Math.ceil(dish.getCostPrice() * 1.05));
                 dish.setPrice(newPrice);
             }
             dish.setCheckDate(todayDate);
             dishRepository.save(dish);
         }
+    }
+
+    private double increasePrice(double price, double percent) {
+        return Math.ceil(price + price / 100 * percent);
+    }
+
+    private double decreasePrice(double price, double percent) {
+        return Math.ceil(price - price / 100 * percent);
     }
 }
