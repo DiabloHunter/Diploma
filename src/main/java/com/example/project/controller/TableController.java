@@ -54,6 +54,14 @@ public class TableController {
                 String.format("Table with searchId %s has been updated!", updateTableDto.getPreviousSearchId())), HttpStatus.OK);
     }
 
+    @Async
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+    @GetMapping("/searchId")
+    public CompletableFuture<ResponseEntity<Table>> getTable(@RequestParam String searchId) {
+        Table table = tableService.getTableBySearchId(searchId);
+        return CompletableFuture.completedFuture(ResponseEntity.ok(table));
+    }
+
     @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     @DeleteMapping("/delete")
     public ResponseEntity<ApiResponse> deleteCategory(@RequestParam String searchId) throws NotFoundException {
