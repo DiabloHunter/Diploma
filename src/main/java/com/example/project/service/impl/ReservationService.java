@@ -81,7 +81,6 @@ public class ReservationService implements IReservationService {
         reservation.setEndTime(TimeUtil.formatLocalDateTime(reservationDTO.getEndTime()));
         reservation.setUser(user);
         reservation.setCanceled(false);
-        //todo decide if reservation must contain list or single table
         reservation.setTables(Collections.singletonList(availableTables.get(0)));
 
         reservationRepository.save(reservation);

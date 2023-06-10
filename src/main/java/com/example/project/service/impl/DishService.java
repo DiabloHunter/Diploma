@@ -179,7 +179,6 @@ public class DishService implements IDishService {
         if (!checkPriceEnabled) {
             return;
         }
-
         List<Dish> dishes = dishRepository.findAll();
 
         LocalDateTime todayDate = TimeUtil.formatLocalDateTime(new LocalDateTime());

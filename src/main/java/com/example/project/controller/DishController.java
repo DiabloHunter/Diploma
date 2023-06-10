@@ -38,9 +38,8 @@ public class DishController {
     }
 
     @Async
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN') or hasRole('MANAGER') or hasRole('CASHIER')")
     @GetMapping("/getBySearchId/")
-    public CompletableFuture<ResponseEntity<DishDTO>> getDishBySearchId(@RequestParam String searchId) {
+    public CompletableFuture<ResponseEntity<DishDTO>> getDishBySearchId(@RequestParam("searchId") String searchId) {
         Dish dish = dishService.getDishBySearchId(searchId);
 
         if (dish == null) {
