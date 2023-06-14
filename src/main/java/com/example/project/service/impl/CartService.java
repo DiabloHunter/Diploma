@@ -79,13 +79,13 @@ public class CartService implements ICartService {
     }
 
     private double getDiscount(double rating) {
-        if (rating > 1500 && rating < 3000) {
+        if (rating > 150 && rating < 300) {
             return 0.97;
         }
-        if (rating > 3000 && rating < 5000) {
+        if (rating > 300 && rating < 500) {
             return 0.95;
         }
-        if (rating > 5000) {
+        if (rating > 500) {
             return 0.93;
         }
         return 1;
