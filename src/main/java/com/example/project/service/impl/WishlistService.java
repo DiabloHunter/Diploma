@@ -48,7 +48,6 @@ public class WishlistService implements IWishlistService {
             } else {
                 LOG.warn(String.format("Dish with id %s was not found!", wishList.getDish().getId()));
             }
-            dishDTOS.add(dishService.getDishDto(wishList.getDish()));
         }
         return dishDTOS;
     }
